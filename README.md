@@ -15,47 +15,34 @@ Natureza conectada é um aplicativo, que tem o objetivo em ajudar na preservaç�
 
 Você pode visualizar os arquivos baixando eles pelo git hub, ou acessando pelos links:
 
+<<<<<<< HEAD
 [Apresentação](https://www.canva.com/design/DAF4T7UVSyg/B21qvwGNrSuWYRYbGL-Tsg/edit?utm_content=DAF4T7UVSyg&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 <br/>
 [Relatório]()
+=======
+[Apresentação em slides](https://www.canva.com/design/DAF4T7UVSyg/B21qvwGNrSuWYRYbGL-Tsg/edit?utm_content=DAF4T7UVSyg&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+[Relatório](https://docs.google.com/document/d/1ViJH6_dRK3jtG0aTHHMpLIKtqzzjtI1Sjuv02cowVJc/edit?usp=sharing)
+>>>>>>> cba215e9264e1c237ce8b2a9dccda2ef69bb345a
 
 ## Integrantes
 
-<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap: 16px;">
-<div style="display:flex; flex-direction:column; align-items: center; gap: 10px;">
-<img src="./assets/thales.png" alt="Thales Salla" width="33%" style="border-radius: 100px"/>
+
 Thales Salla
-</div>
-<div style="display:flex; flex-direction:column; align-items: center; gap: 10px;">
-<img src="./assets/welton.png" alt="Welton Santos" width="33%" style="border-radius: 100px"/>
+
 Welton Santos
-</div>
-<div style="display:flex; flex-direction:column; align-items: center; gap: 10px;">
-<img src="./assets/janier.png" alt="Janier Freitas" width="33%" style="border-radius: 100px"/>
+
 Janier Freitas
-</div>
-<div style="display:flex; flex-direction:column; align-items: center; gap: 10px;">
-<img src="./assets/carlos.png" alt="Carlos Henrique" width="33%" style="border-radius: 100px"/>
+
 Carlos Henrique
-</div>
-<div style="display:flex; flex-direction:column; align-items: center; gap: 10px;">
-<img src="./assets/rafael.png" alt="Rafael Camilo" width="33%" style="border-radius: 100px"/>
+
 Rafael Camilo
-</div>
-<div style="display:flex; flex-direction:column; align-items: center; gap: 10px;">
-<img src="./assets/pedro.png" alt="Pedro Antonetti" width="33%" style="border-radius: 100px"/>
+
 Pedro Antonetti
-</div>
-<div style="display:flex; flex-direction:column; align-items: center; gap: 10px;">
-<img src="./assets/luh.png" alt="Luísa dos Santos" width="33%" style="border-radius: 100px"/>
+
 Luísa dos Santos
-</div>
-<div style="display:flex; flex-direction:column; align-items: center; gap: 10px;">
-<img src="./assets/willian.png" alt="Willian Cavalheiro" width="33%" style="border-radius: 100px"/>
+
 Willian Cavalheiro
-</div>
-<div style="display:flex; flex-direction:column; align-items: center; gap: 10px;">
-<img src="./assets/diuli.jpg" alt="Diuliano Vargas" width="33%" style="border-radius: 100px"/>
+
 Diuliano Vargas
-</div>
-</div>
+
+
