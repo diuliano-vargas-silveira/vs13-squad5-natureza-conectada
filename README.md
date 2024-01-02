@@ -16,6 +16,7 @@ Natureza conectada é um aplicativo, que tem o objetivo em ajudar na preservaç�
 Você pode visualizar os arquivos baixando eles pelo git hub, ou acessando pelos links:
 
 [Apresentação](https://www.canva.com/design/DAF4T7UVSyg/B21qvwGNrSuWYRYbGL-Tsg/edit?utm_content=DAF4T7UVSyg&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+<br/>
 [Relatório]()
 
 ## Integrantes
