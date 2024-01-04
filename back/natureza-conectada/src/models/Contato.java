@@ -1,5 +1,7 @@
 package models;
 
+import enums.Tipo;
+
 public class Contato {
 
     private int id;
