@@ -2,7 +2,7 @@ package models;
 
 import enums.TipoUsuario;
 
-public class Usuario {
+public abstract class Usuario {
     private final int id;
     private String nome;
     private String email;
