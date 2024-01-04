@@ -1,3 +1,5 @@
+package models;
+
 public class Contato {
 
     private int id;
@@ -13,7 +15,7 @@ public class Contato {
         this.tipo = (tipo == 1) ? Tipo.RESIDENCIAL : ((tipo == 2) ? Tipo.COMERCIAL : null);
 
         if (this.tipo == null)
-            throw new IllegalArgumentException("Tipo inválido.");
+            throw new IllegalArgumentException("enums.Tipo inválido.");
     }
 
     public int getId() {
@@ -48,11 +50,11 @@ public class Contato {
         this.tipo = (tipo == 1) ? Tipo.RESIDENCIAL : ((tipo == 2) ? Tipo.COMERCIAL : null);
 
         if (this.tipo == null)
-            throw new IllegalArgumentException("Tipo inválido.");
+            throw new IllegalArgumentException("enums.Tipo inválido.");
     }
 
     @Override
     public String toString() {
-        return "\nID: " + getId() + "\nDescrição: " + getDescricao() + "\nNumero: " + getNumero() + "\nTipo: " + getTipo();
+        return "\nID: " + getId() + "\nDescrição: " + getDescricao() + "\nNumero: " + getNumero() + "\nenums.Tipo: " + getTipo();
     }
 }

@@ -1,3 +1,7 @@
+package models;
+
+import enums.Tipo;
+
 public class Endereco {
 
     private int id;
@@ -24,7 +28,7 @@ public class Endereco {
         this.tipo = (tipo == 1) ? Tipo.RESIDENCIAL : ((tipo == 2) ? Tipo.COMERCIAL : null);
 
         if (this.tipo == null)
-            throw new IllegalArgumentException("Tipo inválido.");
+            throw new IllegalArgumentException("enums.Tipo inválido.");
     }
 
     public int getId() {
@@ -91,12 +95,12 @@ public class Endereco {
         this.tipo = (tipo == 1) ? Tipo.RESIDENCIAL : ((tipo == 2) ? Tipo.COMERCIAL : null);
 
         if (this.tipo == null)
-            throw new IllegalArgumentException("Tipo inválido.");
+            throw new IllegalArgumentException("enums.Tipo inválido.");
     }
 
     @Override
     public String toString() {
         return "\nID: " + getId() + "\nCEP: " + getCep() + "\nLogradouro: " + getLogradouro() + "\nNº: " + getNumero() + "\nComplemento: " + getComplemento()
-                + "\nCidade: " + getCidade() + "\nEstado: " + getEstado() + "\nPaís: " + PAIS + "\nTipo: " + getTipo();
+                + "\nCidade: " + getCidade() + "\nEstado: " + getEstado() + "\nPaís: " + PAIS + "\nenums.Tipo: " + getTipo();
     }
 }
