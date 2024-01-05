@@ -6,6 +6,8 @@ import enums.TipoMuda;
 
 
 public class Muda {
+
+    private static int  contadora = 1;
     private int id;
 
     private TipoMuda tipo;
@@ -27,6 +29,8 @@ public class Muda {
         } else if (TamanhoMuda.ofTipo(porte) == null) {
             throw new IllegalArgumentException("enum porte inválido.");
         } else {
+            this.id = Muda.contadora;
+            Muda.setContadora(Muda.contadora + 1);
             this.tipo = TipoMuda.ofTipo(tipo);
             this.porte = TamanhoMuda.ofTipo(porte);
             this.nome = nome;
@@ -34,6 +38,14 @@ public class Muda {
             this.ambienteIdeal = ambienteIdeal;
             this.descricao = descricao;
         }
+    }
+
+    public static int getContadora() {
+        return contadora;
+    }
+
+    public static void setContadora(int contadora) {
+        Muda.contadora = contadora;
     }
 
     public int getId() {
