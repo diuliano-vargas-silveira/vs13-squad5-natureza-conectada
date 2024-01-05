@@ -20,6 +20,16 @@ public class Relatorio {
         this.avaliacaoEspecialista = avaliacaoEspecialista;
     }
 
+    @Override
+    public String toString(){
+        return "Relatório ID: " + String.valueOf(this.id) 
+        + "\nDados do cliente: \n" + this.dono.toString()
+        + "\nDados do especialista:\n" + this.avaliador
+        + "\nDescrição da muda: \n" + this.muda
+        + "\nEstado da muda: " + this.estadoMuda
+        + "\nSugestões: " + this.sugestoes
+        + "\nAvaliação do especialista: " + this.avaliacaoEspecialista;
+    }
     public int getId() {
         return id;
     }
