@@ -9,7 +9,7 @@ import models.Endereco;
 
 import models.Cliente;
 import services.ServiceContato;
-
+import services.ServiceEndereco;
 
 
 public class Main {
@@ -49,28 +49,30 @@ public class Main {
         Muda muda3 = new Muda(0,"da","adas",0,"asdas","adada");
 
 
-
-
         Endereco end = new Endereco( "777-6666", "Rua Abc", "123", "CASA", "PORTO ALEGRE", "RS", 1);
-        Contato cont = new Contato("models.Contato 1", "9873424234", 2);
+        Contato cont = new Contato("Contato 1", "9873424234", 2);
         Cliente cliente = new Cliente(1, "Garen, o Paladino", "garen@email.com", "katarina123", "123456789");
 
 
-
-
-
-        cliente.imprimirCliente();
+        // cliente.imprimirCliente();
 
         ServiceContato sc = new ServiceContato();
 
         sc.adicionar(cont);
-        System.out.println(cont);
-        System.out.println(sc.editar(cont.getId(), new Contato("models.Contato 1", "9873424234", 1)));
-        System.out.println(sc.procurarPorID(cont.getId()));
-        System.out.println(sc.listarTodos());
-        sc.deletar(cont.getId());
-        System.out.println(sc.listarTodos());
+        // sc.editar(cont.getId(), new Contato("models.Contato 1", "9873424234", 1));
+        // System.out.println(sc.procurarPorID(cont.getId()).get());
+        // System.out.println(sc.listarTodos());
+        // sc.deletar(cont.getId());
+        // System.out.println(sc.listarTodos());
 
+        ServiceEndereco se = new ServiceEndereco();
+
+        se.adicionar(end);
+        // System.out.println(se.listarTodos());
+        // System.out.println(se.procurarPorID(end.getId()).get());
+        // se.deletar(end.getId());
+        // se.editar(end.getId(), new Endereco( "777-6666", "Rua Abc", "123", "CASA", "PORTO ALEGRE", "RS", 2));
+        // System.out.println(se.listarTodos());
 
     }
 }
