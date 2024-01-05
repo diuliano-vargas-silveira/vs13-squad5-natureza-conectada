@@ -9,15 +9,14 @@ public class Contato {
     private String numero;
     private Tipo tipo;
 
-    public Contato(int id, String descricao, String numero, int tipo) {
-        this.id = id;
+    public Contato(String descricao, String numero, int tipo) {
         this.descricao = descricao;
         this.numero = numero;
 
         this.tipo = (tipo == 1) ? Tipo.RESIDENCIAL : ((tipo == 2) ? Tipo.COMERCIAL : null);
 
         if (this.tipo == null)
-            throw new IllegalArgumentException("enums.Tipo inválido.");
+            throw new IllegalArgumentException("Tipo inválido.");
     }
 
     public int getId() {
@@ -52,11 +51,11 @@ public class Contato {
         this.tipo = (tipo == 1) ? Tipo.RESIDENCIAL : ((tipo == 2) ? Tipo.COMERCIAL : null);
 
         if (this.tipo == null)
-            throw new IllegalArgumentException("enums.Tipo inválido.");
+            throw new IllegalArgumentException("Tipo inválido.");
     }
 
     @Override
     public String toString() {
-        return "\nID: " + getId() + "\nDescrição: " + getDescricao() + "\nNumero: " + getNumero() + "\nenums.Tipo: " + getTipo();
+        return "\nID: " + getId() + "\nDescrição: " + getDescricao() + "\nNumero: " + getNumero() + "\nTipo: " + getTipo();
     }
 }
