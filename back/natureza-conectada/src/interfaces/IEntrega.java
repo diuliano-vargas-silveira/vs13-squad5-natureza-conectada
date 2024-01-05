@@ -1,8 +1,8 @@
 package interfaces;
 
-import enums.Status;
+import enums.StatusEntrega;
 
 public interface IEntrega {
-    public void atualizarEntrega(Status status);
+    public void atualizarEntrega(StatusEntrega status);
     public void consultarMuldaEntrega();
 }

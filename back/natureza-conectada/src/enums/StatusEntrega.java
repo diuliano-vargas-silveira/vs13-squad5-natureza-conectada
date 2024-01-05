@@ -1,5 +1,5 @@
 package enums;
 
-public enum Status {
+public enum StatusEntrega {
     RECEBIDO, ENVIADO, ENTREGUE;
 }

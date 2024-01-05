@@ -1,6 +1,6 @@
 package models;
 
-import enums.Status;
+import enums.StatusEntrega;
 import interfaces.IEntrega;
 
 import java.util.ArrayList;
@@ -8,20 +8,20 @@ import java.util.ArrayList;
 public class Entrega implements IEntrega {
     private int id;
     private ArrayList<Muda> mudas;
-    private Status status;
+    private StatusEntrega status;
     private Cliente cliente;
 
     public Entrega(){
 
     }
-    public Entrega(int id, ArrayList<Muda> mudas, Status status, Cliente cliente){
+    public Entrega(int id, ArrayList<Muda> mudas, StatusEntrega status, Cliente cliente){
         setId(id);
         setMudas(mudas);
         setStatus(status);
         setCliente(cliente);
     }
     @Override
-    public void atualizarEntrega(Status status) {
+    public void atualizarEntrega(StatusEntrega status) {
         this.status = status;
         System.out.printf("O Status da entrega: %d, foi atualizada para: %s. \n",
                 this.id, String.valueOf(this.status).toLowerCase());
@@ -49,11 +49,11 @@ public class Entrega implements IEntrega {
 
     public void setId(int id) {this.id = id;}
     public void setMudas(ArrayList<Muda> mudas) {this.mudas = mudas;}
-    public void setStatus(Status status) {this.status = status;}
+    public void setStatus(StatusEntrega status) {this.status = status;}
     public void setCliente(Cliente cliente) {this.cliente = cliente;}
 
     public int getId() {return this.id;}
     public ArrayList<Muda> getMudas() {return this.mudas;}
-    public Status getStatus() {return this.status;}
+    public StatusEntrega getStatus() {return this.status;}
     public Cliente getCliente() {return this.cliente;}
 }
