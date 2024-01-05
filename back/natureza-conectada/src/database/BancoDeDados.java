@@ -18,7 +18,7 @@ public class BancoDeDados {
     public static List<Endereco> enderecos = new ArrayList<>();
     public static List<Muda> mudas = new ArrayList<>();
     public static List<Relatorio> relatorios = new ArrayList<>();
-
+    public static List<Entrega> entregas = new ArrayList<>();
     // Usar somente quando for criar um id novo
     public static int getNewID() {
         ID++;
