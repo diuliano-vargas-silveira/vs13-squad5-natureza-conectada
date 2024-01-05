@@ -1,81 +1,83 @@
 package models;
 
-public class Especialista {
+import enums.TipoUsuario;
 
-        private int ID;
-        private String especialista;
-        private Contato contato;
-        private String documento;
-        private String especializacao;
-        private String regiaoResponsavel;
+public class Especialista extends Usuario {
 
-        public Especialista(int ID, String especialista, Contato contato, String documento,
-                            String especializacao, String regiaoResponsavel) {
-            this.ID = ID;
-            this.especialista = especialista;
-            this.contato = contato;
-            this.documento = documento;
-            this.especializacao = especializacao;
-            this.regiaoResponsavel = regiaoResponsavel;
-        }
+    private int ID;
+    private String especialista;
+    private Contato contato;
+    private String documento;
+    private String especializacao;
+    private String regiaoResponsavel;
 
-        public int getID() {
-            return ID;
-        }
+    public Especialista(int id, String nome, String email, String senha, TipoUsuario tipoUsuario, int ID, String especialista, Contato contato, String documento, String especializacao, String regiaoResponsavel) {
+        super(id, nome, email, senha, TipoUsuario.ESPECIALISTA);
+        this.ID = ID;
+        this.especialista = especialista;
+        this.contato = contato;
+        this.documento = documento;
+        this.especializacao = especializacao;
+        this.regiaoResponsavel = regiaoResponsavel;
+    }
 
-        public void setID(int ID) {
-            this.ID = ID;
-        }
+    public int getID() {
+        return ID;
+    }
 
-        public String getEspecialista() {
-            return especialista;
-        }
+    public void setID(int ID) {
+        this.ID = ID;
+    }
 
-        public void setEspecialista(String especialista) {
-            this.especialista = especialista;
-        }
+    public String getEspecialista() {
+        return especialista;
+    }
 
-        public Contato getContato() {
-            return contato;
-        }
+    public void setEspecialista(String especialista) {
+        this.especialista = especialista;
+    }
 
-        public void setContato(Contato contato) {
-            this.contato = contato;
-        }
+    public Contato getContato() {
+        return contato;
+    }
 
-        public String getDocumento() {
-            return documento;
-        }
+    public void setContato(Contato contato) {
+        this.contato = contato;
+    }
 
-        public void setDocumento(String documento) {
-            this.documento = documento;
-        }
+    public String getDocumento() {
+        return documento;
+    }
 
-        public String getEspecializacao() {
-            return especializacao;
-        }
+    public void setDocumento(String documento) {
+        this.documento = documento;
+    }
 
-        public void setEspecializacao(String especializacao) {
-            this.especializacao = especializacao;
-        }
+    public String getEspecializacao() {
+        return especializacao;
+    }
 
-        public String getRegiaoResponsavel() {
-            return regiaoResponsavel;
-        }
+    public void setEspecializacao(String especializacao) {
+        this.especializacao = especializacao;
+    }
 
-        public void setRegiaoResponsavel(String regiaoResponsavel) {
-            this.regiaoResponsavel = regiaoResponsavel;
-        }
+    public String getRegiaoResponsavel() {
+        return regiaoResponsavel;
+    }
 
-        @Override
-        public String toString() {
-            return "Especialista{" +
-                    "ID=" + ID +
-                    ", especialista='" + especialista + '\'' +
-                    ", contato=" + contato +
-                    ", documento='" + documento + '\'' +
-                    ", especializacao='" + especializacao + '\'' +
-                    ", regiaoResponsavel='" + regiaoResponsavel + '\'' +
-                    '}';
-        }
+    public void setRegiaoResponsavel(String regiaoResponsavel) {
+        this.regiaoResponsavel = regiaoResponsavel;
+    }
+
+    @Override
+    public String toString() {
+        return "Especialista{" +
+                "ID=" + ID +
+                ", especialista='" + especialista + '\'' +
+                ", contato=" + contato +
+                ", documento='" + documento + '\'' +
+                ", especializacao='" + especializacao + '\'' +
+                ", regiaoResponsavel='" + regiaoResponsavel + '\'' +
+                '}';
+    }
 }
