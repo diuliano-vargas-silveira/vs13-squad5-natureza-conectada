@@ -32,22 +32,19 @@ public class Entrega implements IEntrega {
         System.out.printf("Descrições da(s) muda(s) da entrega %d:\n", this.id);
 
         for(Muda muda : this.mudas){
-
-            String tipo = String.valueOf(muda.getTipo());
-            String nome = muda.getNome();
-            String nomeCientifico = muda.getNomeCientifico();
-            String porte = String.valueOf(muda.getPorte());
-            String ambienteIdeal = muda.getAmbienteIdeal();
-            String descricao = muda.getDescricao();
-
-            System.out.printf("Tipo da muda: %s."
-                    +"\nNome: %s."
-                    +"\nNome científico: %s."
-                    +"\nPorte: %s."
-                    +"\nAmbiente recomendado: %s."
-                    +"\nDescrição da muda: %s.\n",
-                    tipo, nome, nomeCientifico, porte, ambienteIdeal, descricao);
+            System.out.println(muda.toString());
         }
+    }
+
+    @Override
+    public String toString(){
+
+        String mensagemMudas = "";
+        for(Muda muda : this.mudas){ mensagemMudas += muda.toString() + "\n";}
+        return "ID da entrega: " + this.id 
+        + "\nDescrições da(s) muda(s) da entrega: " + mensagemMudas
+        +"\nStatus: " + String.valueOf(this.status) 
+        + "\nDados do cliente: " + this.cliente.toString() + "\n";
     }
 
     public void setId(int id) {this.id = id;}
