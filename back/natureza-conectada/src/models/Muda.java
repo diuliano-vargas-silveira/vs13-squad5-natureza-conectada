@@ -3,7 +3,7 @@ package models;
 import enums.TamanhoMuda;
 import enums.TipoMuda;
 
-import java.util.Objects;
+
 
 public class Muda {
     private int id;
@@ -22,11 +22,11 @@ public class Muda {
 
     public Muda(int tipo, String nome, String nomeCientifico, int porte, String ambienteIdeal, String descricao) {
 
-        if(TipoMuda.ofTipo(tipo) == null){
+        if (TipoMuda.ofTipo(tipo) == null) {
             throw new IllegalArgumentException("enum Tipo inválido.");
         } else if (TamanhoMuda.ofTipo(porte) == null) {
             throw new IllegalArgumentException("enum porte inválido.");
-        }else{
+        } else {
             this.tipo = TipoMuda.ofTipo(tipo);
             this.porte = TamanhoMuda.ofTipo(porte);
             this.nome = nome;
@@ -92,3 +92,4 @@ public class Muda {
         this.descricao = descricao;
     }
 }
+
