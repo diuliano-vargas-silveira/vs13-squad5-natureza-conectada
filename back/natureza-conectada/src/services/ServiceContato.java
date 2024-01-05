@@ -3,13 +3,13 @@ package services;
 import database.BancoDeDados;
 import exceptions.ContatoExistente;
 import exceptions.InformacaoNaoEncontrada;
-import interfaces.IServiceContato;
+import interfaces.IService;
 import models.Contato;
 
 import java.util.List;
 import java.util.Optional;
 
-public class ServiceContato implements IServiceContato {
+public class ServiceContato implements IService<Contato> {
 
 
     @Override
