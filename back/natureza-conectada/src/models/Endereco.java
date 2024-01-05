@@ -16,8 +16,7 @@ public class Endereco {
 
     private Tipo tipo;
 
-    public Endereco(int id, String cep, String logradouro, String numero, String complemento, String cidade, String estado, int tipo) {
-        this.id = id;
+    public Endereco(String cep, String logradouro, String numero, String complemento, String cidade, String estado, int tipo) {
         this.cep = cep;
         this.logradouro = logradouro;
         this.numero = numero;
@@ -28,7 +27,7 @@ public class Endereco {
         this.tipo = (tipo == 1) ? Tipo.RESIDENCIAL : ((tipo == 2) ? Tipo.COMERCIAL : null);
 
         if (this.tipo == null)
-            throw new IllegalArgumentException("enums.Tipo inválido.");
+            throw new IllegalArgumentException("Tipo inválido.");
     }
 
     public int getId() {
@@ -95,12 +94,12 @@ public class Endereco {
         this.tipo = (tipo == 1) ? Tipo.RESIDENCIAL : ((tipo == 2) ? Tipo.COMERCIAL : null);
 
         if (this.tipo == null)
-            throw new IllegalArgumentException("enums.Tipo inválido.");
+            throw new IllegalArgumentException("Tipo inválido.");
     }
 
     @Override
     public String toString() {
         return "\nID: " + getId() + "\nCEP: " + getCep() + "\nLogradouro: " + getLogradouro() + "\nNº: " + getNumero() + "\nComplemento: " + getComplemento()
-                + "\nCidade: " + getCidade() + "\nEstado: " + getEstado() + "\nPaís: " + PAIS + "\nenums.Tipo: " + getTipo();
+                + "\nCidade: " + getCidade() + "\nEstado: " + getEstado() + "\nPaís: " + PAIS + "\nTipo: " + getTipo();
     }
 }
