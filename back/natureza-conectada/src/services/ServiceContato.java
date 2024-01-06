@@ -1,8 +1,8 @@
 package services;
 
 import database.BancoDeDados;
-import exceptions.ContatoExistente;
 import exceptions.InformacaoNaoEncontrada;
+import exceptions.ObjetoExistente;
 import interfaces.IService;
 import models.Contato;
 
@@ -17,7 +17,7 @@ public class ServiceContato implements IService<Contato> {
         Optional<Contato> contatoExistente = procurarPorID(contato.getId());
 
         if (contatoExistente.isPresent())
-            throw new ContatoExistente();
+            throw new ObjetoExistente("Este contato já existe");
 
         contato.setId(BancoDeDados.getNewID());
         BancoDeDados.contatos.add(contato);
