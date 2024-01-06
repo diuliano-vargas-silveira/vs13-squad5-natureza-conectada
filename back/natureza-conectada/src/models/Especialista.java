@@ -5,8 +5,7 @@ import enums.TipoUsuario;
 
 public class Especialista extends Usuario {
 
-    private int ID;
-    private String especialista;
+
     private Contato contato;
     private String documento;
     private String especializacao;
@@ -15,31 +14,16 @@ public class Especialista extends Usuario {
     public Especialista() {
     }
 
-    public Especialista(int id, String nome, String email, String senha, TipoUsuario tipoUsuario, int ID, String especialista, Contato contato, String documento, String especializacao, Estados regiaoResponsavel) {
-        super(id, nome, email, senha, TipoUsuario.ESPECIALISTA);
-        this.ID = ID;
-        this.especialista = especialista;
+    public Especialista(String nome, String email, String senha, Contato contato, String documento, String especializacao, Estados regiaoResponsavel) {
+        super(nome, email, senha, TipoUsuario.ESPECIALISTA);
         this.contato = contato;
         this.documento = documento;
         this.especializacao = especializacao;
         this.regiaoResponsavel = regiaoResponsavel;
     }
 
-    public int getID() {
-        return ID;
-    }
 
-    public void setID(int ID) {
-        this.ID = ID;
-    }
 
-    public String getEspecialista() {
-        return especialista;
-    }
-
-    public void setEspecialista(String especialista) {
-        this.especialista = especialista;
-    }
 
     public Contato getContato() {
         return contato;
@@ -76,8 +60,7 @@ public class Especialista extends Usuario {
     @Override
     public String toString() {
         return "Especialista{" +
-                "ID=" + ID +
-                ", especialista='" + especialista + '\'' +
+                "ID=" + getId() +
                 ", contato=" + contato +
                 ", documento='" + documento + '\'' +
                 ", especializacao='" + especializacao + '\'' +

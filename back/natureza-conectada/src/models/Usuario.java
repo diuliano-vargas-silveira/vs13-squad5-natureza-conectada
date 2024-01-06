@@ -12,8 +12,7 @@ public abstract class Usuario {
     public Usuario() {
     }
 
-    public Usuario(int id, String nome, String email, String senha, TipoUsuario tipoUsuario) {
-        this.id = id;
+    public Usuario(String nome, String email, String senha, TipoUsuario tipoUsuario) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
@@ -22,6 +21,10 @@ public abstract class Usuario {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNome() {
