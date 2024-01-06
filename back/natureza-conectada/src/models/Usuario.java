@@ -3,12 +3,14 @@ package models;
 import enums.TipoUsuario;
 
 public abstract class Usuario {
-    private final int id;
+    private int id;
     private String nome;
     private String email;
     private String senha;
     private TipoUsuario tipoUsuario;
 
+    public Usuario() {
+    }
 
     public Usuario(int id, String nome, String email, String senha, TipoUsuario tipoUsuario) {
         this.id = id;

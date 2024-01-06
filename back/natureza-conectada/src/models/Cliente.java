@@ -9,6 +9,7 @@ public class Cliente extends Usuario {
     private ArrayList<Endereco> enderecos = new ArrayList<>();
     private ArrayList<Contato> contatos = new ArrayList<>();
 
+
     // Construtor
     public Cliente(int ID, String nome, String email, String senha, String cpf) {
         super(ID, nome, email, senha, TipoUsuario.CLIENTE);
