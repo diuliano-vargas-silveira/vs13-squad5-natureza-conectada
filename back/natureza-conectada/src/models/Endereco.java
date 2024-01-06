@@ -1,5 +1,6 @@
 package models;
 
+import enums.Estados;
 import enums.Tipo;
 
 public class Endereco {
@@ -10,13 +11,13 @@ public class Endereco {
     private String numero;
     private String complemento;
     private String cidade;
-    private String estado;
+    private Estados estado;
 
     private static final String PAIS = "Brasil";
 
     private Tipo tipo;
 
-    public Endereco(String cep, String logradouro, String numero, String complemento, String cidade, String estado, int tipo) {
+    public Endereco(String cep, String logradouro, String numero, String complemento, String cidade, Estados estado, int tipo) {
         this.cep = cep;
         this.logradouro = logradouro;
         this.numero = numero;
@@ -78,11 +79,11 @@ public class Endereco {
         this.cidade = cidade;
     }
 
-    public String getEstado() {
+    public Estados getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(Estados estado) {
         this.estado = estado;
     }
 

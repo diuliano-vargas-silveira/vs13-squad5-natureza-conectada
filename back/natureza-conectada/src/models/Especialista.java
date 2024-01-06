@@ -1,5 +1,6 @@
 package models;
 
+import enums.Estados;
 import enums.TipoUsuario;
 
 public class Especialista extends Usuario {
@@ -9,12 +10,12 @@ public class Especialista extends Usuario {
     private Contato contato;
     private String documento;
     private String especializacao;
-    private String regiaoResponsavel;
+    private Estados regiaoResponsavel;
 
     public Especialista() {
     }
 
-    public Especialista(int id, String nome, String email, String senha, TipoUsuario tipoUsuario, int ID, String especialista, Contato contato, String documento, String especializacao, String regiaoResponsavel) {
+    public Especialista(int id, String nome, String email, String senha, TipoUsuario tipoUsuario, int ID, String especialista, Contato contato, String documento, String especializacao, Estados regiaoResponsavel) {
         super(id, nome, email, senha, TipoUsuario.ESPECIALISTA);
         this.ID = ID;
         this.especialista = especialista;
@@ -64,11 +65,11 @@ public class Especialista extends Usuario {
         this.especializacao = especializacao;
     }
 
-    public String getRegiaoResponsavel() {
+    public Estados getRegiaoResponsavel() {
         return regiaoResponsavel;
     }
 
-    public void setRegiaoResponsavel(String regiaoResponsavel) {
+    public void setRegiaoResponsavel(Estados regiaoResponsavel) {
         this.regiaoResponsavel = regiaoResponsavel;
     }
 
