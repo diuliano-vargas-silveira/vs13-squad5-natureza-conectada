@@ -17,8 +17,9 @@ public class ServiceEspecialista  implements IService<Especialista> {
         if (especialistaExistente.isPresent())
             throw new EspecialistaExistente();
 
-        especialista.setID(BancoDeDados.getNewID());
+        especialista.setID(BancoDeDados.gerarNovoIdEspecialista());
         BancoDeDados.especialistas.add(especialista);
+        BancoDeDados.usuarios.add(especialista);
     }
 
     @Override
