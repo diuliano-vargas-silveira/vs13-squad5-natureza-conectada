@@ -1,7 +1,5 @@
 package utils;
 
-import database.BancoDeDados;
-import enums.TipoUsuario;
 import models.Cliente;
 import models.Especialista;
 import models.Muda;
