@@ -10,46 +10,46 @@ public class Teclado {
     private static final String ESPACO = " ";
 
     public static String nextString(String mensagem) {
-        System.out.print(mensagem + ESPACO);
-        String input = scanner.nextLine();
+        while (true) {
+            try {
+                System.out.println(mensagem + ESPACO);
+                String input = scanner.nextLine();
 
-        boolean isVazio = isInputVazio(input);
+                boolean isVazio = isInputVazio(input);
 
-        if (isVazio) {
-            throw new ErroDigitacaoException();
+                if (isVazio) {
+                    throw new ErroDigitacaoException();
+                }
+
+                return input;
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
         }
-
-        return input;
     }
 
     public static Integer nextInt(String mensagem) throws NumberFormatException {
-        System.out.print(mensagem + ESPACO);
-        String input = scanner.nextLine();
+        while (true) {
+            try {
+                String input = nextString(mensagem);
 
-        boolean isValido = isInputVazio(input);
-
-        if (isValido) {
-            throw new ErroDigitacaoException();
+                return Integer.parseInt(input);
+            } catch (Exception e) {
+                System.err.println("Número inválido, por favor digite novamente!");
+            }
         }
-
-        Integer inputInteiro = Integer.parseInt(input);
-
-        return inputInteiro;
     }
 
     public static Double nextDouble(String mensagem) throws NumberFormatException {
-        System.out.print(mensagem + ESPACO);
-        String input = scanner.nextLine();
+        while (true) {
+            try {
+                String input = nextString(mensagem);
 
-        boolean isValido = isInputVazio(input);
-
-        if (isValido) {
-            throw new ErroDigitacaoException();
+                return Double.parseDouble(input);
+            } catch (Exception e) {
+                System.err.println("Número inválido, por favor digite novamente!");
+            }
         }
-
-        Double inputFlutuante = Double.parseDouble(input);
-
-        return inputFlutuante;
     }
 
 
