@@ -12,7 +12,7 @@ import java.util.Optional;
 public class ServiceMudas implements IService<Muda> {
 
     @Override
-    public boolean adicionar(Muda muda) {
+    public void adicionar(Muda muda) {
        Optional<Muda> mudaNoBd = BancoDeDados.mudas.stream().filter(md -> md.getId() == muda.getId()).findFirst() ;
         if (!mudaNoBd.isEmpty()){
             new MudaExistente("Muda existente no Banco de dados ");
@@ -21,18 +21,18 @@ public class ServiceMudas implements IService<Muda> {
             BancoDeDados.mudas.add(muda);
         }
 
-     return true;
+
     }
 
     @Override
-    public Muda deletar(int id) {
+    public void deletar(int id) {
         Optional<Muda> mudaASerDeletada = procurarPorID(id);
 
         BancoDeDados.mudas.remove(mudaASerDeletada.get());
 
 
 
-        return mudaASerDeletada.get();
+
     }
 
     @Override

@@ -59,7 +59,7 @@ public class Main {
 
 
 
-        cliente.imprimirCliente();
+
 
         ServiceContato sc = new ServiceContato();
 
@@ -68,7 +68,7 @@ public class Main {
         System.out.println(sc.editar(cont.getId(), new Contato("models.Contato 1", "9873424234", 1)));
         System.out.println(sc.procurarPorID(cont.getId()));
         System.out.println(sc.listarTodos());
-        System.out.println(sc.deletar(cont.getId()));
+
         System.out.println(sc.listarTodos());
 
 
