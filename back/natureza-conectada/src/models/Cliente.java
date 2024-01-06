@@ -9,7 +9,17 @@ public class Cliente extends Usuario {
     private ArrayList<Endereco> enderecos = new ArrayList<>();
     private ArrayList<Contato> contatos = new ArrayList<>();
     private ArrayList<Muda> mudas = new ArrayList<>();
+    private ArrayList<Entrega> entregas = new ArrayList<>();
 
+
+    // Setters e Getters
+    public ArrayList<Entrega> getEntregas() {
+        return entregas;
+    }
+
+    public void setEntregas(ArrayList<Entrega> entregas) {
+        this.entregas = entregas;
+    }
 
     // Construtor
     public Cliente(int ID, String nome, String email, String senha, String cpf) {
@@ -19,7 +29,8 @@ public class Cliente extends Usuario {
 
     // Setters e Getters
     public void setId(int id){ this.id = id;}
-    public int getID() {
+
+    public int getId() {
         return id;
     }
 
@@ -51,35 +62,43 @@ public class Cliente extends Usuario {
         return mudas;
     }
 
+    public ArrayList<Muda> getMudas() {
+        return mudas;
+    }
+
+    public void setMudas(ArrayList<Muda> mudas) {
+        this.mudas = mudas;
+    }
+
     // Exibição
-    public void imprimirContatos() {
-        for (Contato contato : contatos) {
-            if (contato == null) {
-                break;
+    private void imprimirLista(ArrayList<?> lista, String tipo) {
+        System.out.println("Lista de " + tipo + ":");
+        for (Object item : lista) {
+            if (item != null) {
+                System.out.println(item.toString());
             }
-            System.out.println(contato.toString());
         }
+        System.out.println();
+    }
+
+    // Métodos de impressão
+    public void imprimirContatos() {
+        imprimirLista(contatos, "Contatos");
     }
 
     public void imprimirEnderecos() {
-        for (Endereco endereco : enderecos) {
-            if (endereco == null) {
-                break;
-            }
-            System.out.println(endereco.toString());
-        }
+        imprimirLista(enderecos, "Endereços");
     }
 
     public void imprimirMudas() {
-        for (Muda muda : mudas) {
-            if (muda == null) {
-                break;
-            }
-            System.out.println(muda.toString());
-        }
+        imprimirLista(mudas, "Mudas");
     }
 
-    //Métodos de adicionar objetos externos
+    public void imprimirEntregas() {
+        imprimirLista(entregas, "Entregas");
+    }
+
+    //Métodos de adição
 
     public void adicionarContato(Contato contato) {
         contatos.add(contato);

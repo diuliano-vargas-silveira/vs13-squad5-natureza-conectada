@@ -11,7 +11,7 @@ import java.util.Optional;
 public class ServiceCliente implements IService<Cliente> {
 
     @Override
-    public boolean adicionar(Cliente cliente) {
+    public void adicionar(Cliente cliente) {
         Optional<Cliente> clienteExistente = procurarPorID(cliente.getId());
 
         if (clienteExistente.isPresent())
@@ -19,19 +19,16 @@ public class ServiceCliente implements IService<Cliente> {
 
         cliente.setId(BancoDeDados.getNewID());
         BancoDeDados.clientes.add(cliente);
-        return true;
-
     }
 
     @Override
-    public Cliente deletar(int id) {
+    public void deletar(int id) {
         Optional<Cliente> clienteExistente = procurarPorID(id);
 
         if (clienteExistente.isEmpty())
             throw new InformacaoNaoEncontrada("Este cliente não existe.");
 
         BancoDeDados.clientes.remove(clienteExistente.get());
-        return clienteExistente.get();
     }
 
     @Override
@@ -73,6 +70,9 @@ public class ServiceCliente implements IService<Cliente> {
         System.out.println("------------------------------");
         System.out.println("Mudas:");
         cliente.imprimirMudas();
+        System.out.println("------------------------------");
+        System.out.println("Entregas:");
+        cliente.imprimirEntregas();
         System.out.println("------------------------------");
     }
 }
