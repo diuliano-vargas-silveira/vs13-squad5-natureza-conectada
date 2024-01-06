@@ -9,7 +9,7 @@ import models.Endereco;
 
 import models.Cliente;
 import services.ServiceContato;
-import utils.Teclado;
+import services.ServiceEndereco;
 
 
 public class Main {
