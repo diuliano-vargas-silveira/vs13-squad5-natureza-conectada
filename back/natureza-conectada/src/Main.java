@@ -1,13 +1,13 @@
 
 import models.Muda;
 
-
 import database.BancoDeDados;
 import models.Contato;
 
 import models.Endereco;
 
 import models.Cliente;
+import services.ServiceCliente;
 import services.ServiceContato;
 
 
@@ -42,24 +42,16 @@ public class Main {
 //
 //        cliente.imprimirCliente();
 
+        ServiceCliente serviceCliente = new ServiceCliente();
+
         Muda muda1 = new Muda(0,"da","adas",0,"asdas","adada");
-
         Muda muda2 = new Muda(0,"da","adas",0,"asdas","adada");
-
         Muda muda3 = new Muda(0,"da","adas",0,"asdas","adada");
-
-
-
 
         Endereco end = new Endereco( "777-6666", "Rua Abc", "123", "CASA", "PORTO ALEGRE", "RS", 1);
         Contato cont = new Contato("models.Contato 1", "9873424234", 2);
         Cliente cliente = new Cliente(1, "Garen, o Paladino", "garen@email.com", "katarina123", "123456789");
 
-
-
-
-
-        cliente.imprimirCliente();
 
         ServiceContato sc = new ServiceContato();
 

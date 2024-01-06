@@ -1,13 +1,14 @@
 package models;
 
 import enums.TipoUsuario;
-
 import java.util.ArrayList;
 
 public class Cliente extends Usuario {
+    private int id;
     private String cpf;
     private ArrayList<Endereco> enderecos = new ArrayList<>();
     private ArrayList<Contato> contatos = new ArrayList<>();
+    private ArrayList<Muda> mudas = new ArrayList<>();
 
 
     // Construtor
@@ -17,10 +18,14 @@ public class Cliente extends Usuario {
     }
 
     // Setters e Getters
+    public void setId(int id){ this.id = id;}
+    public int getID() {
+        return id;
+    }
+
     public void setCpf(String cpf) {
         this.cpf = cpf;
     }
-
     public String getCpf() {
         return cpf;
     }
@@ -28,7 +33,6 @@ public class Cliente extends Usuario {
     public void setEnderecos(ArrayList<Endereco> enderecos) {
         this.enderecos = enderecos;
     }
-
     public ArrayList<Endereco> getEnderecos() {
         return enderecos;
     }
@@ -36,9 +40,15 @@ public class Cliente extends Usuario {
     public void setContatos(ArrayList<Contato> contatos) {
         this.contatos = contatos;
     }
-
     public ArrayList<Contato> getContatos() {
         return contatos;
+    }
+
+    public void setMuda(ArrayList<Muda> muda) {
+        this.mudas = muda;
+    }
+    public ArrayList<Muda> getMuda() {
+        return mudas;
     }
 
     // Exibição
@@ -60,19 +70,25 @@ public class Cliente extends Usuario {
         }
     }
 
-    public void imprimirCliente() {
-        System.out.println("------------------------------");
-        System.out.println("ID: " + getId());
-        System.out.println("Cliente: " + getNome());
-        System.out.println("CPF: " + getCpf());
-        System.out.println("E-mail: " + getEmail());
-        System.out.println("------------------------------");
-        System.out.println("Contatos:");
-        imprimirContatos();
-        System.out.println("------------------------------");
-        System.out.println("Endereços:");
-        imprimirEnderecos();
-        System.out.println("------------------------------");
+    public void imprimirMudas() {
+        for (Muda muda : mudas) {
+            if (muda == null) {
+                break;
+            }
+            System.out.println(muda.toString());
+        }
+    }
+
+    //Métodos de adicionar objetos externos
+
+    public void adicionarContato(Contato contato) {
+        contatos.add(contato);
+    }
+    public void adicionarEndereco(Endereco endereco) {
+        enderecos.add(endereco);
+    }
+    public void adicionarMuda(Muda muda) {
+        mudas.add(muda);
     }
 
     @Override
