@@ -13,7 +13,7 @@ public class ServiceContato implements IService<Contato> {
 
 
     @Override
-    public boolean adicionar(Contato contato) {
+    public void adicionar(Contato contato) {
         Optional<Contato> contatoExistente = procurarPorID(contato.getId());
 
         if (contatoExistente.isPresent())
@@ -21,18 +21,17 @@ public class ServiceContato implements IService<Contato> {
 
         contato.setId(BancoDeDados.getNewID());
         BancoDeDados.contatos.add(contato);
-        return true;
+
     }
 
     @Override
-    public Contato deletar(int id) {
+    public void deletar(int id) {
         Optional<Contato> contatoExistente = procurarPorID(id);
 
         if (contatoExistente.isEmpty())
             throw new InformacaoNaoEncontrada("Este contato não existe.");
 
         BancoDeDados.contatos.remove(contatoExistente.get());
-        return contatoExistente.get();
     }
 
     @Override

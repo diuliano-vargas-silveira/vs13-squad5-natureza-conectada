@@ -9,13 +9,13 @@ import java.util.Optional;
 public class ServicosMudas implements IService<Muda> {
 
     @Override
-    public boolean adicionar(Muda o) {
-        return false;
+    public void adicionar(Muda o) {
+
     }
 
     @Override
-    public Muda deletar(int id) {
-        return null;
+    public void deletar(int id) {
+
     }
 
     @Override
