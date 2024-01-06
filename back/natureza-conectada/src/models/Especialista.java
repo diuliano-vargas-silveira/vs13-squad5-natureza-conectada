@@ -11,6 +11,9 @@ public class Especialista extends Usuario {
     private String especializacao;
     private String regiaoResponsavel;
 
+    public Especialista() {
+    }
+
     public Especialista(int id, String nome, String email, String senha, TipoUsuario tipoUsuario, int ID, String especialista, Contato contato, String documento, String especializacao, String regiaoResponsavel) {
         super(id, nome, email, senha, TipoUsuario.ESPECIALISTA);
         this.ID = ID;

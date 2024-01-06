@@ -19,6 +19,7 @@ public class ServiceEspecialista  implements IService<Especialista> {
 
         especialista.setID(BancoDeDados.gerarNovoIdEspecialista());
         BancoDeDados.especialistas.add(especialista);
+        BancoDeDados.usuarios.add(especialista);
     }
 
     @Override
