@@ -18,7 +18,7 @@ public class ServiceEndereco implements IService<Endereco> {
         if (enderecoExistente.isPresent())
             throw new EnderecoExistente();
 
-        endereco.setId(BancoDeDados.getNewID());
+        endereco.setId(BancoDeDados.gerarNovoIdEndereco());
         BancoDeDados.enderecos.add(endereco);
     }
 

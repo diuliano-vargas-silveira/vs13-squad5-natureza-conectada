@@ -62,6 +62,7 @@ public class Cliente extends Usuario {
     public void setMudas(ArrayList<Muda> mudas) {
         this.mudas = mudas;
     }
+
     public ArrayList<Entrega> getEntregas() {
         return entregas;
     }

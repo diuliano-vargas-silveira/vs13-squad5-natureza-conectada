@@ -20,7 +20,7 @@ public class ServiceCliente implements IService<Cliente> {
         if (clienteExistente.isPresent())
             throw new ObjetoExistente("Este cliente já existe");
 
-        cliente.setId(BancoDeDados.getNewID());
+        cliente.setId(BancoDeDados.gerarNovoIdCliente());
         BancoDeDados.clientes.add(cliente);
         BancoDeDados.usuarios.add(cliente);
     }
