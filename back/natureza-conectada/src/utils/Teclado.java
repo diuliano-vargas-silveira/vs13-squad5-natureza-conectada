@@ -10,79 +10,44 @@ public class Teclado {
     private static final String ESPACO = " ";
 
     public static String nextString(String mensagem) {
-        String input = "";
-        boolean isVazio = true;
+        System.out.print(mensagem + ESPACO);
+        String input = scanner.nextLine();
 
-        while (isVazio) {
-            try {
-                System.out.println(mensagem + ESPACO);
-                input = scanner.nextLine();
+        boolean isVazio = isInputVazio(input);
 
-                isVazio = isInputVazio(input);
-
-                if (isVazio) {
-                    throw new ErroDigitacaoException();
-                }
-            } catch (ErroDigitacaoException e) {
-                System.err.println(e.getMessage());
-            }
+        if (isVazio) {
+            throw new ErroDigitacaoException();
         }
 
         return input;
     }
 
     public static Integer nextInt(String mensagem) throws NumberFormatException {
-        String input = "";
-        boolean isValido = true;
-        Integer inputInteiro = null;
+        System.out.print(mensagem + ESPACO);
+        String input = scanner.nextLine();
 
-        while (isValido) {
-            try {
-                System.out.println(mensagem + ESPACO);
-                input = scanner.nextLine();
+        boolean isValido = isInputVazio(input);
 
-                isValido = isInputVazio(input);
-
-                if (isValido) {
-                    throw new ErroDigitacaoException();
-                }
-
-                inputInteiro = Integer.parseInt(input);
-            } catch (ErroDigitacaoException e) {
-                System.err.println(e.getMessage());
-            } catch (NumberFormatException e) {
-                isValido = true;
-                System.err.println("Número inválido! Digite novamente.");
-            }
+        if (isValido) {
+            throw new ErroDigitacaoException();
         }
+
+        Integer inputInteiro = Integer.parseInt(input);
 
         return inputInteiro;
     }
 
     public static Double nextDouble(String mensagem) throws NumberFormatException {
-        String input = "";
-        boolean isValido = true;
-        Double inputFlutuante = null;
+        System.out.print(mensagem + ESPACO);
+        String input = scanner.nextLine();
 
-        while (isValido) {
-            try {
-                System.out.println(mensagem + ESPACO);
-                input = scanner.nextLine();
+        boolean isValido = isInputVazio(input);
 
-                isValido = isInputVazio(input);
-
-                if (isValido) {
-                    throw new ErroDigitacaoException();
-                }
-
-                inputFlutuante = Double.parseDouble(input);
-            } catch (ErroDigitacaoException e) {
-                System.err.println(e.getMessage());
-            } catch (NumberFormatException e) {
-                isValido = true;
-                System.err.println("Número inválido! Digite novamente.");
-            }
+        if (isValido) {
+            throw new ErroDigitacaoException();
         }
+
+        Double inputFlutuante = Double.parseDouble(input);
 
         return inputFlutuante;
     }

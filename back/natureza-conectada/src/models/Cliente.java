@@ -11,17 +11,10 @@ public class Cliente extends Usuario {
     private ArrayList<Muda> mudas = new ArrayList<>();
     private ArrayList<Entrega> entregas = new ArrayList<>();
 
-
-    // Setters e Getters
-    public ArrayList<Entrega> getEntregas() {
-        return entregas;
-    }
-
-    public void setEntregas(ArrayList<Entrega> entregas) {
-        this.entregas = entregas;
-    }
-
     // Construtor
+    public Cliente() {
+    }
+
     public Cliente(int ID, String nome, String email, String senha, String cpf) {
         super(ID, nome, email, senha, TipoUsuario.CLIENTE);
         this.cpf = cpf;
@@ -69,6 +62,14 @@ public class Cliente extends Usuario {
     public void setMudas(ArrayList<Muda> mudas) {
         this.mudas = mudas;
     }
+    public ArrayList<Entrega> getEntregas() {
+        return entregas;
+    }
+
+    public void setEntregas(ArrayList<Entrega> entregas) {
+        this.entregas = entregas;
+    }
+
 
     // Exibição
     private void imprimirLista(ArrayList<?> lista, String tipo) {

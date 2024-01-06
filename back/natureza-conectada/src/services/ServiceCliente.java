@@ -4,7 +4,10 @@ import database.BancoDeDados;
 import exceptions.InformacaoNaoEncontrada;
 import exceptions.ObjetoExistente;
 import interfaces.IService;
+import interfaces.IServiceUsuario;
 import models.Cliente;
+import models.Usuario;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +22,7 @@ public class ServiceCliente implements IService<Cliente> {
 
         cliente.setId(BancoDeDados.getNewID());
         BancoDeDados.clientes.add(cliente);
+        BancoDeDados.usuarios.add(cliente);
     }
 
     @Override
@@ -75,4 +79,6 @@ public class ServiceCliente implements IService<Cliente> {
         cliente.imprimirEntregas();
         System.out.println("------------------------------");
     }
+
+
 }
