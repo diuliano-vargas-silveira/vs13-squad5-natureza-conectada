@@ -13,63 +13,59 @@ public class ServiceMudas implements IService<Muda> {
 
     @Override
     public void adicionar(Muda muda) {
-       Optional<Muda> mudaNoBd = BancoDeDados.mudas.stream().filter(md -> md.getId() == muda.getId()).findFirst() ;
+       Optional<Muda> mudaNoBd = procurar(muda.getId());
+
         if (mudaNoBd.isPresent()){
-           throw  new MudaExistente("Muda existente no Banco de dados ");
-        }else{
-            muda.setId(BancoDeDados.gerarNovoIDMudas());
-            BancoDeDados.mudas.add(muda);
+           throw  new MudaExistente("Muda existente no Banco de dados!");
         }
 
-
+        muda.setId(BancoDeDados.gerarNovoIDMudas());
+        BancoDeDados.mudas.add(muda);
     }
 
     @Override
     public void deletar(int id) {
-        Optional<Muda> mudaASerDeletada = procurarPorID(id);
+        Muda mudaASerDeletada = procurarPorID(id);
 
-        BancoDeDados.mudas.remove(mudaASerDeletada.get());
-
-
-
-
+        BancoDeDados.mudas.remove(mudaASerDeletada);
     }
 
     @Override
     public boolean editar(int id, Muda muda) {
-        Optional<Muda> mudaAtualizada = procurarPorID(id);
+        Muda mudaAtualizada = procurarPorID(id);
 
-        int indexMuda = BancoDeDados.mudas.indexOf(mudaAtualizada.get());
+        int indexMuda = BancoDeDados.mudas.indexOf(mudaAtualizada);
 
-        mudaAtualizada.get().setNome(muda.getNome());
-        mudaAtualizada.get().setAmbienteIdeal(muda.getAmbienteIdeal());
-        mudaAtualizada.get().setPorte(muda.getPorte());
-        mudaAtualizada.get().setDescricao(muda.getDescricao());
-        mudaAtualizada.get().setTipo(muda.getTipo());
-        mudaAtualizada.get().setNomeCientifico(muda.getNomeCientifico());
-        BancoDeDados.mudas.set(indexMuda, mudaAtualizada.get());
+        mudaAtualizada.setNome(muda.getNome());
+        mudaAtualizada.setAmbienteIdeal(muda.getAmbienteIdeal());
+        mudaAtualizada.setPorte(muda.getPorte());
+        mudaAtualizada.setDescricao(muda.getDescricao());
+        mudaAtualizada.setTipo(muda.getTipo());
+        mudaAtualizada.setNomeCientifico(muda.getNomeCientifico());
 
-
-
-
+        BancoDeDados.mudas.set(indexMuda, mudaAtualizada);
 
         return true;
     }
 
     @Override
-    public Optional<Muda> procurarPorID(int id) {
-        Optional<Muda> mudaPorID = BancoDeDados.mudas.stream().filter(md -> md.getId() == id).findFirst();
+    public Muda procurarPorID(int id) {
+        Optional<Muda> mudaPorID = procurar(id);
 
         if(mudaPorID.isEmpty()){
-           throw  new InformacaoNaoEncontrada("Não existe nenhuma muda com este ID");
+           throw  new InformacaoNaoEncontrada("Não existe nenhuma muda com este ID!");
         }
 
-        return mudaPorID;
+        return mudaPorID.get();
     }
 
     @Override
     public List<Muda> listarTodos() {
+        return BancoDeDados.mudas;
+    }
 
-        return BancoDeDados.mudas ;
+    @Override
+    public Optional<Muda> procurar(int id) {
+        return BancoDeDados.mudas.stream().filter(muda -> muda.getId() == id).findFirst();
     }
 }
