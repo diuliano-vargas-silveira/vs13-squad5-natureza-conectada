@@ -28,7 +28,7 @@ public class Entrega implements IEntrega {
     }
 
     @Override
-    public void consultarMuldaEntrega() {
+    public void consultarMudaEntrega() {
         System.out.printf("Descrições da(s) muda(s) da entrega %d:\n", this.id);
 
         for(Muda muda : this.mudas){
