@@ -13,11 +13,13 @@ public class BancoDeDados {
     private static int IDContato = 0;
     private static int IDEndereco = 0;
     private static int IDMudas = 0;
+
+    private static int IDEntrega = 0;
     private static int IDRelatorios = 0;
 
 
 
-    // TODO: Adicionar listas de entregas
+
     public static List<Usuario> usuarios = new ArrayList<>();
     public static List<Cliente> clientes = new ArrayList<>();
     public static List<Especialista> especialistas = new ArrayList<>();
@@ -38,4 +40,27 @@ public class BancoDeDados {
         return IDMudas;
 
     }
+    public static int gerarNovoIdCliente() {
+        IDCliente++;
+        return IDCliente;
+    }
+    public static int gerarNovoIdEndereco() {
+        IDEndereco++;
+        return IDEndereco;
+    }
+    public static int gerarNovoIdEspecialista() {
+        IDEspecialita++;
+        return IDEspecialita;
+    }
+    public static int gerarNovoIdRelatorio() {
+        IDRelatorios++;
+        return IDRelatorios;
+    }
+    public static int gerarNovoIdEntrega() {
+        IDEntrega++;
+        return IDEntrega;
+    }
+
+
+
 }
