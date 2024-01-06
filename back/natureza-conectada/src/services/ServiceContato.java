@@ -19,7 +19,7 @@ public class ServiceContato implements IService<Contato> {
         if (contatoExistente.isPresent())
             throw new ObjetoExistente("Este contato já existe");
 
-        contato.setId(BancoDeDados.getNewID());
+        contato.setId(BancoDeDados.gerarNovoIdContato());
         BancoDeDados.contatos.add(contato);
 
     }

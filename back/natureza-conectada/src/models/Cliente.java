@@ -21,6 +21,7 @@ public class Cliente extends Usuario {
         this.entregas = entregas;
     }
 
+
     // Construtor
     public Cliente(int ID, String nome, String email, String senha, String cpf) {
         super(ID, nome, email, senha, TipoUsuario.CLIENTE);
