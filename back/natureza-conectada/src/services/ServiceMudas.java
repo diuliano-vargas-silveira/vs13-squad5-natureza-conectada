@@ -14,8 +14,8 @@ public class ServiceMudas implements IService<Muda> {
     @Override
     public void adicionar(Muda muda) {
        Optional<Muda> mudaNoBd = BancoDeDados.mudas.stream().filter(md -> md.getId() == muda.getId()).findFirst() ;
-        if (!mudaNoBd.isEmpty()){
-            new MudaExistente("Muda existente no Banco de dados ");
+        if (mudaNoBd.isPresent()){
+           throw  new MudaExistente("Muda existente no Banco de dados ");
         }else{
             muda.setId(BancoDeDados.gerarNovoIDMudas());
             BancoDeDados.mudas.add(muda);
@@ -57,7 +57,7 @@ public class ServiceMudas implements IService<Muda> {
     }
 
     @Override
-    public Optional procurarPorID(int id) {
+    public Optional<Muda> procurarPorID(int id) {
         Optional<Muda> mudaPorID = BancoDeDados.mudas.stream().filter(md -> md.getId() == id).findFirst();
 
         if(mudaPorID.isEmpty()){
