@@ -1,10 +1,10 @@
 package utils;
 
+import enums.Estados;
 import models.*;
 import services.*;
 
 import java.util.List;
-import java.util.Optional;
 
 public class Menu {
     private static int opcaoMenuIncial = 0;
@@ -17,6 +17,7 @@ public class Menu {
     private static final ServiceMudas serviceMudas = new ServiceMudas();
     private static final ServiceUsuario serviceUsuario = new ServiceUsuario();
     private static final ServiceContato serviceContato = new ServiceContato();
+    private static final ServiceEndereco serviceEndereco = new ServiceEndereco();
 
     public static void rodarAplicacao() {
         do {
@@ -96,7 +97,22 @@ public class Menu {
                     break;
                 case 2:
                     String especialidade = Teclado.nextString("| Digite sua especialidade:");
-                    String regiaoResponsavel = Teclado.nextString("| Digite sua região:");
+                    boolean isValido = false;
+                    String regiaoResponsavel = null;
+                    while (!isValido){
+                        regiaoResponsavel = Teclado.nextString("| Digite a sigla da sua região (exemplo: RS):");
+                        for (Estados estados : Estados.values()){
+                            if (estados.toString().equals(regiaoResponsavel)){
+                                isValido = true;
+                                break;
+                            }
+                        }
+                        if (!isValido) {
+                            System.err.println("| Região inválida ");
+                        }
+                    }
+
+
 
                     Especialista novoEspecialista = new Especialista();
 
@@ -105,9 +121,9 @@ public class Menu {
                     novoEspecialista.setSenha(senha);
                     novoEspecialista.setDocumento(documento);
                     novoEspecialista.setEspecializacao(especialidade);
-                    novoEspecialista.setRegiaoResponsavel(regiaoResponsavel);
-
+                    novoEspecialista.setRegiaoResponsavel(Estados.valueOf(regiaoResponsavel));
                     serviceEspecialista.adicionar(novoEspecialista);
+
                     break;
                 default:
                     System.out.println(OPCAO_INVALIDA);
@@ -211,9 +227,54 @@ public class Menu {
     }
 
     private static void menuMeusEnderecos() {
+
+        System.out.println(QUEBRA_DE_LINHA);
+        System.out.println("| Seus endereços");
+
+        Cliente cliente = serviceCliente.procurarPorID(usuarioCadastrado.getId());
+
+        List<Endereco> enderecos = cliente.getEnderecos();
+
+        for (Endereco endereco : enderecos)
+            System.out.println(endereco);
     }
 
     private static void menuCadastrarEnderecos() {
+        String cep = Teclado.nextString("Digite seu CEP: ");
+        String logradouro = Teclado.nextString("Digite o logradouro: ");
+        String numero = Teclado.nextString("Digite o numero: ");
+        String complemento = Teclado.nextString("Digite o complemento: ");
+        String cidade = Teclado.nextString("Digite sua cidade: ");
+
+        boolean isValido = false;
+        String estado = null;
+        while (!isValido){
+            estado = Teclado.nextString("| Digite a sigla do seu estado (exemplo: RS):");
+            for (Estados estados : Estados.values()){
+                if (estados.toString().equals(estado)){
+                    isValido = true;
+                    break;
+                }
+            }
+            if (!isValido) {
+                System.err.println("| Região inválida ");
+            }
+        }
+
+        int tipo = 0;
+        while (true) {
+            if (tipo <= 2 && tipo >= 1) break;
+            tipo = Teclado.nextInt("Escolha o tipo do seu contato:\n1. Residencial\n2. Comercial: ");
+            if (tipo >= 3)
+                System.out.println("Número inválido.");
+        }
+
+        System.out.println("Endereco cadastrado com sucesso!");
+        Endereco endereco = new Endereco(cep, logradouro, numero, complemento, cidade, Estados.valueOf(estado), tipo);
+
+        Cliente cliente = serviceCliente.procurarPorID(usuarioCadastrado.getId());
+        cliente.adicionarEndereco(endereco);
+        serviceEndereco.adicionar(endereco);
     }
 
     private static void menuClienteContatos() {
@@ -251,9 +312,9 @@ public class Menu {
         System.out.println(QUEBRA_DE_LINHA);
         System.out.println("| Seus contatos");
 
-        Optional<Cliente> cliente = serviceCliente.procurarPorID(usuarioCadastrado.getId());
+        Cliente cliente = serviceCliente.procurarPorID(usuarioCadastrado.getId());
 
-        List<Contato> contatos = cliente.get().getContatos();
+        List<Contato> contatos = cliente.getContatos();
 
         for (Contato contato : contatos)
             System.out.println(contato);
@@ -274,8 +335,8 @@ public class Menu {
         System.out.println("Contato cadastrado com sucesso!");
         Contato novoContato = new Contato(descricao, numero, tipo);
 
-        Optional<Cliente> cliente = serviceCliente.procurarPorID(usuarioCadastrado.getId());
-        cliente.get().adicionarContato(novoContato);
+        Cliente cliente = serviceCliente.procurarPorID(usuarioCadastrado.getId());
+        cliente.adicionarContato(novoContato);
         serviceContato.adicionar(novoContato);
 
 
