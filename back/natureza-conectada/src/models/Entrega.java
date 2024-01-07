@@ -15,10 +15,10 @@ public class Entrega implements IEntrega {
 
     }
     public Entrega(int id, ArrayList<Muda> mudas, StatusEntrega status, Cliente cliente){
-        setId(id);
-        setMudas(mudas);
-        setStatus(status);
-        setCliente(cliente);
+        this.id = id;
+        this.mudas = mudas;
+        this.status = status;
+        this.cliente = cliente ;
     }
     @Override
     public void atualizarEntrega(StatusEntrega status) {
