@@ -33,9 +33,9 @@ public class ServiceEntrega implements IService<Entrega>{
         Entrega entregaCadastrada = procurarPorID(id);
         
         entregaAtualizada.setId(id);
-        
-        int indiceEntrega = BancoDeDados.entregas.indexOf(entregaCadastrada);
-        BancoDeDados.entregas.set(indiceEntrega, entregaAtualizada);
+        entregaCadastrada.setMudas(entregaAtualizada.getMudas());
+        entregaCadastrada.setStatus(entregaAtualizada.getStatus());
+        entregaCadastrada.setCliente(entregaAtualizada.getCliente());
         return true;
     }
 
