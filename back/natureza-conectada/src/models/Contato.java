@@ -61,4 +61,5 @@ public class Contato {
     public String toString() {
         return "\nID: " + getId() + "\nDescrição: " + getDescricao() + "\nNumero: " + getNumero() + "\nTipo: " + getTipo();
     }
+
 }

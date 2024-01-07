@@ -580,7 +580,7 @@ public class Menu {
                 System.err.println(e.getMessage());
             }
         }
-        return tipoContato;
+        return tipoContato + 1;
     }
 
     private static void menuEspecialistaRelatorio() {
