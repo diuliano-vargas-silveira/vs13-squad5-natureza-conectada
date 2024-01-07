@@ -13,8 +13,8 @@ public class ServiceEntrega implements IService<Entrega>{
 
     @Override
     public void adicionar(Entrega entrega) {
-        Entrega entregaCadastrada = procurarPorID(entrega.getId());
-        if(entregaCadastrada != null){
+        Optional <Entrega> entregaCadastrada = procurar(entrega.getId());
+        if(entregaCadastrada.isPresent()){
             throw new ObjetoExistente("Está entrega já existe.");
         }
         entrega.setId(BancoDeDados.gerarNovoIdEntrega());
@@ -24,19 +24,16 @@ public class ServiceEntrega implements IService<Entrega>{
     @Override
     public void deletar(int id) {
         Entrega entregaDeletar = procurarPorID(id);
-        if(entregaDeletar == null){
-            throw new InformacaoNaoEncontrada("Está entrega não existe.");
-        }
+        
         BancoDeDados.entregas.remove(entregaDeletar);
     }
 
     @Override
     public boolean editar(int id, Entrega entregaAtualizada) {
         Entrega entregaCadastrada = procurarPorID(id);
-        if(entregaCadastrada == null){
-            throw new InformacaoNaoEncontrada("Está entrega não existe.");
-        }
+        
         entregaAtualizada.setId(id);
+        
         int indiceEntrega = BancoDeDados.entregas.indexOf(entregaCadastrada);
         BancoDeDados.entregas.set(indiceEntrega, entregaAtualizada);
         return true;
