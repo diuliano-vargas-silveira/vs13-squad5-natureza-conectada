@@ -13,14 +13,13 @@ import java.util.List;
 import java.util.Optional;
 
 public class ServiceRelatorio implements IService<Relatorio> {
-
     @Override
     public void adicionar(Relatorio relatorio) {
         if (relatorio == null) {
             throw new IllegalArgumentException("Relatório não pode ser nulo");
         }
 
-        Optional<Relatorio> relatorioExistente = procurarPorID(relatorio.getId());
+        Optional<Relatorio> relatorioExistente = procurar(relatorio.getId());
 
         if (relatorioExistente.isPresent()) {
             throw new RelatorioExistente();
@@ -32,44 +31,37 @@ public class ServiceRelatorio implements IService<Relatorio> {
 
     @Override
     public void deletar(int id) {
-        Optional<Relatorio> relatorioExistente = procurarPorID(id);
+        Relatorio relatorioExistente = procurarPorID(id);
 
-        if (relatorioExistente.isEmpty())
-            throw new InformacaoNaoEncontrada("Este relatório não existe.");
-
-        BancoDeDados.relatorios.remove(relatorioExistente.get());
+        BancoDeDados.relatorios.remove(relatorioExistente);
     }
 
     @Override
     public boolean editar(int id, Relatorio relatorio) {
-        Optional<Relatorio> relatorioExistente = procurarPorID(id);
+        Relatorio relatorioEncontrado = procurarPorID(id);
 
-        if (relatorioExistente.isEmpty())
-            throw new InformacaoNaoEncontrada("Este relatório não existe.");
+        int indexRelatorio = BancoDeDados.relatorios.indexOf(relatorioEncontrado);
 
-        int indexRelatorio = BancoDeDados.relatorios.indexOf(relatorioExistente.get());
+        relatorioEncontrado.setDono(relatorio.getDono());
+        relatorioEncontrado.setAvaliador(relatorio.getAvaliador());
+        relatorioEncontrado.setMuda(relatorio.getMuda());
+        relatorioEncontrado.setEstadoMuda(relatorio.getEstadoMuda());
+        relatorioEncontrado.setSugestoes(relatorio.getSugestoes());
+        relatorioEncontrado.setAvaliacaoEspecialista(relatorio.getAvaliacaoEspecialista());
 
-        relatorioExistente.get().setDono(relatorio.getDono());
-        relatorioExistente.get().setAvaliador(relatorio.getAvaliador());
-        relatorioExistente.get().setAvaliador(relatorio.getAvaliador());
-        relatorioExistente.get().setMuda(relatorio.getMuda());
-        relatorioExistente.get().setEstadoMuda(relatorio.getEstadoMuda());
-        relatorioExistente.get().setSugestoes(relatorio.getSugestoes());
-        relatorioExistente.get().setAvaliacaoEspecialista(relatorio.getAvaliacaoEspecialista());
-
-        BancoDeDados.relatorios.set(indexRelatorio, relatorioExistente.get());
+        BancoDeDados.relatorios.set(indexRelatorio, relatorioEncontrado);
 
         return true;
     }
 
     @Override
-    public Optional<Relatorio> procurarPorID(int id) {
-        Optional<Relatorio> relatorioPorID = BancoDeDados.relatorios.stream().filter(md -> md.getId() == id).findFirst();
+    public Relatorio procurarPorID(int id) {
+        Optional<Relatorio> relatorioPorID = procurar(id);
 
         if(relatorioPorID.isEmpty()){
             throw  new InformacaoNaoEncontrada("Não existe nenhum relatório com este ID");
         }
-        return relatorioPorID;
+        return relatorioPorID.get();
     }
 
     @Override
@@ -77,4 +69,8 @@ public class ServiceRelatorio implements IService<Relatorio> {
         return BancoDeDados.relatorios;
     }
 
+    @Override
+    public Optional<Relatorio> procurar(int id) {
+        return BancoDeDados.relatorios.stream().filter(relatorio -> relatorio.getId() == id).findFirst();
+    }
 }
