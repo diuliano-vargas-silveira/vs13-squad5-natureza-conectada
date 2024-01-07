@@ -69,7 +69,7 @@ public class Cliente extends Usuario {
 
 
     // Exibição
-    public void imprimirLista(ArrayList<?> lista, String tipo) {
+    private void imprimirLista(ArrayList<?> lista, String tipo) {
         System.out.println("Lista de " + tipo + ":");
         for (Object item : lista) {
             if (item != null) {
