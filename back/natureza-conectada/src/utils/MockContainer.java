@@ -191,6 +191,18 @@ public class MockContainer {
         Entrega entrega9 = new Entrega( listaDeMudas9, StatusEntrega.ENVIADO, null);
         Entrega entrega10 = new Entrega( listaDeMudas10, StatusEntrega.ENTREGUE, null);
 
+        ServiceEntrega serviceEntrega = new ServiceEntrega();
+        serviceEntrega.adicionar(entrega1);
+        serviceEntrega.adicionar(entrega2);
+        serviceEntrega.adicionar(entrega3);
+        serviceEntrega.adicionar(entrega4);
+        serviceEntrega.adicionar(entrega5);
+        serviceEntrega.adicionar(entrega6);
+        serviceEntrega.adicionar(entrega7);
+        serviceEntrega.adicionar(entrega8);
+        serviceEntrega.adicionar(entrega9);
+        serviceEntrega.adicionar(entrega10);
+
 
         // Administrador - criação de objetos, adoções ao banco de dados
         ServiceAdmin serviceAdmin = new ServiceAdmin();

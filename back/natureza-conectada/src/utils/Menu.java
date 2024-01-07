@@ -635,9 +635,9 @@ public class Menu {
                         int id = Teclado.nextInt("| Digite o ID da entrega escolhida");
                         Entrega entregaEscolhida = serviceEntrega.procurarPorID(id);
                         System.out.println("| Digite o status da entrega escolhida");
-                        System.out.println("| 0 - Recebido");
-                        System.out.println("| 1 - Enviado");
-                        System.out.println("| 2 - Entregue");
+                        System.out.println("| 1 - Recebido");
+                        System.out.println("| 2 - Enviado");
+                        System.out.println("| 3 - Entregue");
                         int status = Teclado.nextInt("| Digite o novo status da entrega escolhida");
                         switch (status) {
                             case 1:
