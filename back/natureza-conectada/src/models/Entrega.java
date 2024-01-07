@@ -58,7 +58,7 @@ public class Entrega implements IEntrega {
                 "\n Endereço de entrega: "+this.enderecoDeEntrega
 
         +"\nStatus: " + String.valueOf(this.status)
-        + "\nDados do cliente: " + this.cliente.toString() + "\n";
+        + "\nDados do cliente: " + this.cliente + "\n";
     }
 
     public void setId(int id) {this.id = id;}
