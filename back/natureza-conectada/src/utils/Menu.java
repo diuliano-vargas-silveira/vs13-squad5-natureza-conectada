@@ -1,15 +1,10 @@
 package utils;
 
-import models.Cliente;
-import models.Especialista;
-import models.Muda;
-import models.Usuario;
-import services.ServiceCliente;
-import services.ServiceEspecialista;
-import services.ServiceMudas;
-import services.ServiceUsuario;
+import models.*;
+import services.*;
 
 import java.util.List;
+import java.util.Optional;
 
 public class Menu {
     private static int opcaoMenuIncial = 0;
@@ -21,6 +16,7 @@ public class Menu {
     private static final ServiceEspecialista serviceEspecialista = new ServiceEspecialista();
     private static final ServiceMudas serviceMudas = new ServiceMudas();
     private static final ServiceUsuario serviceUsuario = new ServiceUsuario();
+    private static final ServiceContato serviceContato = new ServiceContato();
 
     public static void rodarAplicacao() {
         do {
@@ -251,9 +247,38 @@ public class Menu {
     }
 
     private static void menuMeusContato() {
+
+        System.out.println(QUEBRA_DE_LINHA);
+        System.out.println("| Seus contatos");
+
+        Optional<Cliente> cliente = serviceCliente.procurarPorID(usuarioCadastrado.getId());
+
+        List<Contato> contatos = cliente.get().getContatos();
+
+        for (Contato contato : contatos)
+            System.out.println(contato);
+
     }
 
     private static void menuCadastrarContato() {
+        String descricao = Teclado.nextString("Digite a descrição: ");
+        int tipo = 0;
+        while (true) {
+            if (tipo <= 2 && tipo >= 1) break;
+            tipo = Teclado.nextInt("Escolha o tipo do seu contato:\n1. Residencial\n2. Comercial: ");
+            if (tipo >= 3)
+                System.out.println("Número inválido.");
+        }
+
+        String numero = Teclado.nextString("Digite seu número: ");
+        System.out.println("Contato cadastrado com sucesso!");
+        Contato novoContato = new Contato(descricao, numero, tipo);
+
+        Optional<Cliente> cliente = serviceCliente.procurarPorID(usuarioCadastrado.getId());
+        cliente.get().adicionarContato(novoContato);
+        serviceContato.adicionar(novoContato);
+
+
     }
 
     private static void menuClienteRelatorio() {

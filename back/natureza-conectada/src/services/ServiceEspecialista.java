@@ -17,7 +17,7 @@ public class ServiceEspecialista  implements IService<Especialista> {
         if (especialistaExistente.isPresent())
             throw new EspecialistaExistente();
 
-        especialista.setID(BancoDeDados.gerarNovoIdEspecialista());
+        especialista.setId(BancoDeDados.gerarNovoIdEspecialista());
         BancoDeDados.especialistas.add(especialista);
         BancoDeDados.usuarios.add(especialista);
     }
@@ -39,7 +39,7 @@ public class ServiceEspecialista  implements IService<Especialista> {
         if (especialistaExistente.isEmpty())
             throw new InformacaoNaoEncontrada("Este Especialista não existe.");
 
-        especialistaEditado.setID(id);
+        especialistaEditado.setId(id);
         int indexEspecialista = BancoDeDados.especialistas.indexOf(especialistaExistente.get());
         BancoDeDados.especialistas.set(indexEspecialista, especialistaEditado);
         return true;
