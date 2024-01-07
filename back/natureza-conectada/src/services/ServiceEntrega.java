@@ -13,44 +13,53 @@ public class ServiceEntrega implements IService<Entrega>{
 
     @Override
     public void adicionar(Entrega entrega) {
-        Optional<Entrega> entregaCadastrada = procurarPorID(entrega.getId());
-        if(entregaCadastrada.isPresent()){
+        Entrega entregaCadastrada = procurarPorID(entrega.getId());
+        if(entregaCadastrada != null){
             throw new ObjetoExistente("Está entrega já existe.");
         }
-        entrega.setId(BancoDeDados.getNewID());
+        entrega.setId(BancoDeDados.gerarNovoIdEntrega());
         BancoDeDados.entregas.add(entrega);
     }
 
     @Override
     public void deletar(int id) {
-        Optional<Entrega> entregaDeletar = procurarPorID(id);
-        if(entregaDeletar.isEmpty()){
-            throw new InformacaoNaoEncontrada("Está entraga não existe.");
+        Entrega entregaDeletar = procurarPorID(id);
+        if(entregaDeletar == null){
+            throw new InformacaoNaoEncontrada("Está entrega não existe.");
         }
-        BancoDeDados.entregas.remove(entregaDeletar.get());
+        BancoDeDados.entregas.remove(entregaDeletar);
     }
 
     @Override
     public boolean editar(int id, Entrega entregaAtualizada) {
-        Optional<Entrega> entregaCadastrada = procurarPorID(id);
-        if(entregaCadastrada.isEmpty()){
+        Entrega entregaCadastrada = procurarPorID(id);
+        if(entregaCadastrada == null){
             throw new InformacaoNaoEncontrada("Está entrega não existe.");
         }
         entregaAtualizada.setId(id);
-        int indiceEntrega = BancoDeDados.entregas.indexOf(entregaCadastrada.get());
+        int indiceEntrega = BancoDeDados.entregas.indexOf(entregaCadastrada);
         BancoDeDados.entregas.set(indiceEntrega, entregaAtualizada);
         return true;
     }
 
     @Override
-    public Optional procurarPorID(int id) {
-        return BancoDeDados.entregas.stream()
-        .filter(entrega -> entrega.getId() == id)
-        .findFirst();
+    public Entrega procurarPorID(int id) {
+        Optional<Entrega> entregaCadastrada = procurar(id);
+        if(entregaCadastrada.isEmpty()){
+            throw new InformacaoNaoEncontrada("Não existe nenhuma entrega com este ID!");
+        }
+        return entregaCadastrada.get();
     }
 
     @Override
     public List listarTodos() {
         return BancoDeDados.entregas;
+    }
+
+    @Override
+    public Optional<Entrega> procurar(int id) {
+        return BancoDeDados.entregas.stream()
+        .filter(entrega -> entrega.getId() == id)
+        .findFirst();
     }
 }
