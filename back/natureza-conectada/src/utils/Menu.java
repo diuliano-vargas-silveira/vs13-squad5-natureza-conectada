@@ -395,28 +395,29 @@ public class Menu {
 
                     case 1:
 
-                        clienteLogado.imprimirLista(clienteLogado.getMuda(),"| Mudas");
+                        serviceCliente.imprimirMudasCliente(clienteLogado);
                         int idDaMudaEscolhida =  Teclado.nextInt("| Selecione o ID da muda");
                         Muda mudaSelecionado = serviceMudas.procurarPorID(idDaMudaEscolhida);
                         String estadoDaMuda = Teclado.nextString("| Diga para nós, como está a muda?");
                         String sugestao = Teclado.nextString("| digite alguma sugestão para nós");
                         Relatorio relatorio = new Relatorio(clienteLogado,mudaSelecionado,estadoDaMuda,sugestao);
                         System.out.println("| prévia do relatório ");
-                        System.out.println(relatorio.toString());
+                        serviceRelatorio.imprimirRelatorio(relatorio);
                         serviceRelatorio.adicionar(relatorio);
                         menuCliente();
                         break;
                     case 2:
-                        System.out.println("| Segue relatório abaixo");
-                        serviceRelatorio.listarTodos();
+                        System.out.println("| Segue relatórios abaixo");
+                        serviceRelatorio.buscarPorCliente(clienteLogado);
+
                         menuCliente();
                         break;
                     case 3:
                         System.out.println("| Lista de relatórios");
-                        serviceRelatorio.listarTodos();
+                        serviceRelatorio.buscarPorCliente(clienteLogado);
                         int relatorioSelecionado = Teclado.nextInt("| Seleciona o ID do relatorio");
                         System.out.println("| Editando o relatorio");
-                        clienteLogado.imprimirLista(clienteLogado.getMuda(),"Mudas");
+                        serviceCliente.imprimirMudasCliente(clienteLogado);
                         int idMudaEscolhida =  Teclado.nextInt("| Selecione o ID da muda");
                         Muda mudaRelatorioEditado = serviceMudas.procurarPorID(idMudaEscolhida);
                         String estadoDaMudaEditado = Teclado.nextString("| Diga para nós, como está a muda?");

@@ -59,4 +59,6 @@ public class ServiceEntrega implements IService<Entrega>{
         .filter(entrega -> entrega.getId() == id)
         .findFirst();
     }
+
+
 }
