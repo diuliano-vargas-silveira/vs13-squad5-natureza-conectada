@@ -5,9 +5,7 @@ import exceptions.InformacaoNaoEncontrada;
 import exceptions.ObjetoExistente;
 import interfaces.IService;
 import interfaces.IServiceUsuario;
-import models.Cliente;
-import models.Relatorio;
-import models.Usuario;
+import models.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -71,6 +69,20 @@ public class ServiceCliente implements IService<Cliente> {
 
     public Optional<Cliente> procurarPorEmail(String email) {
         return BancoDeDados.clientes.stream().filter(cliente -> cliente.getEmail().equals(email)).findFirst();
+    }
+
+    // Métodos para adicionar aos arrays
+    public void adicionarContato(Cliente cliente, Contato contato) {
+        cliente.adicionarContato(contato);
+    }
+    public void adicionarEndereco(Cliente cliente, Endereco endereco) {
+        cliente.adicionarEndereco(endereco);
+    }
+    public void adicionarMuda(Cliente cliente, Muda muda) {
+        cliente.adicionarMuda(muda);
+    }
+    public void adicionarEntregas(Cliente cliente, Entrega entrega) {
+        cliente.adicionarEntregas(entrega);
     }
 
     //Métodos de impressão

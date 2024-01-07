@@ -5,7 +5,6 @@ import enums.TipoUsuario;
 
 public class Especialista extends Usuario {
 
-
     private Contato contato;
     private String documento;
     private String especializacao;
@@ -21,8 +20,6 @@ public class Especialista extends Usuario {
         this.especializacao = especializacao;
         this.regiaoResponsavel = regiaoResponsavel;
     }
-
-
 
 
     public Contato getContato() {
@@ -56,6 +53,7 @@ public class Especialista extends Usuario {
     public void setRegiaoResponsavel(Estados regiaoResponsavel) {
         this.regiaoResponsavel = regiaoResponsavel;
     }
+
 
     @Override
     public String toString() {

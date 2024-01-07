@@ -107,6 +107,9 @@ public class Cliente extends Usuario {
     public void adicionarMuda(Muda muda) {
         mudas.add(muda);
     }
+    public void adicionarEntregas(Entrega entrega) {
+        entregas.add(entrega);
+    }
 
     @Override
     public String toString() {
