@@ -3,11 +3,9 @@ package utils;
 import java.util.ArrayList;
 import enums.StatusEntrega;
 import enums.Estados;
+import enums.TipoUsuario;
 import models.*;
-import services.ServiceCliente;
-import services.ServiceContato;
-import services.ServiceEndereco;
-import services.ServiceMudas;
+import services.*;
 
 public class MockContainer {
 
@@ -35,6 +33,7 @@ public class MockContainer {
         Endereco endereco15 = new Endereco("57752", "Praça da Estação", "13001", "Mercado Central", "Belo Horizonte", Estados.MG, 1);
         Endereco endereco16 = new Endereco("100001", "Recife Antigo", "-", "Praia de Boa Viagem", "Recife", Estados.PE, 2);
         Endereco endereco17 = new Endereco("282002", "Ponta Negra", "1", "Centro de Turismo de Natal", "Natal", Estados.RN, 1);
+
 
         ServiceEndereco serviceEndereco = new ServiceEndereco();
         serviceEndereco.adicionar(endereco1);
@@ -74,6 +73,10 @@ public class MockContainer {
         Contato contato16 = new Contato("Empresa", "+55 21 1234-5678", 2);
         Contato contato17 = new Contato("Celular", "+55 31 8765-4321", 1);
         Contato contato18 = new Contato("Empresa", "+55 85 2345-6789", 2);
+        Contato contato19 = new Contato("Empresa", "+51 85 2345-4000", 2);
+        Contato contato20 = new Contato("Empresa", "+51 85 2345-5000", 2);
+        Contato contato21 = new Contato("Empresa", "+51 85 2345-6000", 2);
+        Contato contato22 = new Contato("Empresa", "+51 85 2345-7000", 2);
 
         ServiceContato serviceContato = new ServiceContato();
         serviceContato.adicionar(contato1);
@@ -94,6 +97,10 @@ public class MockContainer {
         serviceContato.adicionar(contato16);
         serviceContato.adicionar(contato17);
         serviceContato.adicionar(contato18);
+        serviceContato.adicionar(contato19);
+        serviceContato.adicionar(contato20);
+        serviceContato.adicionar(contato21);
+        serviceContato.adicionar(contato22);
 
         // Mudas - criação de objetos, adições ao banco de dados e criação de listas
         Muda muda1 = new Muda(1, "Rosa", "Rosa gallica", 1, "Jardim", "Belíssima rosa com pétalas vermelhas");
@@ -186,7 +193,7 @@ public class MockContainer {
         Entrega entrega10 = new Entrega(10, listaDeMudas10, StatusEntrega.ENTREGUE, null);
 
 
-        // Clientes e suas atribuições
+        // Clientes - criação de objetos, adições ao banco de dados
         ServiceCliente serviceCliente = new ServiceCliente();
 
         Cliente cliente1 = new Cliente("Willian Cavalheiro", "willian@dbc.com.br", "senhadificil", "123.456.789-09");
@@ -281,6 +288,19 @@ public class MockContainer {
         serviceCliente.adicionarMuda(cliente10, muda17);
         serviceCliente.adicionarMuda(cliente10, muda18);
         serviceCliente.adicionarEntregas(cliente10, entrega10);
+
+        // Especialistas - criação de objetos e adições ao banco de dados
+        ServiceEspecialista serviceEspecialista = new ServiceEspecialista();
+
+        Especialista especialista1 = new Especialista("Rafael Lazzari", "rlazzari@dbc.com.br", "senhadificil", contato19,"999.999.444-00", "Horticultura Ornamental", Estados.SP);
+        Especialista especialista2 = new Especialista("Ályson Campos", "alysonc@dbc.com.br", "senhadificil", contato20,"999.999.444-13", "Agronomia", Estados.RS);
+        Especialista especialista3 = new Especialista("Mayra Amaral", "mayraa@dbc.com.br", "senhadificil", contato21,"999.999.444-25", "Silvicultura", Estados.PB);
+        Especialista especialista4 = new Especialista("Cristina Jung", "crisjung@dbc.com.br", "senhadificil", contato22,"999.999.444-12", "Botânica Aplicada:", Estados.AM);
+
+        serviceEspecialista.adicionar(especialista1);
+        serviceEspecialista.adicionar(especialista2);
+        serviceEspecialista.adicionar(especialista3);
+        serviceEspecialista.adicionar(especialista4);
 
     }
 }
