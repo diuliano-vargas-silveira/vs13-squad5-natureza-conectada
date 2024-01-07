@@ -192,6 +192,12 @@ public class MockContainer {
         Entrega entrega10 = new Entrega( listaDeMudas10, StatusEntrega.ENTREGUE, null);
 
 
+        // Administrador - criação de objetos, adoções ao banco de dados
+        ServiceAdmin serviceAdmin = new ServiceAdmin();
+
+        Admin admin = new Admin("Administrador", "administrador@naturezaconectada.com", "senhadificil");
+        serviceAdmin.adicionar(admin);
+
         // Clientes - criação de objetos, adições ao banco de dados
         ServiceCliente serviceCliente = new ServiceCliente();
 

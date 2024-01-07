@@ -1,11 +1,11 @@
 package utils;
 
+import database.BancoDeDados;
 import enums.Estados;
 import enums.StatusEntrega;
 import enums.TipoUsuario;
 import models.*;
 import services.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,6 +15,7 @@ public class Menu {
     private static final String QUEBRA_DE_LINHA = "| -------------------------------------------------------------------------- |";
     private static final String OPCAO_INVALIDA = "| Opção inválida! Digite novamente.";
     private static final int SAIR_PROGRAMA = 3;
+    private static final ServiceAdmin serviceAdmin = new ServiceAdmin();
     private static final ServiceCliente serviceCliente = new ServiceCliente();
     private static final ServiceEspecialista serviceEspecialista = new ServiceEspecialista();
     private static final ServiceMudas serviceMudas = new ServiceMudas();
@@ -51,6 +52,7 @@ public class Menu {
                     break;
                 case 3:
                     System.out.println("| Muito obrigado por usar o programa S2!");
+                    System.exit(0);
                     break;
                 default:
                     System.out.println(OPCAO_INVALIDA);
@@ -77,7 +79,7 @@ public class Menu {
                     menuEspecialista();
                 }
                 case ADMIN -> {
-                    menuIncial();
+                    menuAdmin();
                 }
             }
         } catch (Exception e) {
@@ -95,13 +97,17 @@ public class Menu {
             System.out.println("| 2 - Especialista");
             int tipoUsuario = Teclado.nextInt("| Digite seu tipo de usuário:");
 
-            String nome = Teclado.nextString("| Digite seu nome:");
-            String email = Teclado.nextString("| Digite seu email:");
-            String senha = Teclado.nextString("| Digite sua senha:");
-            String documento = Teclado.nextString("| Digite seu CPF ou CNPJ:");
+            String nome = null;
+            String email = null;
+            String senha = null;
+            String documento = null;
 
             switch (tipoUsuario) {
                 case 1:
+                    nome = Teclado.nextString("| Digite seu nome:");
+                    email = Teclado.nextString("| Digite seu email:");
+                    senha = Teclado.nextString("| Digite sua senha:");
+                    documento = Teclado.nextString("| Digite seu CPF ou CNPJ:");
                     Cliente novoCliente = new Cliente();
 
                     novoCliente.setNome(nome);
@@ -113,6 +119,10 @@ public class Menu {
                     serviceCliente.adicionar(novoCliente);
                     break;
                 case 2:
+                    nome = Teclado.nextString("| Digite seu nome:");
+                    email = Teclado.nextString("| Digite seu email:");
+                    senha = Teclado.nextString("| Digite sua senha:");
+                    documento = Teclado.nextString("| Digite seu CPF ou CNPJ:");
                     String especialidade = Teclado.nextString("| Digite sua especialidade:");
                     boolean isValido = false;
                     String regiaoResponsavel = null;
@@ -534,6 +544,83 @@ public class Menu {
                 System.err.println(e.getMessage());
             }
         }
+    }
+    private static void menuAdmin() {
+        int opcao = 0;
+        while (opcao != 8) {
+            try {
+                System.out.println(QUEBRA_DE_LINHA);
+                System.out.println("| Bem-vindo " + usuarioCadastrado.getNome());
+                System.out.println("| 1 - Listar todos os clientes");
+                System.out.println("| 2 - Listar todos os especialistas");
+                System.out.println("| 3 - Listar todos os usuários");
+                System.out.println("| 4 - Listar todos os relatórios");
+                System.out.println("| 5 - Entregas");
+                System.out.println("| 6 - Mudas");
+                System.out.println("| 7 - Editar minha conta");
+                System.out.println("| 8 - Sair");
+                opcao = Teclado.nextInt("| Digite sua opção:");
+
+                switch (opcao) {
+                    case 1:
+                        System.out.println("| Listando todos os clientes: ");
+                        System.out.println(serviceCliente.listarTodos());
+                        break;
+                    case 2:
+                        System.out.println("| Listando todos os especialistas: ");
+                        System.out.println(serviceEspecialista.listarTodos());
+                        break;
+                    case 3:
+                        System.out.println("| Listando todos os usuários: ");
+                        System.out.println("\n| Administradores: ");
+                        System.out.println(serviceAdmin.listarTodos());
+                        System.out.println("\n| Clientes:");
+                        System.out.println(serviceCliente.listarTodos());
+                        System.out.println("\n| Especialistas:");
+                        System.out.println(serviceEspecialista.listarTodos());
+                        break;
+                    case 4:
+                        System.out.println("| Listando todos os relatórios: ");
+                        System.out.println(serviceRelatorio.listarTodos());
+                        break;
+                    case 5:
+                        menuAdminEntregas();
+                        break;
+                    case 6:
+                        menuAdminMudas();
+                        break;
+                    case 7:
+                        String nome = Teclado.nextString("| Digite seu novo nome: ");
+                        String email = Teclado.nextString("| Digite seu novo email: ");
+                        String senha = Teclado.nextString("| Digite sua nova senha: ");
+
+
+                        usuarioCadastrado.setNome(nome);
+                        usuarioCadastrado.setEmail(email);
+                        usuarioCadastrado.setSenha(senha);
+
+                        System.out.println("| Conta editada com sucesso!");
+                        break;
+                    case 8:
+
+                        System.out.println("| Saindo da conta...");
+                        break;
+                    default:
+                        System.out.println(OPCAO_INVALIDA);
+                }
+
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        }
+    }
+
+    private static void menuAdminEntregas() {
+
+    }
+
+    private static void menuAdminMudas() {
+
     }
 
     private static void menuEditarContato() {
