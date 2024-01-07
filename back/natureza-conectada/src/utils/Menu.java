@@ -2,11 +2,13 @@ package utils;
 
 import enums.Estados;
 import enums.StatusEntrega;
+import enums.TipoUsuario;
 import models.*;
 import services.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Menu {
     private static int opcaoMenuIncial = 0;
@@ -16,12 +18,11 @@ public class Menu {
     private static final int SAIR_PROGRAMA = 3;
     private static final ServiceCliente serviceCliente = new ServiceCliente();
     private static final ServiceEspecialista serviceEspecialista = new ServiceEspecialista();
-
-    private static final ServiceRelatorio serviceRelatorio = new ServiceRelatorio();
     private static final ServiceMudas serviceMudas = new ServiceMudas();
     private static final ServiceUsuario serviceUsuario = new ServiceUsuario();
     private static final ServiceContato serviceContato = new ServiceContato();
     private static final ServiceEndereco serviceEndereco = new ServiceEndereco();
+    private static final ServiceRelatorio serviceRelatorio = new ServiceRelatorio();
 
     public static void rodarAplicacao() {
         do {
@@ -67,7 +68,17 @@ public class Menu {
 
             usuarioCadastrado = serviceUsuario.logar(email, senha);
 
-            menuCliente();
+            switch (usuarioCadastrado.getTipoUsuario()) {
+                case CLIENTE -> {
+                    menuCliente();
+                }
+                case ESPECIALISTA -> {
+                    menuEspecialista();
+                }
+                case ADMIN -> {
+                    menuIncial();
+                }
+            }
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
@@ -96,6 +107,7 @@ public class Menu {
                     novoCliente.setEmail(email);
                     novoCliente.setSenha(senha);
                     novoCliente.setCpf(documento);
+                    novoCliente.setTipoUsuario(TipoUsuario.CLIENTE);
 
                     serviceCliente.adicionar(novoCliente);
                     break;
@@ -116,7 +128,16 @@ public class Menu {
                         }
                     }
 
+                    System.out.println("| Agora vamos criar seu Contato!");
+                    String decricao = Teclado.nextString("| Digite a descrição dele:");
+                    String numero = Teclado.nextString("| Digite seu telefone:");
 
+                    int tipoContato = 0;
+                    tipoContato = getTipoContato(tipoContato);
+
+                    Contato contato = new Contato(decricao, numero, tipoContato);
+
+                    serviceContato.adicionar(contato);
 
                     Especialista novoEspecialista = new Especialista();
 
@@ -126,8 +147,10 @@ public class Menu {
                     novoEspecialista.setDocumento(documento);
                     novoEspecialista.setEspecializacao(especialidade);
                     novoEspecialista.setRegiaoResponsavel(Estados.valueOf(regiaoResponsavel));
-                    serviceEspecialista.adicionar(novoEspecialista);
+                    novoEspecialista.setContato(contato);
+                    novoEspecialista.setTipoUsuario(TipoUsuario.ESPECIALISTA);
 
+                    serviceEspecialista.adicionar(novoEspecialista);
                     break;
                 default:
                     System.out.println(OPCAO_INVALIDA);
@@ -295,8 +318,7 @@ public class Menu {
         }
 
         int tipo = 0;
-        while (true) {
-            if (tipo <= 2 && tipo >= 1) break;
+        while (tipo > 2 || tipo < 1) {
             tipo = Teclado.nextInt("Escolha o tipo do seu contato:\n1. Residencial\n2. Comercial: ");
             if (tipo >= 3)
                 System.out.println("Número inválido.");
@@ -357,8 +379,7 @@ public class Menu {
     private static void menuCadastrarContato() {
         String descricao = Teclado.nextString("Digite a descrição: ");
         int tipo = 0;
-        while (true) {
-            if (tipo <= 2 && tipo >= 1) break;
+        while (tipo > 2 || tipo < 1) {
             tipo = Teclado.nextInt("Escolha o tipo do seu contato:\n1. Residencial\n2. Comercial: ");
             if (tipo >= 3)
                 System.out.println("Número inválido.");
@@ -381,7 +402,7 @@ public class Menu {
 
 
 
-        while (opcao != 1) {
+        while (opcao != 4) {
             try {
                 System.out.println(QUEBRA_DE_LINHA);
                 System.out.println("| Menu de Relatório");
@@ -468,6 +489,177 @@ public class Menu {
                 }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    private static void menuEspecialista() {
+        int opcao = 0;
+        while (opcao != 6) {
+            try {
+                System.out.println(QUEBRA_DE_LINHA);
+                System.out.println("| Bem-vindo " + usuarioCadastrado.getNome());
+                System.out.println("| 1 - Relatório");
+                System.out.println("| 2 - Editar Contato");
+                System.out.println("| 3 - Sair");
+                opcao = Teclado.nextInt("| Digite sua opção:");
+
+                switch (opcao) {
+                    case 1:
+                        menuEspecialistaRelatorio();
+                        break;
+                    case 2:
+                        menuEditarContato();
+                        break;
+                    case 3:
+                        menuIncial();
+                        System.out.println("| Saindo da conta...");
+                        break;
+                    default:
+                        System.out.println(OPCAO_INVALIDA);
+                }
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        }
+    }
+
+    private static void menuEditarContato() {
+        try {
+            Especialista especialista = serviceEspecialista.procurarPorID(usuarioCadastrado.getId());
+
+            System.out.println(QUEBRA_DE_LINHA);
+            System.out.println("| Você está editando este contato:");
+            System.out.println(especialista.getContato());
+
+            String decricao = Teclado.nextString("| Digite a descrição dele:");
+            String numero = Teclado.nextString("| Digite seu telefone:");
+
+            int tipoContato = 0;
+            tipoContato = getTipoContato(tipoContato);
+
+            Contato contatoEditado = new Contato();
+
+            contatoEditado.setDescricao(decricao);
+            contatoEditado.setNumero(numero);
+            contatoEditado.setTipo(tipoContato);
+
+            serviceContato.editar(especialista.getContato().getId(), contatoEditado);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    private static int getTipoContato(int tipoContato) {
+        boolean condicao = true;
+        while (condicao) {
+            try {
+                System.out.println("| Digite seu tipo de Contato:");
+                System.out.println("| 1 - Residencial");
+                System.out.println("| 2 - Comercial");
+                tipoContato = Teclado.nextInt("| Digite o seu tipo:");
+
+                condicao = tipoContato < 1 || tipoContato > 2;
+
+                if (condicao) {
+                    System.err.println("Digite um tipo válido!");
+                }
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        }
+        return tipoContato;
+    }
+
+    private static void menuEspecialistaRelatorio() {
+        int opcao = 0;
+
+        while (opcao != 3) {
+            try {
+                System.out.println(QUEBRA_DE_LINHA);
+                System.out.println("| 1 - Relatórios abertos(Avaliar Relatório)");
+                System.out.println("| 2 - Meus Relatórios");
+                System.out.println("| 3 - Voltar");
+
+                opcao = Teclado.nextInt("| Digite a opção:");
+
+                switch (opcao) {
+                    case 1:
+                        menuRelatoriosAbertos();
+                        break;
+                    case 2:
+                        meusRelatorios();
+                        break;
+                    case 3:
+                        menuEspecialista();
+                        break;
+                    default:
+                        System.err.println(OPCAO_INVALIDA);
+                }
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        }
+    }
+
+    private static void meusRelatorios() {
+        System.out.println(QUEBRA_DE_LINHA);
+        System.out.println("| Meus Relatórios");
+        List<Relatorio> relatorios = serviceEspecialista.procurarRelatorioPorEmail(usuarioCadastrado.getEmail());
+
+        if (relatorios.isEmpty()) {
+            System.out.println("Você não tem Relatórios disponíveis!");
+        } else {
+            for (Relatorio relatorio : relatorios) {
+                System.out.println(relatorio);
+            }
+        }
+    }
+
+    private static void menuRelatoriosAbertos() {
+        System.out.println(QUEBRA_DE_LINHA);
+        System.out.println("| Relatório sem avaliação");
+        List<Relatorio> relatorios = serviceRelatorio.procurarRelatoriosSemAvaliador();
+
+        if (relatorios.isEmpty()) {
+            System.out.println("Sem Relatórios disponíveis!");
+        } else {
+            System.out.println("| Selecione o relatório pelo seu ID:");
+
+            for (Relatorio relatorio : relatorios) {
+                System.out.println(relatorio);
+            }
+
+            try {
+                Especialista especialista = serviceEspecialista.procurarPorID(usuarioCadastrado.getId());
+                Relatorio relatorioSelecionado = null;
+
+                int idRelatorio = Teclado.nextInt("| Digite o ID do Relátorio que deseja avaliar:");
+
+                for (Relatorio relatorio: relatorios) {
+                    if (relatorio.getId() == idRelatorio) {
+                        relatorioSelecionado = relatorio;
+                    }
+                }
+
+                if (Objects.nonNull(relatorioSelecionado)) {
+                    System.out.println(QUEBRA_DE_LINHA);
+                    relatorioSelecionado.setAvaliador(especialista);
+                    System.out.println("| Muda para avialiação");
+                    System.out.println(relatorioSelecionado.getMuda());
+
+                    String sugestao = Teclado.nextString("| Digite sua sugestão:");
+                    double notaFinal = Teclado.nextDouble("| Digite sua nota para a Muda:");
+
+                    relatorioSelecionado.setSugestoes(sugestao);
+                    relatorioSelecionado.setAvaliacaoEspecialista(notaFinal);
+
+                    serviceRelatorio.editar(relatorioSelecionado.getId(), relatorioSelecionado);
+                } else {
+                    System.out.println("| Nenhum relatório foi selecionado!");
+                }
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
             }
         }
     }

@@ -1,8 +1,8 @@
 package services;
 
 import database.BancoDeDados;
-import exceptions.EnderecoExistente;
 import exceptions.InformacaoNaoEncontrada;
+import exceptions.ObjetoExistente;
 import interfaces.IService;
 import models.Endereco;
 
@@ -16,7 +16,7 @@ public class ServiceEndereco implements IService<Endereco> {
         Optional<Endereco> enderecoExistente = procurar(endereco.getId());
 
         if (enderecoExistente.isPresent())
-            throw new EnderecoExistente();
+            throw new ObjetoExistente("Este endereço, já existe!");
 
         endereco.setId(BancoDeDados.gerarNovoIdEndereco());
         BancoDeDados.enderecos.add(endereco);

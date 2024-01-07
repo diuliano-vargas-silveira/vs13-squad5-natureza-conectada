@@ -21,7 +21,7 @@ public class Relatorio {
 
     @Override
     public String toString(){
-        return "Relatório ID: " + String.valueOf(this.id) 
+        return "Relatório ID: " + this.id
         + "\nDados do cliente: \n" + this.dono.toString()
         + "\nDados do especialista:\n" + this.avaliador
         + "\nDescrição da muda: \n" + this.muda

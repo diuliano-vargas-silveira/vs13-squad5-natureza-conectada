@@ -1,6 +1,6 @@
 package utils;
 
-import exceptions.ErroDigitacaoException;
+import exceptions.ErroDigitacao;
 
 import java.util.Scanner;
 
@@ -18,12 +18,12 @@ public class Teclado {
                 boolean isVazio = isInputVazio(input);
 
                 if (isVazio) {
-                    throw new ErroDigitacaoException();
+                    throw new ErroDigitacao();
                 }
 
                 return input;
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                System.err.println(e.getMessage());
             }
         }
     }

@@ -2,11 +2,8 @@ package services;
 
 import database.BancoDeDados;
 import exceptions.InformacaoNaoEncontrada;
-import exceptions.RelatorioExistente;
+import exceptions.ObjetoExistente;
 import interfaces.IService;
-import models.Endereco;
-import models.Especialista;
-import models.Muda;
 import models.Relatorio;
 
 import java.util.List;
@@ -22,7 +19,7 @@ public class ServiceRelatorio implements IService<Relatorio> {
         Optional<Relatorio> relatorioExistente = procurar(relatorio.getId());
 
         if (relatorioExistente.isPresent()) {
-            throw new RelatorioExistente();
+            throw new ObjetoExistente("Este relatório já existe!");
         }
 
         relatorio.setId(BancoDeDados.gerarNovoIdRelatorio());
@@ -72,5 +69,9 @@ public class ServiceRelatorio implements IService<Relatorio> {
     @Override
     public Optional<Relatorio> procurar(int id) {
         return BancoDeDados.relatorios.stream().filter(relatorio -> relatorio.getId() == id).findFirst();
+    }
+
+    public List<Relatorio> procurarRelatoriosSemAvaliador() {
+        return BancoDeDados.relatorios.stream().filter(relatorio -> relatorio.getAvaliador() == null).toList();
     }
 }
