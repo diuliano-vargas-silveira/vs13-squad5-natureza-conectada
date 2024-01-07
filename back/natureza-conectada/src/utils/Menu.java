@@ -381,7 +381,7 @@ public class Menu {
 
 
 
-        while (opcao != 1) {
+        while (opcao != 4) {
             try {
                 System.out.println(QUEBRA_DE_LINHA);
                 System.out.println("| Menu de Relatório");
