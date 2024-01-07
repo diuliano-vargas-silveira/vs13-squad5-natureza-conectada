@@ -12,6 +12,8 @@ import java.util.Objects;
 
 public class Menu {
     private static int opcaoMenuIncial = 0;
+
+    private static final ServiceEntrega serviceEntrega = new ServiceEntrega();
     private static Usuario usuarioCadastrado;
     private static final String QUEBRA_DE_LINHA = "| -------------------------------------------------------------------------- |";
     private static final String OPCAO_INVALIDA = "| Opção inválida! Digite novamente.";
@@ -221,25 +223,49 @@ public class Menu {
     }
 
     private static void menuSolicitarMuda() {
-        //todo:modficar objeto entrega
+
         System.out.println(QUEBRA_DE_LINHA);
         System.out.println("| Lista de mudas");
+
         List<Muda> mudas = serviceMudas.listarTodos();
+        if(mudas.isEmpty()) {
+            System.out.println("Não há mudas disponíveis");
+            menuClienteMudas();
+        }else {
+            mudas.forEach(System.out::println);
+            int id = Teclado.nextInt("| Digite o ID da muda escolhida");
+            try {
+                Muda mudaEscolhida = serviceMudas.procurarPorID(id);
+                Cliente clienteLogado = serviceCliente.procurarPorID(usuarioCadastrado.getId());
+                System.out.println("| Escolha um endereço de entrega");
+                clienteLogado.imprimirEnderecos();
 
-        int id = Teclado.nextInt("| Digite o ID da muda escolhida");
-        Muda mudaEscolhida = serviceMudas.procurarPorID(id);
+                int idEnderecoEscolhido = Teclado.nextInt("| Digite o ID");
+                Endereco enderecoEscolhido = serviceEndereco.procurarPorID(idEnderecoEscolhido);
+                while(!clienteLogado.getEnderecos().contains(enderecoEscolhido)){
+                    System.err.println("Erro nenhum endereço encontrado, escolha novamente");
+                    System.out.println("| Escolha um endereço de entrega");
+                    clienteLogado.imprimirEnderecos();
 
-        Cliente clienteLogado = serviceCliente.procurarPorID(usuarioCadastrado.getId());
+                    idEnderecoEscolhido = Teclado.nextInt("| Digite o ID");
+                    enderecoEscolhido = serviceEndereco.procurarPorID(idEnderecoEscolhido);
+                }
+                Entrega novaEntrega = new Entrega(List.of(mudaEscolhida), StatusEntrega.RECEBIDO, clienteLogado);
+                novaEntrega.setEnderecoDeEntrega(enderecoEscolhido);
 
-        System.out.println("| Escolha um endereço de entrega");
-        clienteLogado.imprimirEnderecos();
+                serviceEntrega.adicionar(novaEntrega);
+                System.out.println(novaEntrega);
+                clienteLogado.adicionarEntregas(novaEntrega);
 
-        int idEnderecoEscolhido = Teclado.nextInt("| Digite o ID");
-        Endereco enderecoEscolhido = serviceEndereco.procurarPorID(idEnderecoEscolhido);
-        //Entrega novaEntrega = new Entrega(List.of(mudaEscolhida), StatusEntrega.ENTREGUE,clienteLogado);
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        }
 
-        //serviceEntrega.adicionar(novaEntrega);
-        //clienteLogado.adicionarEntregas(novaEntrega);
+
+
+
+
 
 
 
