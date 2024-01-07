@@ -127,7 +127,6 @@ public class    Menu {
                     novoEspecialista.setDocumento(documento);
                     novoEspecialista.setEspecializacao(especialidade);
                     novoEspecialista.setRegiaoResponsavel(Estados.valueOf(regiaoResponsavel));
-                    System.out.println(novoEspecialista.getRegiaoResponsavel());
                     serviceEspecialista.adicionar(novoEspecialista);
 
                     break;
