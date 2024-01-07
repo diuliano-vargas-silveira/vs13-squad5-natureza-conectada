@@ -1,16 +1,19 @@
 package services;
 
 import database.BancoDeDados;
-import exceptions.EspecialistaExistente;
 import exceptions.InformacaoNaoEncontrada;
 import exceptions.ObjetoExistente;
 import interfaces.IService;
-import models.Cliente;
 import models.Especialista;
+import models.Relatorio;
+
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
-public class ServiceEspecialista  implements IService<Especialista> {
+public class ServiceEspecialista implements IService<Especialista> {
+
+    ServiceRelatorio serviceRelatorio = new ServiceRelatorio();
 
     @Override
     public void adicionar(Especialista especialista) {
@@ -71,5 +74,12 @@ public class ServiceEspecialista  implements IService<Especialista> {
 
     public Optional<Especialista> procurarPorEmail(String email) {
         return BancoDeDados.especialistas.stream().filter(especialista -> especialista.getEmail().equals(email)).findFirst();
+    }
+
+    public List<Relatorio> procurarRelatorioPorEmail(String email) {
+        return serviceRelatorio.listarTodos().stream().filter(relatorio -> {
+            if (Objects.isNull(relatorio.getAvaliador())) return false;
+            return relatorio.getAvaliador().getEmail().equals(email);
+        }).toList();
     }
 }

@@ -9,6 +9,9 @@ public class Contato {
     private String numero;
     private Tipo tipo;
 
+    public Contato() {
+    }
+
     public Contato(String descricao, String numero, int tipo) {
         this.descricao = descricao;
         this.numero = numero;

@@ -34,7 +34,6 @@ public class MockContainer {
         Endereco endereco16 = new Endereco("100001", "Recife Antigo", "-", "Praia de Boa Viagem", "Recife", Estados.PE, 2);
         Endereco endereco17 = new Endereco("282002", "Ponta Negra", "1", "Centro de Turismo de Natal", "Natal", Estados.RN, 1);
 
-
         ServiceEndereco serviceEndereco = new ServiceEndereco();
         serviceEndereco.adicionar(endereco1);
         serviceEndereco.adicionar(endereco2);
@@ -301,6 +300,13 @@ public class MockContainer {
         serviceEspecialista.adicionar(especialista2);
         serviceEspecialista.adicionar(especialista3);
         serviceEspecialista.adicionar(especialista4);
+
+        ServiceRelatorio serviceRelatorio = new ServiceRelatorio();
+        Relatorio relatorio = new Relatorio(cliente10, null, muda2, "Bom", "", 0);
+        Relatorio relatorio2 = new Relatorio(cliente10, null, muda3, "Ruim", "", 0);
+
+        serviceRelatorio.adicionar(relatorio);
+        serviceRelatorio.adicionar(relatorio2);
 
     }
 }
