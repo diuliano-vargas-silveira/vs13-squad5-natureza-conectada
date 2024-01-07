@@ -14,7 +14,7 @@ public class Entrega implements IEntrega {
     public Entrega(){
 
     }
-    public Entrega(int id, ArrayList<Muda> mudas, StatusEntrega status, Cliente cliente){
+    public Entrega( ArrayList<Muda> mudas, StatusEntrega status, Cliente cliente){
         setId(id);
         setMudas(mudas);
         setStatus(status);
