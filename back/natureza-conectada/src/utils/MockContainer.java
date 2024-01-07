@@ -5,6 +5,9 @@ import enums.StatusEntrega;
 import enums.Estados;
 import models.*;
 import services.ServiceCliente;
+import services.ServiceContato;
+import services.ServiceEndereco;
+import services.ServiceMudas;
 
 public class MockContainer {
 
@@ -14,7 +17,7 @@ public class MockContainer {
 
     public void iniciaObjetos(){
 
-        // Endereços - objetos
+        // Endereços - criação de objetos e adições ao banco de dados
         Endereco endereco1 = new Endereco("70000-000", "Praça dos Três Poderes", "1", "Palácio do Planalto", "Brasília", Estados.DF, 1);
         Endereco endereco2 = new Endereco("10001-001", "Copacabana Beach", "1", "Cristo Redentor", "Rio de Janeiro", Estados.RJ, 1);
         Endereco endereco3 = new Endereco("SW1A 0AA", "Praça da Sé", "1", "Pátio do Colégio", "São Paulo", Estados.SP, 2);
@@ -33,7 +36,26 @@ public class MockContainer {
         Endereco endereco16 = new Endereco("100001", "Recife Antigo", "-", "Praia de Boa Viagem", "Recife", Estados.PE, 2);
         Endereco endereco17 = new Endereco("282002", "Ponta Negra", "1", "Centro de Turismo de Natal", "Natal", Estados.RN, 1);
 
-        // Contatos - objetos
+        ServiceEndereco serviceEndereco = new ServiceEndereco();
+        serviceEndereco.adicionar(endereco1);
+        serviceEndereco.adicionar(endereco2);
+        serviceEndereco.adicionar(endereco3);
+        serviceEndereco.adicionar(endereco4);
+        serviceEndereco.adicionar(endereco5);
+        serviceEndereco.adicionar(endereco6);
+        serviceEndereco.adicionar(endereco7);
+        serviceEndereco.adicionar(endereco8);
+        serviceEndereco.adicionar(endereco9);
+        serviceEndereco.adicionar(endereco10);
+        serviceEndereco.adicionar(endereco11);
+        serviceEndereco.adicionar(endereco12);
+        serviceEndereco.adicionar(endereco13);
+        serviceEndereco.adicionar(endereco14);
+        serviceEndereco.adicionar(endereco15);
+        serviceEndereco.adicionar(endereco16);
+        serviceEndereco.adicionar(endereco17);
+
+        // Contatos - criação de objetos e adições ao banco de dados
         Contato contato1 = new Contato("Celular", "+1 555-1234", 1);
         Contato contato2 = new Contato("Celular", "+1 555-5678", 1);
         Contato contato3 = new Contato("Empresa", "+1 555-8765", 2);
@@ -53,7 +75,27 @@ public class MockContainer {
         Contato contato17 = new Contato("Celular", "+55 31 8765-4321", 1);
         Contato contato18 = new Contato("Empresa", "+55 85 2345-6789", 2);
 
-        // Mudas - Listas e objetos
+        ServiceContato serviceContato = new ServiceContato();
+        serviceContato.adicionar(contato1);
+        serviceContato.adicionar(contato2);
+        serviceContato.adicionar(contato3);
+        serviceContato.adicionar(contato4);
+        serviceContato.adicionar(contato5);
+        serviceContato.adicionar(contato6);
+        serviceContato.adicionar(contato7);
+        serviceContato.adicionar(contato8);
+        serviceContato.adicionar(contato9);
+        serviceContato.adicionar(contato10);
+        serviceContato.adicionar(contato11);
+        serviceContato.adicionar(contato12);
+        serviceContato.adicionar(contato13);
+        serviceContato.adicionar(contato14);
+        serviceContato.adicionar(contato15);
+        serviceContato.adicionar(contato16);
+        serviceContato.adicionar(contato17);
+        serviceContato.adicionar(contato18);
+
+        // Mudas - criação de objetos, adições ao banco de dados e criação de listas
         Muda muda1 = new Muda(1, "Rosa", "Rosa gallica", 1, "Jardim", "Belíssima rosa com pétalas vermelhas");
         Muda muda2 = new Muda(2, "Lírio", "Lilium candidum", 2, "Canteiro", "Lírio branco de grande porte");
         Muda muda3 = new Muda(1, "Orquídea", "Phalaenopsis amabilis", 1, "Estufa", "Orquídea popular com flores duradouras");
@@ -72,6 +114,26 @@ public class MockContainer {
         Muda muda16 = new Muda(2, "Cerejeira", "Prunus serrulata", 2, "Canteiro", "Árvore ornamental com flores de cerejeira");
         Muda muda17 = new Muda(1, "Samambaia", "Nephrolepis exaltata", 1, "Vaso", "Planta ornamental com folhas delicadas");
         Muda muda18 = new Muda(2, "Agave", "Agave americana", 2, "Soleira", "Planta suculenta resistente, conhecida como 'pita'");
+
+        ServiceMudas serviceMudas = new ServiceMudas();
+        serviceMudas.adicionar(muda1);
+        serviceMudas.adicionar(muda2);
+        serviceMudas.adicionar(muda3);
+        serviceMudas.adicionar(muda4);
+        serviceMudas.adicionar(muda5);
+        serviceMudas.adicionar(muda6);
+        serviceMudas.adicionar(muda7);
+        serviceMudas.adicionar(muda8);
+        serviceMudas.adicionar(muda9);
+        serviceMudas.adicionar(muda10);
+        serviceMudas.adicionar(muda11);
+        serviceMudas.adicionar(muda12);
+        serviceMudas.adicionar(muda13);
+        serviceMudas.adicionar(muda14);
+        serviceMudas.adicionar(muda15);
+        serviceMudas.adicionar(muda16);
+        serviceMudas.adicionar(muda17);
+        serviceMudas.adicionar(muda18);
 
         ArrayList<Muda> listaDeMudas1 = new ArrayList<>();
         listaDeMudas1.add(muda1);
@@ -123,10 +185,12 @@ public class MockContainer {
         Entrega entrega9 = new Entrega(9, listaDeMudas9, StatusEntrega.ENVIADO, null);
         Entrega entrega10 = new Entrega(10, listaDeMudas10, StatusEntrega.ENTREGUE, null);
 
+
         // Clientes e suas atribuições
         ServiceCliente serviceCliente = new ServiceCliente();
 
         Cliente cliente1 = new Cliente("Willian Cavalheiro", "willian@dbc.com.br", "senhadificil", "123.456.789-09");
+        serviceCliente.adicionar(cliente1);
         serviceCliente.adicionarContato(cliente1, contato1);
         serviceCliente.adicionarContato(cliente1, contato2);
         serviceCliente.adicionarEndereco(cliente1, endereco1);
@@ -136,6 +200,7 @@ public class MockContainer {
         serviceCliente.adicionarEntregas(cliente1, entrega1);
 
         Cliente cliente2 = new Cliente("Diuliano Vargas", "Diuliano@dbc.com.br", "senhadificil", "987.654.321-00");
+        serviceCliente.adicionar(cliente2);
         serviceCliente.adicionarContato(cliente2, contato3);
         serviceCliente.adicionarEndereco(cliente2, endereco3);
         serviceCliente.adicionarMuda(cliente2, muda3);
@@ -143,6 +208,7 @@ public class MockContainer {
         serviceCliente.adicionarEntregas(cliente2, entrega2);
 
         Cliente cliente3 = new Cliente("Luísa Santos", "luh.santos@dbc.com.br", "senhadificil", "111.222.333-44");
+        serviceCliente.adicionar(cliente3);
         serviceCliente.adicionarContato(cliente3, contato4);
         serviceCliente.adicionarContato(cliente3, contato5);
         serviceCliente.adicionarEndereco(cliente3, endereco4);
@@ -150,6 +216,7 @@ public class MockContainer {
         serviceCliente.adicionarEntregas(cliente3, entrega3);
 
         Cliente cliente4 = new Cliente("Pedro Antonetti", "pedro@dbc.com.br", "senhadificil", "555.666.777-88");
+        serviceCliente.adicionar(cliente4);
         serviceCliente.adicionarContato(cliente4, contato6);
         serviceCliente.adicionarEndereco(cliente4, endereco5);
         serviceCliente.adicionarMuda(cliente4, muda6);
@@ -158,6 +225,7 @@ public class MockContainer {
         serviceCliente.adicionarEntregas(cliente4, entrega4);
 
         Cliente cliente5 = new Cliente("Janier Freitas", "janier@dbc.com.br", "senhadificil", "999.000.666-22");
+        serviceCliente.adicionar(cliente5);
         serviceCliente.adicionarContato(cliente5, contato7);
         serviceCliente.adicionarContato(cliente5, contato8);
         serviceCliente.adicionarEndereco(cliente5, endereco6);
@@ -166,6 +234,7 @@ public class MockContainer {
         serviceCliente.adicionarEntregas(cliente5, entrega5);
 
         Cliente cliente6 = new Cliente("Thales Salla", "thales@dbc.com.br", "senhadificil", "999.000-999-22");
+        serviceCliente.adicionar(cliente6);
         serviceCliente.adicionarContato(cliente6, contato9);
         serviceCliente.adicionarContato(cliente6, contato10);
         serviceCliente.adicionarContato(cliente6, contato11);
@@ -175,6 +244,7 @@ public class MockContainer {
         serviceCliente.adicionarEntregas(cliente6, entrega6);
 
         Cliente cliente7 = new Cliente("Carlos Queiroz", "carlos@dbc.com.br", "senhadificil", "999.000.555-22");
+        serviceCliente.adicionar(cliente7);
         serviceCliente.adicionarContato(cliente7, contato12);
         serviceCliente.adicionarEndereco(cliente7, endereco9);
         serviceCliente.adicionarEndereco(cliente7, endereco10);
@@ -183,6 +253,7 @@ public class MockContainer {
         serviceCliente.adicionarEntregas(cliente7, entrega7);
 
         Cliente cliente8 = new Cliente("Welton Santos", "welton@dbc.com.br", "senhadificil", "999.000.444-22");
+        serviceCliente.adicionar(cliente8);
         serviceCliente.adicionarContato(cliente8, contato13);
         serviceCliente.adicionarContato(cliente8, contato14);
         serviceCliente.adicionarEndereco(cliente8, endereco11);
@@ -191,6 +262,7 @@ public class MockContainer {
         serviceCliente.adicionarEntregas(cliente8, entrega8);
 
         Cliente cliente9 = new Cliente("Rafael Camilo", "rcamilo@dbc.com.br", "senhadificil", "999.000.444-22");
+        serviceCliente.adicionar(cliente9);
         serviceCliente.adicionarContato(cliente9, contato15);
         serviceCliente.adicionarContato(cliente9, contato16);
         serviceCliente.adicionarEndereco(cliente9, endereco13);
@@ -200,6 +272,7 @@ public class MockContainer {
         serviceCliente.adicionarEntregas(cliente9, entrega9);
 
         Cliente cliente10 = new Cliente("Rafael Ramos", "rramos@dbc.com.br", "senhadificil", "999.000.444-22");
+        serviceCliente.adicionar(cliente10);
         serviceCliente.adicionarContato(cliente10, contato17);
         serviceCliente.adicionarContato(cliente10, contato18);
         serviceCliente.adicionarEndereco(cliente10, endereco15);
