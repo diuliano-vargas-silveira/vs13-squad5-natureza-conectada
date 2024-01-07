@@ -174,16 +174,16 @@ public class MockContainer {
         listaDeMudas10.add(muda18);
 
         // Entregas - objetos
-        Entrega entrega1 = new Entrega(1, listaDeMudas1, StatusEntrega.RECEBIDO, null);
-        Entrega entrega2 = new Entrega(2, listaDeMudas2, StatusEntrega.ENVIADO, null);
-        Entrega entrega3 = new Entrega(3, listaDeMudas3, StatusEntrega.ENTREGUE, null);
-        Entrega entrega4 = new Entrega(4, listaDeMudas4, StatusEntrega.RECEBIDO, null);
-        Entrega entrega5 = new Entrega(5, listaDeMudas5, StatusEntrega.ENVIADO, null);
-        Entrega entrega6 = new Entrega(6, listaDeMudas6, StatusEntrega.ENTREGUE, null);
-        Entrega entrega7 = new Entrega(7, listaDeMudas7, StatusEntrega.RECEBIDO, null);
-        Entrega entrega8 = new Entrega(8, listaDeMudas8, StatusEntrega.ENVIADO, null);
-        Entrega entrega9 = new Entrega(9, listaDeMudas9, StatusEntrega.ENVIADO, null);
-        Entrega entrega10 = new Entrega(10, listaDeMudas10, StatusEntrega.ENTREGUE, null);
+        Entrega entrega1 = new Entrega( listaDeMudas1, StatusEntrega.RECEBIDO, null);
+        Entrega entrega2 = new Entrega( listaDeMudas2, StatusEntrega.ENVIADO, null);
+        Entrega entrega3 = new Entrega( listaDeMudas3, StatusEntrega.ENTREGUE, null);
+        Entrega entrega4 = new Entrega( listaDeMudas4, StatusEntrega.RECEBIDO, null);
+        Entrega entrega5 = new Entrega( listaDeMudas5, StatusEntrega.ENVIADO, null);
+        Entrega entrega6 = new Entrega( listaDeMudas6, StatusEntrega.ENTREGUE, null);
+        Entrega entrega7 = new Entrega( listaDeMudas7, StatusEntrega.RECEBIDO, null);
+        Entrega entrega8 = new Entrega( listaDeMudas8, StatusEntrega.ENVIADO, null);
+        Entrega entrega9 = new Entrega( listaDeMudas9, StatusEntrega.ENVIADO, null);
+        Entrega entrega10 = new Entrega( listaDeMudas10, StatusEntrega.ENTREGUE, null);
 
 
         // Clientes e suas atribuições

@@ -10,14 +10,13 @@ public class Relatorio {
     private String sugestoes;
     private double avaliacaoEspecialista;
 
-    public Relatorio(int id, Cliente dono, Especialista avaliador, Muda muda, String estadoMuda, String sugestoes, double avaliacaoEspecialista) {
-        this.id = id;
+    public Relatorio( Cliente dono,  Muda muda, String estadoMuda, String sugestoes) {
+
         this.dono = dono;
-        this.avaliador = avaliador;
         this.muda = muda;
         this.estadoMuda = estadoMuda;
         this.sugestoes = sugestoes;
-        this.avaliacaoEspecialista = avaliacaoEspecialista;
+
     }
 
     @Override
