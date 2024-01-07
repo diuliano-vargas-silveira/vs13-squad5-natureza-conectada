@@ -10,8 +10,8 @@ public class Relatorio {
     private String sugestoes;
     private double avaliacaoEspecialista;
 
-    public Relatorio( Cliente dono,  Muda muda, String estadoMuda, String sugestoes) {
 
+    public Relatorio(Cliente dono, Muda muda, String estadoMuda, String sugestoes) {
         this.dono = dono;
         this.muda = muda;
         this.estadoMuda = estadoMuda;
@@ -21,7 +21,7 @@ public class Relatorio {
 
     @Override
     public String toString(){
-        return "Relatório ID: " + String.valueOf(this.id) 
+        return "Relatório ID: " + this.id
         + "\nDados do cliente: \n" + this.dono.toString()
         + "\nDados do especialista:\n" + this.avaliador
         + "\nDescrição da muda: \n" + this.muda

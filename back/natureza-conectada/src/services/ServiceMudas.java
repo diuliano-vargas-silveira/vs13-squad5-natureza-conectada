@@ -2,7 +2,7 @@ package services;
 
 import database.BancoDeDados;
 import exceptions.InformacaoNaoEncontrada;
-import exceptions.MudaExistente;
+import exceptions.ObjetoExistente;
 import interfaces.IService;
 import models.Muda;
 
@@ -16,7 +16,7 @@ public class ServiceMudas implements IService<Muda> {
        Optional<Muda> mudaNoBd = procurar(muda.getId());
 
         if (mudaNoBd.isPresent()){
-           throw  new MudaExistente("Muda existente no Banco de dados!");
+           throw new ObjetoExistente("Muda existente no Banco de dados!");
         }
 
         muda.setId(BancoDeDados.gerarNovoIDMudas());

@@ -2,10 +2,10 @@ package services;
 
 import database.BancoDeDados;
 import exceptions.InformacaoNaoEncontrada;
-import exceptions.RelatorioExistente;
+import exceptions.ObjetoExistente;
 import interfaces.IService;
 import models.*;
-
+import models.Relatorio;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,7 +20,7 @@ public class ServiceRelatorio implements IService<Relatorio> {
         Optional<Relatorio> relatorioExistente = procurar(relatorio.getId());
 
         if (relatorioExistente.isPresent()) {
-            throw new RelatorioExistente();
+            throw new ObjetoExistente("Este relatório já existe!");
         }
 
         relatorio.setId(BancoDeDados.gerarNovoIdRelatorio());
@@ -71,6 +71,7 @@ public class ServiceRelatorio implements IService<Relatorio> {
     public Optional<Relatorio> procurar(int id) {
         return BancoDeDados.relatorios.stream().filter(relatorio -> relatorio.getId() == id).findFirst();
     }
+
     public List<Relatorio>buscarPorCliente (Cliente cliente){
         List<Relatorio> relatorios = BancoDeDados.relatorios.stream().filter(relatorio -> relatorio.getDono().getId() == cliente.getId()).collect(Collectors.toList());
 
@@ -91,18 +92,23 @@ public class ServiceRelatorio implements IService<Relatorio> {
         return relatorios;
     }
 
-    public void
-    imprimirRelatorio(Relatorio relatorio){
+    public void imprimirRelatorio(Relatorio relatorio) {
         System.out.printf("""
-                    Id Relatório: %d
-                    muda: %s
-                    Relatório feito: %s
-                    Sugestão: %s
-                    Avaliador: %s
-                    Avaliação: %.1f
-                    
-                    
-                    
-                    """,relatorio.getId(),relatorio.getMuda().toString(),relatorio.getEstadoMuda(),relatorio.getSugestoes(),relatorio.getAvaliacaoEspecialista(),relatorio.getAvaliador());
+                Id Relatório: %d
+                muda: %s
+                Relatório feito: %s
+                Sugestão: %s
+                Avaliador: %s
+                Avaliação: %.1f
+                                    
+                                    
+                                    
+                """, relatorio.getId(), relatorio.getMuda().toString(), relatorio.getEstadoMuda(), relatorio.getSugestoes(), relatorio.getAvaliacaoEspecialista(), relatorio.getAvaliador());
+
     }
+    public List<Relatorio> procurarRelatoriosSemAvaliador() {
+        return BancoDeDados.relatorios.stream().filter(relatorio -> relatorio.getAvaliador() == null).toList();
+
+    }
+
 }
