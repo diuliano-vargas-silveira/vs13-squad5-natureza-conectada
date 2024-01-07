@@ -50,18 +50,30 @@ public class ServiceCliente implements IService<Cliente> {
         return true;
     }
 
-    public boolean editarContato(int id, Contato contato){
-        Cliente cliente = procurarPorID(id);
+    public boolean editarContato(int idCliente, int idContato, Contato contatoEditado){
+        Cliente cliente = procurarPorID(idCliente);
 
-        serviceContato.editar(id, contato);
-        return true;
+        for(Contato contato : cliente.getContatos()){
+            if(contato.getId() == idContato){
+                serviceContato.editar(idContato, contatoEditado);
+                return true;
+            }
+        }
+
+        throw new InformacaoNaoEncontrada("Contato não encontrado.");
     }
 
-    public boolean editarEndereco(int id, Endereco endereco){
-        Cliente cliente = procurarPorID(id);
+    public boolean editarEndereco(int idCliente, int idEndereco, Endereco enderecoEditado){
+        Cliente cliente = procurarPorID(idCliente);
 
-        serviceEndereco.editar(id, endereco);
-        return true;
+        for(Endereco endereco : cliente.getEnderecos()){
+            if(endereco.getId() == idEndereco){
+                serviceEndereco.editar(idEndereco, enderecoEditado);
+                return true;
+            }
+        }
+
+        throw new InformacaoNaoEncontrada("Endereço não encontrado.");
     }
 
     @Override
