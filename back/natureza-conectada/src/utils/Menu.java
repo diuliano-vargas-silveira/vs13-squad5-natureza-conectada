@@ -241,16 +241,6 @@ public class Menu {
 
         //serviceEntrega.adicionar(novaEntrega);
         //clienteLogado.adicionarEntregas(novaEntrega);
-
-
-
-
-
-
-
-
-
-
     }
 
     private static void menuClienteEnderecos() {
