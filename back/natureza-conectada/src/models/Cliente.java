@@ -22,7 +22,6 @@ public class Cliente extends Usuario {
 
     // Setters e Getters
 
-
     public void setCpf(String cpf) {
         this.cpf = cpf;
     }

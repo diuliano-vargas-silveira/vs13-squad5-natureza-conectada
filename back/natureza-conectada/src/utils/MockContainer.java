@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import enums.StatusEntrega;
 import enums.Estados;
 import models.*;
-import services.ServiceCliente;
-import services.ServiceContato;
-import services.ServiceEndereco;
-import services.ServiceMudas;
+import services.*;
 
 public class MockContainer {
 
@@ -185,6 +182,17 @@ public class MockContainer {
         Entrega entrega9 = new Entrega(9, listaDeMudas9, StatusEntrega.ENVIADO, null);
         Entrega entrega10 = new Entrega(10, listaDeMudas10, StatusEntrega.ENTREGUE, null);
 
+        ServiceEntrega serviceEntrega = new ServiceEntrega();
+        serviceEntrega.adicionar(entrega1);
+        serviceEntrega.adicionar(entrega2);
+        serviceEntrega.adicionar(entrega3);
+        serviceEntrega.adicionar(entrega4);
+        serviceEntrega.adicionar(entrega5);
+        serviceEntrega.adicionar(entrega6);
+        serviceEntrega.adicionar(entrega7);
+        serviceEntrega.adicionar(entrega8);
+        serviceEntrega.adicionar(entrega9);
+        serviceEntrega.adicionar(entrega10);
 
         // Clientes e suas atribuições
         ServiceCliente serviceCliente = new ServiceCliente();

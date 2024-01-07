@@ -71,7 +71,7 @@ public class ServiceCliente implements IService<Cliente> {
         return BancoDeDados.clientes.stream().filter(cliente -> cliente.getEmail().equals(email)).findFirst();
     }
 
-    // Métodos para adicionar aos arrays
+    // Métodos para adicionar as listas
     public void adicionarContato(Cliente cliente, Contato contato) {
         cliente.adicionarContato(contato);
     }
