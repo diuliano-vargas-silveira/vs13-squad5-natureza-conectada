@@ -7,18 +7,13 @@ import java.util.List;
 
 public class BancoDeDados {
     // ID de todas as classes, vai mudar diferenciando por listas
-    private static int IDUsuario = 0;
     private static int IDCliente = 0;
     private static int IDEspecialita = 0;
     private static int IDContato = 0;
     private static int IDEndereco = 0;
     private static int IDMudas = 0;
-
     private static int IDEntrega = 0;
     private static int IDRelatorios = 0;
-
-
-
 
     public static List<Usuario> usuarios = new ArrayList<>();
     public static List<Cliente> clientes = new ArrayList<>();
