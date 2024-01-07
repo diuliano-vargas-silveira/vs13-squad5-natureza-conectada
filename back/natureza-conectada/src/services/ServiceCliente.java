@@ -53,18 +53,12 @@ public class ServiceCliente implements IService<Cliente> {
     public boolean editarContato(int id, Contato contato){
         Cliente cliente = procurarPorID(id);
 
-        if(cliente == null)
-            throw new InformacaoNaoEncontrada("Cliente não encontrado");
-
         serviceContato.editar(id, contato);
         return true;
     }
 
     public boolean editarEndereco(int id, Endereco endereco){
         Cliente cliente = procurarPorID(id);
-
-        if(cliente == null)
-            throw new InformacaoNaoEncontrada("Cliente não encontrado");
 
         serviceEndereco.editar(id, endereco);
         return true;
