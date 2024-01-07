@@ -15,10 +15,10 @@ public class Entrega implements IEntrega {
 
     }
     public Entrega(int id, ArrayList<Muda> mudas, StatusEntrega status, Cliente cliente){
-        setId(id);
-        setMudas(mudas);
-        setStatus(status);
-        setCliente(cliente);
+        this.id = id;
+        this.mudas = mudas;
+        this.status = status;
+        this.cliente = cliente ;
     }
     @Override
     public void atualizarEntrega(StatusEntrega status) {
@@ -28,7 +28,7 @@ public class Entrega implements IEntrega {
     }
 
     @Override
-    public void consultarMuldaEntrega() {
+    public void consultarMudaEntrega() {
         System.out.printf("Descrições da(s) muda(s) da entrega %d:\n", this.id);
 
         for(Muda muda : this.mudas){
