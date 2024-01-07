@@ -19,7 +19,7 @@ public class ServiceEspecialista  implements IService<Especialista> {
         if (especialistaExistente.isPresent())
             throw new ObjetoExistente("Especilista já existente com este email!");
 
-        especialista.setID(BancoDeDados.gerarNovoIdEspecialista());
+        especialista.setId(BancoDeDados.gerarNovoIdEspecialista());
         BancoDeDados.usuarios.add(especialista);
         BancoDeDados.especialistas.add(especialista);
     }
