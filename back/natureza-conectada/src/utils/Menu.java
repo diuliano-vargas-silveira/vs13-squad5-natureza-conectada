@@ -616,6 +616,61 @@ public class Menu {
     }
 
     private static void menuAdminEntregas() {
+        int opcao = 0;
+        while (opcao != 3) {
+            try {
+                System.out.println(QUEBRA_DE_LINHA);
+                System.out.println("| Menu entregas");
+                System.out.println("| 1 - Listar todas as entregas");
+                System.out.println("| 2 - Editar Status entrega");
+                System.out.println("| 3 - Voltar");
+                opcao = Teclado.nextInt("| Digite sua opção:");
+
+                switch (opcao) {
+                    case 1:
+                        System.out.println("| Listando todas as entregas: ");
+                        System.out.println(serviceEntrega.listarTodos());
+                        break;
+                    case 2:
+                        int id = Teclado.nextInt("| Digite o ID da entrega escolhida");
+                        Entrega entregaEscolhida = serviceEntrega.procurarPorID(id);
+                        System.out.println("| Digite o status da entrega escolhida");
+                        System.out.println("| 0 - Recebido");
+                        System.out.println("| 1 - Enviado");
+                        System.out.println("| 2 - Entregue");
+                        int status = Teclado.nextInt("| Digite o novo status da entrega escolhida");
+                        switch (status) {
+                            case 1:
+                                entregaEscolhida.setStatus(StatusEntrega.RECEBIDO);
+                                serviceEntrega.editar(id, entregaEscolhida);
+                                break;
+
+                            case 2:
+                                entregaEscolhida.setStatus(StatusEntrega.ENVIADO);
+                                serviceEntrega.editar(id, entregaEscolhida);
+                                break;
+
+                            case 3:
+                                entregaEscolhida.setStatus(StatusEntrega.ENTREGUE);
+                                serviceEntrega.editar(id, entregaEscolhida);
+                                break;
+                            default:
+                                System.out.println(OPCAO_INVALIDA);
+                        }
+
+                        break;
+                    case 3:
+
+                        System.out.println("| Voltando...");
+                        break;
+                    default:
+                        System.out.println(OPCAO_INVALIDA);
+                }
+
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        }
 
     }
 
