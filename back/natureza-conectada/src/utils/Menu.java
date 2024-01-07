@@ -1,5 +1,6 @@
 package utils;
 
+import enums.Estados;
 import models.Cliente;
 import models.Especialista;
 import models.Muda;
@@ -9,9 +10,10 @@ import services.ServiceEspecialista;
 import services.ServiceMudas;
 import services.ServiceUsuario;
 
+import java.util.Arrays;
 import java.util.List;
 
-public class Menu {
+public class    Menu {
     private static int opcaoMenuIncial = 0;
     private static Usuario usuarioCadastrado;
     private static final String QUEBRA_DE_LINHA = "| -------------------------------------------------------------------------- |";
@@ -100,7 +102,22 @@ public class Menu {
                     break;
                 case 2:
                     String especialidade = Teclado.nextString("| Digite sua especialidade:");
-                    String regiaoResponsavel = Teclado.nextString("| Digite sua região:");
+                    boolean isValido = false;
+                    String regiaoResponsavel = null;
+                    while (!isValido){
+                        regiaoResponsavel = Teclado.nextString("| Digite a sigla da sua região (exemplo: RS):");
+                        for (Estados estados : Estados.values()){
+                            if (estados.toString().equals(regiaoResponsavel)){
+                                isValido = true;
+                                break;
+                            }
+                        }
+                        if (!isValido) {
+                            System.err.println("| Região inválida ");
+                        }
+                    }
+
+
 
                     Especialista novoEspecialista = new Especialista();
 
@@ -109,9 +126,9 @@ public class Menu {
                     novoEspecialista.setSenha(senha);
                     novoEspecialista.setDocumento(documento);
                     novoEspecialista.setEspecializacao(especialidade);
-                    novoEspecialista.setRegiaoResponsavel(regiaoResponsavel);
-
+                    novoEspecialista.setRegiaoResponsavel(Estados.valueOf(regiaoResponsavel));
                     serviceEspecialista.adicionar(novoEspecialista);
+
                     break;
                 default:
                     System.out.println(OPCAO_INVALIDA);
