@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import enums.StatusEntrega;
 import enums.Estados;
 import models.*;
-import services.ServiceCliente;
-import services.ServiceContato;
-import services.ServiceEndereco;
-import services.ServiceMudas;
+import services.*;
 
 public class MockContainer {
 
@@ -281,6 +278,13 @@ public class MockContainer {
         serviceCliente.adicionarMuda(cliente10, muda17);
         serviceCliente.adicionarMuda(cliente10, muda18);
         serviceCliente.adicionarEntregas(cliente10, entrega10);
+
+        ServiceRelatorio serviceRelatorio = new ServiceRelatorio();
+        Relatorio relatorio = new Relatorio(cliente10, null, muda2, "Bom", "", 0);
+        Relatorio relatorio2 = new Relatorio(cliente10, null, muda3, "Ruim", "", 0);
+
+        serviceRelatorio.adicionar(relatorio);
+        serviceRelatorio.adicionar(relatorio2);
 
     }
 }
