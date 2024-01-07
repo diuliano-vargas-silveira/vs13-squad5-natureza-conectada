@@ -17,13 +17,13 @@ public class Menu {
     private static final int SAIR_PROGRAMA = 3;
     private static final ServiceCliente serviceCliente = new ServiceCliente();
     private static final ServiceEspecialista serviceEspecialista = new ServiceEspecialista();
-
-    private static final ServiceRelatorio serviceRelatorio = new ServiceRelatorio();
     private static final ServiceMudas serviceMudas = new ServiceMudas();
     private static final ServiceUsuario serviceUsuario = new ServiceUsuario();
     private static final ServiceContato serviceContato = new ServiceContato();
     private static final ServiceEndereco serviceEndereco = new ServiceEndereco();
+    private static final ServiceRelatorio serviceRelatorio = new ServiceRelatorio();
 
+    private static final ServiceEntrega serviceEntrega = new ServiceEntrega();
 
     public static void rodarAplicacao() {
         do {
@@ -222,25 +222,45 @@ public class Menu {
     }
 
     private static void menuSolicitarMuda() {
-        //todo:modficar objeto entrega
+
         System.out.println(QUEBRA_DE_LINHA);
         System.out.println("| Lista de mudas");
+
         List<Muda> mudas = serviceMudas.listarTodos();
+        if(mudas.isEmpty()) {
+            System.out.println("Não há mudas disponíveis");
+            menuClienteMudas();
+        }else {
+            mudas.forEach(System.out::println);
+            int id = Teclado.nextInt("| Digite o ID da muda escolhida");
+            try {
+                Muda mudaEscolhida = serviceMudas.procurarPorID(id);
+                Cliente clienteLogado = serviceCliente.procurarPorID(usuarioCadastrado.getId());
+                System.out.println("| Escolha um endereço de entrega");
+                clienteLogado.imprimirEnderecos();
 
-        int id = Teclado.nextInt("| Digite o ID da muda escolhida");
-        Muda mudaEscolhida = serviceMudas.procurarPorID(id);
+                int idEnderecoEscolhido = Teclado.nextInt("| Digite o ID");
+                Endereco enderecoEscolhido = serviceEndereco.procurarPorID(idEnderecoEscolhido);
+                while(!clienteLogado.getEnderecos().contains(enderecoEscolhido)){
+                    System.err.println("Erro nenhum endereço encontrado, escolha novamente");
+                    System.out.println("| Escolha um endereço de entrega");
+                    clienteLogado.imprimirEnderecos();
 
-        Cliente clienteLogado = serviceCliente.procurarPorID(usuarioCadastrado.getId());
+                    idEnderecoEscolhido = Teclado.nextInt("| Digite o ID");
+                    enderecoEscolhido = serviceEndereco.procurarPorID(idEnderecoEscolhido);
+                }
+                Entrega novaEntrega = new Entrega(List.of(mudaEscolhida), StatusEntrega.RECEBIDO, clienteLogado);
+                novaEntrega.setEnderecoDeEntrega(enderecoEscolhido);
 
-        System.out.println("| Escolha um endereço de entrega");
-        clienteLogado.imprimirEnderecos();
+                serviceEntrega.adicionar(novaEntrega);
+                System.out.println(novaEntrega);
+                clienteLogado.adicionarEntregas(novaEntrega);
 
-        int idEnderecoEscolhido = Teclado.nextInt("| Digite o ID");
-        Endereco enderecoEscolhido = serviceEndereco.procurarPorID(idEnderecoEscolhido);
-        //Entrega novaEntrega = new Entrega(List.of(mudaEscolhida), StatusEntrega.ENTREGUE,clienteLogado);
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        }
 
-        //serviceEntrega.adicionar(novaEntrega);
-        //clienteLogado.adicionarEntregas(novaEntrega);
     }
 
     private static void menuClienteEnderecos() {
@@ -297,8 +317,8 @@ public class Menu {
         String estado = null;
         while (!isValido) {
             estado = Teclado.nextString("| Digite a sigla do seu estado (exemplo: RS):");
-            for (Estados estados : Estados.values()) {
-                if (estados.toString().equals(estado)) {
+            for (Estados estados : Estados.values()){
+                if (estados.toString().equals(estado)){
                     isValido = true;
                     break;
                 }

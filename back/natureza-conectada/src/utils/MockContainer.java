@@ -103,23 +103,23 @@ public class MockContainer {
 
         // Mudas - criação de objetos, adições ao banco de dados e criação de listas
         Muda muda1 = new Muda(1, "Rosa", "Rosa gallica", 1, "Jardim", "Belíssima rosa com pétalas vermelhas");
-        Muda muda2 = new Muda(0, "Lírio", "Lilium candidum", 2, "Canteiro", "Lírio branco de grande porte");
+        Muda muda2 = new Muda(2, "Lírio", "Lilium candidum", 2, "Canteiro", "Lírio branco de grande porte");
         Muda muda3 = new Muda(1, "Orquídea", "Phalaenopsis amabilis", 1, "Estufa", "Orquídea popular com flores duradouras");
-        Muda muda4 = new Muda(0, "Margarida", "Leucanthemum vulgare", 2, "Campo", "Margarida simples e encantadora");
+        Muda muda4 = new Muda(2, "Margarida", "Leucanthemum vulgare", 2, "Campo", "Margarida simples e encantadora");
         Muda muda5 = new Muda(1, "Girassol", "Helianthus annuus", 1, "Jardim", "Girassol amarelo vibrante");
-        Muda muda6 = new Muda(0, "Azaleia", "Rhododendron simsii", 2, "Vaso", "Azaleia de folhas perenes");
+        Muda muda6 = new Muda(2, "Azaleia", "Rhododendron simsii", 2, "Vaso", "Azaleia de folhas perenes");
         Muda muda7 = new Muda(1, "Orégano", "Origanum vulgare", 1, "Horta", "Erva aromática para culinária");
-        Muda muda8 = new Muda(0, "Bromélia", "Neoregalia spp.", 2, "Vaso", "Bromélia colorida e exótica");
+        Muda muda8 = new Muda(2, "Bromélia", "Neoregalia spp.", 2, "Vaso", "Bromélia colorida e exótica");
         Muda muda9 = new Muda(1, "Lavanda", "Lavandula angustifolia", 1, "Canteiro", "Lavanda perfumada e relaxante");
-        Muda muda10 = new Muda(0, "Bambu", "Bambusoideae", 2, "Jardim", "Bambu ornamental e resistente");
+        Muda muda10 = new Muda(2, "Bambu", "Bambusoideae", 2, "Jardim", "Bambu ornamental e resistente");
         Muda muda11 = new Muda(1, "Cacto", "Cactaceae", 1, "Soleira", "Cacto de fácil manutenção");
-        Muda muda12 = new Muda(0, "Hortênsia", "Hydrangea macrophylla", 2, "Vaso", "Hortênsia de flores globosas");
+        Muda muda12 = new Muda(2, "Hortênsia", "Hydrangea macrophylla", 2, "Vaso", "Hortênsia de flores globosas");
         Muda muda13 = new Muda(1, "Suculenta", "Echeveria spp.", 1, "Soleira", "Suculenta com rosetas coloridas");
-        Muda muda14 = new Muda(0, "Jasmim", "Jasminum spp.", 2, "Canteiro", "Jasmim perfumado e elegante");
+        Muda muda14 = new Muda(2, "Jasmim", "Jasminum spp.", 2, "Canteiro", "Jasmim perfumado e elegante");
         Muda muda15 = new Muda(1, "Ipê Amarelo", "Handroanthus spp.", 1, "Jardim", "Árvore brasileira com flores amarelas vibrantes");
-        Muda muda16 = new Muda(0, "Cerejeira", "Prunus serrulata", 2, "Canteiro", "Árvore ornamental com flores de cerejeira");
+        Muda muda16 = new Muda(2, "Cerejeira", "Prunus serrulata", 2, "Canteiro", "Árvore ornamental com flores de cerejeira");
         Muda muda17 = new Muda(1, "Samambaia", "Nephrolepis exaltata", 1, "Vaso", "Planta ornamental com folhas delicadas");
-        Muda muda18 = new Muda(0, "Agave", "Agave americana", 2, "Soleira", "Planta suculenta resistente, conhecida como 'pita'");
+        Muda muda18 = new Muda(2, "Agave", "Agave americana", 2, "Soleira", "Planta suculenta resistente, conhecida como 'pita'");
 
         ServiceMudas serviceMudas = new ServiceMudas();
         serviceMudas.adicionar(muda1);
