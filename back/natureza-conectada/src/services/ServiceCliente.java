@@ -12,6 +12,9 @@ import java.util.Optional;
 
 public class ServiceCliente implements IService<Cliente> {
 
+    ServiceContato serviceContato = new ServiceContato();
+    ServiceEndereco serviceEndereco = new ServiceEndereco();
+
     @Override
     public void adicionar(Cliente cliente) {
         Optional<Cliente> clienteEncontrado = procurarPorEmail(cliente.getEmail());
@@ -44,6 +47,26 @@ public class ServiceCliente implements IService<Cliente> {
 
         BancoDeDados.clientes.set(indexRelatorio, cliente);
 
+        return true;
+    }
+
+    public boolean editarContato(int id, Contato contato){
+        Cliente cliente = procurarPorID(id);
+
+        if(cliente == null)
+            throw new InformacaoNaoEncontrada("Cliente não encontrado");
+
+        serviceContato.editar(id, contato);
+        return true;
+    }
+
+    public boolean editarEndereco(int id, Endereco endereco){
+        Cliente cliente = procurarPorID(id);
+
+        if(cliente == null)
+            throw new InformacaoNaoEncontrada("Cliente não encontrado");
+
+        serviceEndereco.editar(id, endereco);
         return true;
     }
 
