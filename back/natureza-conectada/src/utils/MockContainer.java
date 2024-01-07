@@ -302,8 +302,8 @@ public class MockContainer {
         serviceEspecialista.adicionar(especialista4);
 
         ServiceRelatorio serviceRelatorio = new ServiceRelatorio();
-        Relatorio relatorio = new Relatorio(cliente10,  muda2, "Bom", "");
-        Relatorio relatorio2 = new Relatorio(cliente10,  muda3, "Ruim", "");
+        Relatorio relatorio = new Relatorio(cliente10, null,  "Bom","");
+        Relatorio relatorio2 = new Relatorio(cliente10, null,  "Ruim", "");
 
         serviceRelatorio.adicionar(relatorio);
         serviceRelatorio.adicionar(relatorio2);

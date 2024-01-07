@@ -10,8 +10,8 @@ public class Relatorio {
     private String sugestoes;
     private double avaliacaoEspecialista;
 
-    public Relatorio( Cliente dono,  Muda muda, String estadoMuda, String sugestoes) {
 
+    public Relatorio(Cliente dono, Muda muda, String estadoMuda, String sugestoes) {
         this.dono = dono;
         this.muda = muda;
         this.estadoMuda = estadoMuda;

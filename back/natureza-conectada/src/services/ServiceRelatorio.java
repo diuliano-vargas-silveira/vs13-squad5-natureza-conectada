@@ -4,10 +4,11 @@ import database.BancoDeDados;
 import exceptions.InformacaoNaoEncontrada;
 import exceptions.ObjetoExistente;
 import interfaces.IService;
+import models.*;
 import models.Relatorio;
-
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ServiceRelatorio implements IService<Relatorio> {
     @Override
@@ -71,7 +72,43 @@ public class ServiceRelatorio implements IService<Relatorio> {
         return BancoDeDados.relatorios.stream().filter(relatorio -> relatorio.getId() == id).findFirst();
     }
 
+    public List<Relatorio>buscarPorCliente (Cliente cliente){
+        List<Relatorio> relatorios = BancoDeDados.relatorios.stream().filter(relatorio -> relatorio.getDono().getId() == cliente.getId()).collect(Collectors.toList());
+
+        for (Relatorio r: relatorios) {
+            System.out.printf("""
+                    Id Relatório: %d
+                    muda: %s
+                    Relatório feito: %s
+                    Sugestão: %s
+                    Avaliador: %s
+                    Avaliação: %.1f
+                    
+                    
+                    
+                    """,r.getId(),r.getMuda().toString(),r.getEstadoMuda(),r.getSugestoes(),r.getAvaliador(),r.getAvaliacaoEspecialista());
+        }
+
+        return relatorios;
+    }
+
+    public void imprimirRelatorio(Relatorio relatorio) {
+        System.out.printf("""
+                Id Relatório: %d
+                muda: %s
+                Relatório feito: %s
+                Sugestão: %s
+                Avaliador: %s
+                Avaliação: %.1f
+                                    
+                                    
+                                    
+                """, relatorio.getId(), relatorio.getMuda().toString(), relatorio.getEstadoMuda(), relatorio.getSugestoes(), relatorio.getAvaliacaoEspecialista(), relatorio.getAvaliador());
+
+    }
     public List<Relatorio> procurarRelatoriosSemAvaliador() {
         return BancoDeDados.relatorios.stream().filter(relatorio -> relatorio.getAvaliador() == null).toList();
+
     }
+
 }

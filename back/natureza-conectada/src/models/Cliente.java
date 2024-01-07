@@ -89,7 +89,7 @@ public class Cliente extends Usuario {
     }
 
     public void imprimirMudas() {
-        imprimirLista(mudas, "Mudas");
+        imprimirLista(mudas, "| Mudas");
     }
 
     public void imprimirEntregas() {
