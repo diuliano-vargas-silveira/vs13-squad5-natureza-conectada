@@ -135,4 +135,8 @@ public class ServiceCliente implements IService<Cliente> {
         cliente.imprimirEntregas();
         System.out.println("------------------------------");
     }
+
+    public void imprimirMudasCliente(Cliente cliente){
+        cliente.imprimirMudas();
+    }
 }

@@ -14,8 +14,8 @@ public class Entrega implements IEntrega {
     public Entrega(){
 
     }
-    public Entrega(int id, ArrayList<Muda> mudas, StatusEntrega status, Cliente cliente){
-        this.id = id;
+    public Entrega( ArrayList<Muda> mudas, StatusEntrega status, Cliente cliente){
+
         this.mudas = mudas;
         this.status = status;
         this.cliente = cliente ;

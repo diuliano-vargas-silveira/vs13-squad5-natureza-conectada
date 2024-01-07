@@ -1,10 +1,11 @@
 package utils;
 
 import enums.Estados;
+import enums.StatusEntrega;
 import enums.TipoUsuario;
 import models.*;
 import services.*;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,11 +17,13 @@ public class Menu {
     private static final int SAIR_PROGRAMA = 3;
     private static final ServiceCliente serviceCliente = new ServiceCliente();
     private static final ServiceEspecialista serviceEspecialista = new ServiceEspecialista();
+
+    private static final ServiceRelatorio serviceRelatorio = new ServiceRelatorio();
     private static final ServiceMudas serviceMudas = new ServiceMudas();
     private static final ServiceUsuario serviceUsuario = new ServiceUsuario();
     private static final ServiceContato serviceContato = new ServiceContato();
     private static final ServiceEndereco serviceEndereco = new ServiceEndereco();
-    private static final ServiceRelatorio serviceRelatorio = new ServiceRelatorio();
+
 
     public static void rodarAplicacao() {
         do {
@@ -219,6 +222,25 @@ public class Menu {
     }
 
     private static void menuSolicitarMuda() {
+        //todo:modficar objeto entrega
+        System.out.println(QUEBRA_DE_LINHA);
+        System.out.println("| Lista de mudas");
+        List<Muda> mudas = serviceMudas.listarTodos();
+
+        int id = Teclado.nextInt("| Digite o ID da muda escolhida");
+        Muda mudaEscolhida = serviceMudas.procurarPorID(id);
+
+        Cliente clienteLogado = serviceCliente.procurarPorID(usuarioCadastrado.getId());
+
+        System.out.println("| Escolha um endereço de entrega");
+        clienteLogado.imprimirEnderecos();
+
+        int idEnderecoEscolhido = Teclado.nextInt("| Digite o ID");
+        Endereco enderecoEscolhido = serviceEndereco.procurarPorID(idEnderecoEscolhido);
+        //Entrega novaEntrega = new Entrega(List.of(mudaEscolhida), StatusEntrega.ENTREGUE,clienteLogado);
+
+        //serviceEntrega.adicionar(novaEntrega);
+        //clienteLogado.adicionarEntregas(novaEntrega);
     }
 
     private static void menuClienteEnderecos() {
@@ -367,18 +389,61 @@ public class Menu {
 
     private static void menuClienteRelatorio() {
         int opcao = 0;
+        Cliente clienteLogado = serviceCliente.procurarPorID(usuarioCadastrado.getId());
 
-        // TODO: AJUSTAR O RELATÓRIO
 
-        while (opcao != 1) {
+
+        while (opcao != 4) {
             try {
                 System.out.println(QUEBRA_DE_LINHA);
                 System.out.println("| Menu de Relatório");
-                System.out.println("| 1 - Voltar");
+                System.out.println("| 1 - Gerar relatório");
+                System.out.println("| 2 - Consultar relatórios");
+                System.out.println("| 3 - Editar relatório");
+                System.out.println("| 4 - Voltar");
                 opcao = Teclado.nextInt("| Digite sua opção:");
 
                 switch (opcao) {
+
                     case 1:
+
+                        serviceCliente.imprimirMudasCliente(clienteLogado);
+                        int idDaMudaEscolhida =  Teclado.nextInt("| Selecione o ID da muda");
+                        Muda mudaSelecionado = serviceMudas.procurarPorID(idDaMudaEscolhida);
+                        String estadoDaMuda = Teclado.nextString("| Diga para nós, como está a muda?");
+                        String sugestao = Teclado.nextString("| digite alguma sugestão para nós");
+                        Relatorio relatorio = new Relatorio(clienteLogado,mudaSelecionado,estadoDaMuda,sugestao);
+                        System.out.println("| prévia do relatório ");
+                        serviceRelatorio.imprimirRelatorio(relatorio);
+                        serviceRelatorio.adicionar(relatorio);
+                        menuCliente();
+                        break;
+                    case 2:
+                        System.out.println("| Segue relatórios abaixo");
+                        serviceRelatorio.buscarPorCliente(clienteLogado);
+
+                        menuCliente();
+                        break;
+                    case 3:
+                        System.out.println("| Lista de relatórios");
+                        serviceRelatorio.buscarPorCliente(clienteLogado);
+                        int relatorioSelecionado = Teclado.nextInt("| Seleciona o ID do relatorio");
+                        System.out.println("| Editando o relatorio");
+                        serviceCliente.imprimirMudasCliente(clienteLogado);
+                        int idMudaEscolhida =  Teclado.nextInt("| Selecione o ID da muda");
+                        Muda mudaRelatorioEditado = serviceMudas.procurarPorID(idMudaEscolhida);
+                        String estadoDaMudaEditado = Teclado.nextString("| Diga para nós, como está a muda?");
+                        String sugestaoEditada = Teclado.nextString("| digite alguma sugestão para nós");
+                        Relatorio relatorioEditado = new Relatorio(clienteLogado,mudaRelatorioEditado,estadoDaMudaEditado,sugestaoEditada);
+
+                        System.out.println("| prévia do relatório ");
+                        System.out.println(relatorioEditado.toString());
+
+                        serviceRelatorio.editar(relatorioSelecionado,relatorioEditado);
+
+                        menuCliente();
+                        break;
+                    case 4:
                         menuCliente();
                         break;
                     default:

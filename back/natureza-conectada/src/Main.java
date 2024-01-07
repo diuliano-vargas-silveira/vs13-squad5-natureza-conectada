@@ -5,6 +5,7 @@ import utils.MockContainer;
 public class Main {
 
     public static void main(String[] args) {
+        MockContainer mock = new MockContainer();
 
         new MockContainer();
         Menu.rodarAplicacao();
