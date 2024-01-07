@@ -5,7 +5,6 @@ import exceptions.InformacaoNaoEncontrada;
 import exceptions.ObjetoExistente;
 import interfaces.IService;
 import models.Admin;
-import models.Cliente;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +18,7 @@ public class ServiceAdmin implements IService<Admin> {
             throw new ObjetoExistente("Um administrador com este email já foi criado!");
         }
 
-        admin.setId(BancoDeDados.gerarNovoIdCliente());
+        admin.setId(BancoDeDados.gerarNovoIdAdmin());
         BancoDeDados.usuarios.add(admin);
         BancoDeDados.admins.add(admin);
     }
