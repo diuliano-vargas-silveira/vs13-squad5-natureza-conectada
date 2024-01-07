@@ -4,35 +4,24 @@ import enums.TipoUsuario;
 import java.util.ArrayList;
 
 public class Cliente extends Usuario {
-    private int id;
+
     private String cpf;
     private ArrayList<Endereco> enderecos = new ArrayList<>();
     private ArrayList<Contato> contatos = new ArrayList<>();
     private ArrayList<Muda> mudas = new ArrayList<>();
     private ArrayList<Entrega> entregas = new ArrayList<>();
 
-
-    // Setters e Getters
-    public ArrayList<Entrega> getEntregas() {
-        return entregas;
-    }
-
-    public void setEntregas(ArrayList<Entrega> entregas) {
-        this.entregas = entregas;
-    }
-
     // Construtor
-    public Cliente(int ID, String nome, String email, String senha, String cpf) {
-        super(ID, nome, email, senha, TipoUsuario.CLIENTE);
+    public Cliente() {
+    }
+
+    public Cliente(String nome, String email, String senha, String cpf) {
+        super(nome, email, senha, TipoUsuario.CLIENTE);
         this.cpf = cpf;
     }
 
     // Setters e Getters
-    public void setId(int id){ this.id = id;}
 
-    public int getId() {
-        return id;
-    }
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
@@ -69,6 +58,15 @@ public class Cliente extends Usuario {
     public void setMudas(ArrayList<Muda> mudas) {
         this.mudas = mudas;
     }
+
+    public ArrayList<Entrega> getEntregas() {
+        return entregas;
+    }
+
+    public void setEntregas(ArrayList<Entrega> entregas) {
+        this.entregas = entregas;
+    }
+
 
     // Exibição
     private void imprimirLista(ArrayList<?> lista, String tipo) {
@@ -108,6 +106,9 @@ public class Cliente extends Usuario {
     }
     public void adicionarMuda(Muda muda) {
         mudas.add(muda);
+    }
+    public void adicionarEntregas(Entrega entrega) {
+        entregas.add(entrega);
     }
 
     @Override
