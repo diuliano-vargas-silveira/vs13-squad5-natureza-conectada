@@ -26,6 +26,10 @@ public class Muda {
 
     private List<Especialista> especialistasDeRegiao = new ArrayList<>();
 
+    public Muda(){
+
+    }
+
     public Muda(int tipo, String nome, String nomeCientifico, int porte, String ambienteIdeal, String descricao) {
 
         if (TipoMuda.ofTipo(tipo) == null) {

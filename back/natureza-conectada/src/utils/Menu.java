@@ -1,9 +1,7 @@
 package utils;
 
 import database.BancoDeDados;
-import enums.Estados;
-import enums.StatusEntrega;
-import enums.TipoUsuario;
+import enums.*;
 import models.*;
 import services.*;
 import java.util.List;
@@ -675,7 +673,95 @@ public class Menu {
     }
 
     private static void menuAdminMudas() {
+        int opcao = 0;
+        while (opcao != 4) {
+            try {
+                System.out.println(QUEBRA_DE_LINHA);
+                System.out.println("| Menu mudas");
+                System.out.println("| 1 - Adicionar muda");
+                System.out.println("| 2 - Deletar muda");
+                System.out.println("| 3 - Editar muda");
+                System.out.println("| 4 - Listar mudas");
+                System.out.println("| 5 - Voltar");
+                opcao = Teclado.nextInt("| Digite sua opção:");
 
+                switch (opcao) {
+                    case 1:
+                        boolean isValido = false;
+                        String tipoMuda = null;
+                        while (!isValido) {
+                            System.out.println("| Tipos de muda: ");
+                            System.out.println("| PLANTA");
+                            System.out.println("| ARVORE");
+                            tipoMuda = Teclado.nextString("| O tipo da sua muda:");
+                            for (TipoMuda mudas : TipoMuda.values()){
+                                if (mudas.toString().equals(tipoMuda)){
+                                    isValido = true;
+                                    break;
+                                }
+                            }
+                            if (!isValido) {
+                                System.err.println("| Tipo de muda inválido ");
+                            }
+                        }
+
+                        String nome = Teclado.nextString("| Digite o nome da sua muda: ");
+                        String nomeCientifico = Teclado.nextString("| Digite o nome científico da sua muda: ");
+                        String porteMuda = null;
+                        boolean isValidoPorte = false;
+                        while (!isValidoPorte) {
+                            System.out.println("| Portes de muda: ");
+                            System.out.println("| PEQUENO");
+                            System.out.println("| MEDIO");
+                            System.out.println("| GRANDE");
+                            porteMuda = Teclado.nextString("| Digite o porte da sua muda: ");
+                            for (TamanhoMuda portes : TamanhoMuda.values()){
+                                if (portes.toString().equals(porteMuda)){
+                                    isValidoPorte = true;
+                                    break;
+                                }
+                            }
+                            if (!isValidoPorte) {
+                                System.err.println("| Porte de muda inválido ");
+                            }
+                        }
+                        String ambienteIdeal = Teclado.nextString("| Digite o ambiente ideal da sua muda: ");
+                        String descricao = Teclado.nextString("| Digite a descrição da sua muda: ");
+
+                        Muda novaMuda = new Muda();
+                        novaMuda.setTipo(TipoMuda.valueOf(tipoMuda));
+                        novaMuda.setNome(nome);
+                        novaMuda.setNomeCientifico(nomeCientifico);
+                        novaMuda.setPorte(TamanhoMuda.valueOf(porteMuda));
+                        novaMuda.setAmbienteIdeal(ambienteIdeal);
+                        novaMuda.setDescricao(descricao);
+
+                        serviceMudas.adicionar(novaMuda);
+                        System.out.println("| Muda adicionada com sucesso!");
+                        break;
+                    case 2:
+                        int id = Teclado.nextInt("| Digite o ID da muda a ser deletada:");
+                        Muda mudaExistente = serviceMudas.procurarPorID(id);
+                        serviceMudas.deletar(mudaExistente.getId());
+                        System.out.println("| Muda deletada com sucesso!");
+                        break;
+
+                    case 3:
+                        System.out.println("| Listando mudas:");
+                        System.out.println(serviceMudas.listarTodos());
+                        break;
+
+                    case 4:
+                        System.out.println("| Voltando...");
+                        break;
+                    default:
+                        System.out.println(OPCAO_INVALIDA);
+                }
+
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        }
     }
 
     private static void menuEditarContato() {
