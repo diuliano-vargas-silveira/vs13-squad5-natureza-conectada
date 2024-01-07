@@ -202,7 +202,14 @@ public class MockContainer {
         serviceEntrega.adicionar(entrega8);
         serviceEntrega.adicionar(entrega9);
         serviceEntrega.adicionar(entrega10);
-        
+
+
+        // Administrador - criação de objetos, adoções ao banco de dados
+        ServiceAdmin serviceAdmin = new ServiceAdmin();
+
+        Admin admin = new Admin("Administrador", "administrador@naturezaconectada.com", "senhadificil");
+        serviceAdmin.adicionar(admin);
+
         // Clientes - criação de objetos, adições ao banco de dados
         ServiceCliente serviceCliente = new ServiceCliente();
 
