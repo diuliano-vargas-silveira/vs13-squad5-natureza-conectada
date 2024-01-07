@@ -9,6 +9,7 @@ public class BancoDeDados {
     // ID de todas as classes, vai mudar diferenciando por listas
     private static int IDCliente = 0;
     private static int IDEspecialita = 0;
+    private static int IDAdmin = 0;
     private static int IDContato = 0;
     private static int IDEndereco = 0;
     private static int IDMudas = 0;
@@ -18,6 +19,7 @@ public class BancoDeDados {
     public static List<Usuario> usuarios = new ArrayList<>();
     public static List<Cliente> clientes = new ArrayList<>();
     public static List<Especialista> especialistas = new ArrayList<>();
+    public static List<Admin> admins = new ArrayList<>();
     public static List<Contato> contatos = new ArrayList<>();
     public static List<Endereco> enderecos = new ArrayList<>();
     public static List<Entrega> entregas = new ArrayList<>();
@@ -46,6 +48,10 @@ public class BancoDeDados {
     public static int gerarNovoIdEspecialista() {
         IDEspecialita++;
         return IDEspecialita;
+    }
+    public static int gerarNovoIdAdmin() {
+        IDAdmin++;
+        return IDAdmin;
     }
     public static int gerarNovoIdRelatorio() {
         IDRelatorios++;
