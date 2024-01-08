@@ -221,12 +221,11 @@ public class Menu {
 
     private static void menuMinhasMudas() {
         System.out.println(QUEBRA_DE_LINHA);
+        Cliente clienteLogado = serviceCliente.procurarPorID(usuarioCadastrado.getId());
         System.out.println("| Suas mudas");
-        List<Muda> mudas = serviceMudas.listarTodos();
+       clienteLogado.imprimirMudas();
 
-        for (Muda muda : mudas) {
-            System.out.println(muda);
-        }
+
     }
 
     private static void menuSolicitarMuda() {
