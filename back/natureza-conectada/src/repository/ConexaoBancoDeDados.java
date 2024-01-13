@@ -12,7 +12,7 @@ public class ConexaoBancoDeDados {
 
     private static final String USER = "VS_13_EQUIPE_5";
     private static final String PASS = "oracle";
-    private static final String SCHEMA = "EQUIPE_5";
+    private static final String SCHEMA = "VS_13_EQUIPE_5";
 
     public static Connection getConnection() throws SQLException {
         String url = "jdbc:oracle:thin:@" + SERVER + ":" + PORT + ":" + DATABASE;
