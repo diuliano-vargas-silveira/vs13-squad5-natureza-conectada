@@ -1,3 +1,4 @@
+/*
 package services;
 
 import database.BancoDeDados;
@@ -37,3 +38,4 @@ public class ServiceUsuario implements IServiceUsuario {
         return BancoDeDados.usuarios.stream().filter(usuario -> usuario.getEmail().equals(email)).findFirst();
     }
 }
+ */

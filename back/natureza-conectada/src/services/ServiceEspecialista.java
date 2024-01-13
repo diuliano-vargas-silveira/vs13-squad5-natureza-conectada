@@ -1,3 +1,4 @@
+/*
 package services;
 
 import database.BancoDeDados;
@@ -83,3 +84,4 @@ public class ServiceEspecialista implements IService<Especialista> {
         }).toList();
     }
 }
+ */
