@@ -1,90 +1,175 @@
 package repository;
 
 import enums.Estados;
+import exceptions.BancoDeDadosException;
 import models.Contato;
 import models.Especialista;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-public class EspecialistaRepository {
+public class EspecialistaRepository implements Repository<Integer, Especialista> {
 
-    private static final List<Especialista> especialistas = new ArrayList<>();
-    private static int nextId = 1;
-
-    public Especialista adicionarEspecialista(Especialista especialista) {
-        especialista.setId(nextId++);
-        especialistas.add(especialista);
-        return especialista;
-    }
-
-    public Optional<Especialista> buscarEspecialistaPorID(int id) {
-        return especialistas.stream().filter(e -> e.getId() == id).findFirst();
-    }
-
-    public List<Especialista> listarTodosEspecialistas() {
-        return new ArrayList<>(especialistas);
-    }
-
-    public boolean atualizarEspecialista(int id, Especialista especialistaAtualizado) {
-        Optional<Especialista> especialistaExistente = buscarEspecialistaPorID(id);
-
-        if (especialistaExistente.isPresent()) {
-            int index = especialistas.indexOf(especialistaExistente.get());
-            especialistaAtualizado.setId(id);
-            especialistas.set(index, especialistaAtualizado);
-            return true;
+    @Override
+    public Integer getProximoId(Connection connection) throws SQLException {
+        String sql = "SELECT SEQ_ESPECIALISTA.NEXTVAL mysequence FROM DUAL";
+        Statement stmt = connection.createStatement();
+        ResultSet resultado = stmt.executeQuery(sql);
+        if (resultado.next()) {
+            return resultado.getInt("mysequence");
         }
-
-        return false;
+        return null;
     }
 
-    public boolean excluirEspecialista(int id) {
-        Optional<Especialista> especialistaExistente = buscarEspecialistaPorID(id);
+    @Override
+    public Especialista adicionar(Especialista especialista) throws BancoDeDadosException {
+        Connection conexao = null;
+        try {
+            conexao = ConexaoBancoDeDados.getConnection();
+            Integer proximoId = this.getProximoId(conexao);
+            especialista.setId(proximoId.intValue());
 
-        if (especialistaExistente.isPresent()) {
-            especialistas.remove(especialistaExistente.get());
-            return true;
+            String sql = "INSERT INTO VS_13_EQUIPE_5.ESPECIALISTA\n" +
+                    "(ID_ESPECIALISTA, NOME, EMAIL, SENHA, CONTATO, DOCUMENTO, ESPECIALIZACAO, REGIAO_RESPONSAVEL)\n" +
+                    "VALUES(?, ?, ?, ?, ?, ?, ?, ?)\n";
+
+            PreparedStatement stmt = conexao.prepareStatement(sql);
+            stmt.setInt(1, especialista.getId());
+            stmt.setString(2, especialista.getNome());
+            stmt.setString(3, especialista.getEmail());
+            stmt.setString(4, especialista.getSenha());
+            stmt.setObject(5, especialista.getContato());
+            stmt.setString(6, especialista.getDocumento());
+            stmt.setString(7, especialista.getEspecializacao());
+            stmt.setString(8, especialista.getRegiaoResponsavel().toString());
+
+            int resultado = stmt.executeUpdate();
+            System.out.println("O especialista foi adicionado! Resultado: " + resultado);
+
+            return especialista;
+
+        } catch (SQLException erro) {
+            System.out.println("ERRO: Algo deu errado para adicionar o especialista ao banco de dados.");
+            throw new BancoDeDadosException(erro.getCause());
+        } finally {
+            try {
+                fecharConexao(conexao);
+            } catch (SQLException erro) {
+                System.out.println("ERRO: Não foi possível encerrar corretamente a conexão com o banco de dados.");
+                erro.printStackTrace();
+            }
         }
-
-        return false;
     }
 
-    public static void main(String[] args) {
+    @Override
+    public boolean remover(Integer id) throws BancoDeDadosException {
+        Connection conexao = null;
+        try {
+            conexao = ConexaoBancoDeDados.getConnection();
+            String sql = "DELETE FROM VS_13_EQUIPE_5.ESPECIALISTA WHERE ID_ESPECIALISTA = ?";
 
-        EspecialistaRepository especialistaRepository = getEspecialistaRepository();
+            PreparedStatement stmt = conexao.prepareStatement(sql);
+            stmt.setInt(1, id.intValue());
 
-        System.out.println("Lista de Especialistas:");
-        especialistaRepository.listarTodosEspecialistas().forEach(System.out::println);
+            int resultado = stmt.executeUpdate();
+            System.out.println("O especialista foi removido! Resultado: " + resultado);
 
-        Optional<Especialista> espEncontrado = especialistaRepository.buscarEspecialistaPorID(1);
-        espEncontrado.ifPresent(especialista -> System.out.println("\nEspecialista encontrado por ID: " + especialista));
-
-        especialistaRepository.atualizarEspecialista(1, new Especialista("NovoNome", "emailAtualizado@example.com", "novaSenha",
-                new Contato("NovoTelefone", "NovoEndereco"), "NovoDocumento", "NovaEspecializacao", Estados.MG));
-
-        System.out.println("\nLista de Especialistas após Atualização:");
-        especialistaRepository.listarTodosEspecialistas().forEach(System.out::println);
-
-
-        especialistaRepository.excluirEspecialista(2);
-
-
-        System.out.println("\nLista de Especialistas após Exclusão:");
-        especialistaRepository.listarTodosEspecialistas().forEach(System.out::println);
+            return resultado > 0;
+        } catch (SQLException erro) {
+            System.out.println("ERRO: Algo deu errado para remover o especialista do banco de dados.");
+            throw new BancoDeDadosException(erro.getCause());
+        } finally {
+            try {
+                fecharConexao(conexao);
+            } catch (SQLException erro) {
+                System.out.println("ERRO: Não foi possível encerrar corretamente a conexão com o banco de dados.");
+                erro.printStackTrace();
+            }
+        }
     }
 
-    private static EspecialistaRepository getEspecialistaRepository() {
-        EspecialistaRepository especialistaRepository = new EspecialistaRepository();
+    @Override
+    public boolean editar(Integer id, Especialista especialista) throws BancoDeDadosException {
+        Connection conexao = null;
+        try {
+            conexao = ConexaoBancoDeDados.getConnection();
 
-        // Adicionar especialistas
-        Especialista esp1 = new Especialista("Especialista1", "email1@example.com", "senha1",
-                new Contato("Telefone1", "Endereco1"), "Documento1", "Especializacao1", Estados.SP);
-        especialistaRepository.adicionarEspecialista(esp1);
+            StringBuilder sql = new StringBuilder();
+            sql.append("UPDATE VS_13_EQUIPE_5.ESPECIALISTA SET");
+            sql.append(" NOME = ?, EMAIL = ?, SENHA = ?, CONTATO = ?, DOCUMENTO = ?, ESPECIALIZACAO = ?, REGIAO_RESPONSAVEL = ?");
+            sql.append(" WHERE ID_ESPECIALISTA = ?");
 
-        Especialista esp2 = new Especialista("Especialista2", "email2@example.com", "senha2",
-                new Contato("Telefone2", "Endereco2"), "Documento2", "Especializacao2", Estados.RJ);
-        especialistaRepository.adicionarEspecialista(esp2);
-        return especialistaRepository;
+            PreparedStatement stmt = conexao.prepareStatement(sql.toString());
+            stmt.setString(1, especialista.getNome());
+            stmt.setString(2, especialista.getEmail());
+            stmt.setString(3, especialista.getSenha());
+            stmt.setObject(4, especialista.getContato());
+            stmt.setString(5, especialista.getDocumento());
+            stmt.setString(6, especialista.getEspecializacao());
+            stmt.setString(7, especialista.getRegiaoResponsavel().toString());
+            stmt.setInt(8, id.intValue());
+
+            int resultado = stmt.executeUpdate();
+
+            System.out.println("O especialista foi atualizado! Resultado: " + resultado);
+            return resultado > 0;
+        } catch (SQLException erro) {
+            System.out.println("ERRO: Algo deu errado ao editar o especialista no banco de dados.");
+            throw new BancoDeDadosException(erro.getCause());
+        } finally {
+            try {
+                fecharConexao(conexao);
+            } catch (SQLException erro) {
+                System.out.println("ERRO: Não foi possível encerrar corretamente a conexão com o banco de dados.");
+                erro.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public List<Especialista> listar() throws BancoDeDadosException {
+        Connection conexao = null;
+        List<Especialista> listaEspecialistas = new ArrayList<>();
+
+        try {
+            conexao = ConexaoBancoDeDados.getConnection();
+            Statement statment = conexao.createStatement();
+
+            String sqlEspecialista = "SELECT * FROM VS_13_EQUIPE_5.ESPECIALISTA";
+
+            ResultSet especialistaTabela = statment.executeQuery(sqlEspecialista);
+
+            while (especialistaTabela.next()) {
+                Especialista especialistaAtual = new Especialista();
+                especialistaAtual.setId(especialistaTabela.getInt("ID_ESPECIALISTA"));
+                especialistaAtual.setNome(especialistaTabela.getString("NOME"));
+                especialistaAtual.setEmail(especialistaTabela.getString("EMAIL"));
+                especialistaAtual.setSenha(especialistaTabela.getString("SENHA"));
+                especialistaAtual.setContato((Contato) especialistaTabela.getObject("CONTATO"));
+                especialistaAtual.setDocumento(especialistaTabela.getString("DOCUMENTO"));
+                especialistaAtual.setEspecializacao(especialistaTabela.getString("ESPECIALIZACAO"));
+                especialistaAtual.setRegiaoResponsavel(Estados.valueOf(especialistaTabela.getString("REGIAO_RESPONSAVEL")));
+
+                listaEspecialistas.add(especialistaAtual);
+            }
+
+        } catch (SQLException erro) {
+            System.out.println("ERRO: Algo deu errado ao listar os especialistas do banco de dados.");
+            throw new BancoDeDadosException(erro.getCause());
+        } finally {
+            try {
+                fecharConexao(conexao);
+            } catch (SQLException erro) {
+                System.out.println("ERRO: Não foi possível encerrar corretamente a conexão com o banco de dados.");
+                erro.printStackTrace();
+            }
+        }
+        return listaEspecialistas;
+    }
+
+    private void fecharConexao(Connection conexao) throws SQLException {
+        if (conexao != null) {
+            conexao.close();
+        }
     }
 }
