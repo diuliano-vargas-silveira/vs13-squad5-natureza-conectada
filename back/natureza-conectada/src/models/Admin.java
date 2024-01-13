@@ -3,6 +3,9 @@ package models;
 import enums.TipoUsuario;
 
 public class Admin extends Usuario{
+    public Admin() {
+    }
+
     public Admin(String nome, String email, String senha) {
         super(nome, email, senha, TipoUsuario.ADMIN);
     }
