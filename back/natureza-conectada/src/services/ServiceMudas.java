@@ -1,3 +1,4 @@
+/*
 package services;
 
 import database.BancoDeDados;
@@ -69,3 +70,4 @@ public class ServiceMudas implements IService<Muda> {
         return BancoDeDados.mudas.stream().filter(muda -> muda.getId() == id).findFirst();
     }
 }
+ */

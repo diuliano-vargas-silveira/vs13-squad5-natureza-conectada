@@ -1,3 +1,4 @@
+/*
 package services;
 
 import database.BancoDeDados;
@@ -68,3 +69,5 @@ public class ServiceEndereco implements IService<Endereco> {
         return BancoDeDados.enderecos.stream().filter(endereco -> endereco.getId() == id).findFirst();
     }
 }
+
+ */
