@@ -1,3 +1,4 @@
+/*
 package utils;
 
 import database.BancoDeDados;
@@ -904,3 +905,4 @@ public class Menu {
     }
 
 }
+ */

@@ -1,3 +1,4 @@
+/*
 package services;
 
 import database.BancoDeDados;
@@ -74,3 +75,4 @@ public class ServiceAdmin implements IService<Admin> {
         return BancoDeDados.admins.stream().filter(admin -> admin.getEmail().equals(email)).findFirst();
     }
 }
+*/

@@ -1,4 +1,4 @@
-package services;
+/* package services;
 
 import database.BancoDeDados;
 import exceptions.InformacaoNaoEncontrada;
@@ -64,3 +64,5 @@ public class ServiceContato implements IService<Contato> {
         return BancoDeDados.contatos.stream().filter(contato -> contato.getId() == id).findFirst();
     }
 }
+
+ */

@@ -1,4 +1,4 @@
-package services;
+/* package services;
 
 import database.BancoDeDados;
 import exceptions.InformacaoNaoEncontrada;
@@ -140,3 +140,4 @@ public class ServiceCliente implements IService<Cliente> {
         cliente.imprimirMudas();
     }
 }
+*/
