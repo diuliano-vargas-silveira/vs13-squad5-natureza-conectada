@@ -96,8 +96,8 @@ public class UsuarioRepository implements Repository<Integer, Usuario> {
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE USUARIO SET");
-            sql.append(" EMAIL = ?");
-            sql.append(" NOME = ?");
+            sql.append(" EMAIL = ?,");
+            sql.append(" NOME = ?,");
             sql.append(" SENHA = ?");
             sql.append(" WHERE ID_USUARIO = ?");
 
