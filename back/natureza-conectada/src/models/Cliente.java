@@ -115,9 +115,7 @@ public class Cliente extends Usuario {
     public String toString() {
         return "\nID: " + getId() +
                 "\nNome: " + getNome() +
-                "\nCPF: " + getCpf() +
-                "\nE-mail: " + getEmail()
-                ;
+                "\nCPF: " + getCpf();
     }
 
 }
