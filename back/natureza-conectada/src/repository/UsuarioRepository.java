@@ -66,7 +66,7 @@ public class UsuarioRepository implements Repository<Integer, Usuario> {
         Connection conexao = null;
         try {
             conexao = ConexaoBancoDeDados.getConnection();
-            String sql = "DELETE FROM USUARIO WHERE ID_ENTREGA = ?";
+            String sql = "DELETE FROM USUARIO WHERE ID_USUARIO = ?";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setInt(1, id.intValue());
@@ -99,11 +99,13 @@ public class UsuarioRepository implements Repository<Integer, Usuario> {
             sql.append(" EMAIL = ?");
             sql.append(" NOME = ?");
             sql.append(" SENHA = ?");
+            sql.append(" WHERE ID_USUARIO = ?");
 
             PreparedStatement stmt = conexao.prepareStatement(sql.toString());
             stmt.setString(1, usuario.getEmail());
             stmt.setString(2, usuario.getNome());
             stmt.setString(3, usuario.getSenha());
+            stmt.setInt(4, id);
 
             int resultado = stmt.executeUpdate();
 
@@ -179,7 +181,6 @@ public class UsuarioRepository implements Repository<Integer, Usuario> {
 
         return admin;
     }
-
 
     private Usuario getEspecialista(ResultSet usuario) throws SQLException {
         Especialista especialista = new Especialista();
