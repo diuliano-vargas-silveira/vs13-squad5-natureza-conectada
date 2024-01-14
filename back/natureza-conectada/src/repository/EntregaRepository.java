@@ -121,7 +121,7 @@ public class EntregaRepository implements Repository<Integer, Entrega>{
     }
 
     @Override
-    public List listar() throws BancoDeDadosException {
+    public List<Entrega> listar() throws BancoDeDadosException {
         Connection conexao = null;
         List<Entrega> listaEntrega = new ArrayList<>();
 
