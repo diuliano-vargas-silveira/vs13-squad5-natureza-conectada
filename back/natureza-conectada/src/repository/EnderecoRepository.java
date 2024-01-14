@@ -113,7 +113,7 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
 
             int resultado = stmt.executeUpdate();
 
-            System.out.println("A entrega foi atualizada! Resultado: ".concat(String.valueOf(resultado)));
+            System.out.println("O endereço foi atualizado! Resultado: ".concat(String.valueOf(resultado)));
         }catch(SQLException erro){
             System.out.println("ERRO: Algo deu errado em editar o endereço no banco de dados.");
             throw new BancoDeDadosException(erro.getCause());
