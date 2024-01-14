@@ -69,7 +69,7 @@ public class UsuarioRepository implements Repository<Integer, Usuario> {
             String sql = "DELETE FROM USUARIO WHERE ID_USUARIO = ?";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setInt(1, id.intValue());
+            stmt.setInt(1, id);
 
             int resultado = stmt.executeUpdate();
             System.out.println("Usuário foi removido! Resultado: ".concat(String.valueOf(resultado)));
@@ -109,7 +109,7 @@ public class UsuarioRepository implements Repository<Integer, Usuario> {
 
             int resultado = stmt.executeUpdate();
 
-            System.out.println("Seu usuário foi criado! Resultado: ".concat(String.valueOf(resultado)));
+            System.out.println("Seu usuário foi editado! Resultado: ".concat(String.valueOf(resultado)));
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado em editar seu usuário no banco de dados.");
             throw new BancoDeDadosException(erro.getCause());
