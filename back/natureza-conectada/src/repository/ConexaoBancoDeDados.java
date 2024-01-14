@@ -23,10 +23,10 @@ public class ConexaoBancoDeDados {
         String url = "jdbc:oracle:thin:@" + SERVER + ":" + PORT + ":" + DATABASE;
 
 
-        Connection con = DriverManager.getConnection(SESSAO_LOCAL, USER_LOCAL, SENHA_LOCAL);
+        Connection con = DriverManager.getConnection(url, USER, PASS);
 
 
-        con.createStatement().execute("alter session set current_schema=" + SCHEMA_LOCAL);
+        con.createStatement().execute("alter session set current_schema=" + SCHEMA);
 
         return con;
     }
