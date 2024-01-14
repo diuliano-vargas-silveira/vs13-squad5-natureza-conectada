@@ -32,7 +32,7 @@ public class UsuarioRepository implements Repository<Integer, Usuario> {
         try {
             conexao = ConexaoBancoDeDados.getConnection();
             Integer proximoId = this.getProximoId(conexao);
-            usuario.setId(proximoId.intValue());
+            usuario.setId(proximoId);
 
             String sql = "INSERT INTO USUARIO\n" +
                     "(ID_USUARIO, NOME, EMAIL, SENHA, TIPO_USUARIO)\n" +
@@ -167,10 +167,10 @@ public class UsuarioRepository implements Repository<Integer, Usuario> {
         try {
             conexao = ConexaoBancoDeDados.getConnection();
 
-            String sqlUsuario = "SELECT * FROM USUARIO WHERE EMAIL = '" + email + "'";
+            String sqlUsuario = "SELECT * FROM USUARIO WHERE EMAIL = ?";
             PreparedStatement preparedStatement = conexao.prepareStatement(sqlUsuario);
 
-//            preparedStatement.setString(1, email);
+            preparedStatement.setString(1, email);
 
             ResultSet usuarioTabela = preparedStatement.executeQuery();
 
