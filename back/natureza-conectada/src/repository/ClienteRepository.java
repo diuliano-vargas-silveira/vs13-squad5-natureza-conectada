@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClienteRepository implements Repository<Integer, Cliente>{
+public class ClienteRepository implements Repository<Integer, Cliente> {
 
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
@@ -27,9 +27,9 @@ public class ClienteRepository implements Repository<Integer, Cliente>{
         try {
             conexao = ConexaoBancoDeDados.getConnection();
             Integer proximoId = this.getProximoId(conexao);
-            cliente.setId(proximoId.intValue());
+            cliente.setIdCliente(proximoId);
 
-            String sql = "INSERT INTO VS_13_EQUIPE_5.CLIENTE\n" +
+            String sql = "INSERT INTO CLIENTE\n" +
                     "(ID_CLIENTE, ID_USUARIO, CPF)\n" +
                     "VALUES(?, ?, ?)\n";
 
@@ -66,7 +66,7 @@ public class ClienteRepository implements Repository<Integer, Cliente>{
         Connection conexao = null;
         try {
             conexao = ConexaoBancoDeDados.getConnection();
-            String sql = "DELETE FROM VS_13_EQUIPE_5.CLIENTE WHERE id_cliente = ?";
+            String sql = "DELETE FROM CLIENTE WHERE id_cliente = ?";
 
             try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
                 stmt.setInt(1, id);
@@ -81,7 +81,7 @@ public class ClienteRepository implements Repository<Integer, Cliente>{
 
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
-        }finally {
+        } finally {
             try {
                 fecharConexao(conexao);
             } catch (SQLException erro) {
@@ -97,23 +97,19 @@ public class ClienteRepository implements Repository<Integer, Cliente>{
 
         try {
             conexao = ConexaoBancoDeDados.getConnection();
-            StringBuilder sql_cliente = new StringBuilder();
 
-            sql_cliente.append("UPDATE VS_13_EQUIPE_5.CLIENTE SET ");
-            sql_cliente.append(" CPF = ? ");
-            sql_cliente.append(" WHERE id_cliente = ? ");
+            String sql_cliente = "UPDATE CLIENTE SET\n" +
+                    " CPF = ? \n" +
+                    " WHERE id_cliente = ? ";
 
-            try (PreparedStatement stmt = conexao.prepareStatement(sql_cliente.toString())) {
-                stmt.setString(1, clienteEditado.getCpf());
-                stmt.setInt(2, id);
+            PreparedStatement stmt = conexao.prepareStatement(sql_cliente);
+            stmt.setString(1, clienteEditado.getCpf());
+            stmt.setInt(2, id);
 
-                int res = stmt.executeUpdate();
-                System.out.println("editarPessoa.res=" + res);
+            int res = stmt.executeUpdate();
+            System.out.println("editarPessoa.res=" + res);
 
-                return res > 0;
-            } catch (SQLException e) {
-                throw new BancoDeDadosException(e.getCause());
-            }
+            return res > 0;
 
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
@@ -140,26 +136,26 @@ public class ClienteRepository implements Repository<Integer, Cliente>{
                     "FROM VS_13_EQUIPE_5.CLIENTE c\n" +
                     "INNER JOIN VS_13_EQUIPE_5.USUARIO u ON (c.ID_USUARIO = u.ID_USUARIO )");
 
-                while (res.next()) {
-                    Cliente cliente = new Cliente();
-                    cliente.setId(res.getInt("ID_CLIENTE"));
-                    cliente.setNome(res.getString("NOME"));
-                    cliente.setEmail(res.getString("EMAIL"));
-                    cliente.setCpf(res.getString("CPF"));
-                    clientes.add(cliente);
-                }
-
-            } catch (SQLException e) {
-                throw new BancoDeDadosException(e.getCause());
-            } finally {
-                try {
-                    fecharConexao(conexao);
-                } catch (SQLException erro) {
-                    System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
-                    erro.printStackTrace();
-                }
+            while (res.next()) {
+                Cliente cliente = new Cliente();
+                cliente.setId(res.getInt("ID_CLIENTE"));
+                cliente.setNome(res.getString("NOME"));
+                cliente.setEmail(res.getString("EMAIL"));
+                cliente.setCpf(res.getString("CPF"));
+                clientes.add(cliente);
             }
-            return clientes;
+
+        } catch (SQLException e) {
+            throw new BancoDeDadosException(e.getCause());
+        } finally {
+            try {
+                fecharConexao(conexao);
+            } catch (SQLException erro) {
+                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
+                erro.printStackTrace();
+            }
+        }
+        return clientes;
 
     }
 
@@ -169,7 +165,7 @@ public class ClienteRepository implements Repository<Integer, Cliente>{
 
         try {
             conexao = ConexaoBancoDeDados.getConnection();
-            String sql = "SELECT c.ID_CLIENTE, c.CPF, u.NOME, u.EMAIL\n" +
+            String sql = "SELECT c.ID_CLIENTE, c.CPF, u.NOME, u.EMAIL, c.ID_USUARIO\n" +
                     "FROM\n" +
                     "\tUSUARIO u \n" +
                     "INNER JOIN \n" +
@@ -188,8 +184,7 @@ public class ClienteRepository implements Repository<Integer, Cliente>{
 
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
-        }
-        finally {
+        } finally {
             try {
                 fecharConexao(conexao);
             } catch (SQLException erro) {
@@ -207,6 +202,7 @@ public class ClienteRepository implements Repository<Integer, Cliente>{
         cliente.setNome(usuario.getString("NOME"));
         cliente.setEmail(usuario.getString("EMAIL"));
         cliente.setCpf(usuario.getString("CPF"));
+        cliente.setId(usuario.getInt("ID_USUARIO"));
 
         return cliente;
     }

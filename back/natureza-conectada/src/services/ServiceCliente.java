@@ -17,9 +17,8 @@ public class ServiceCliente implements IService<Cliente> {
 
     @Override
     public void adicionar(Cliente cliente) throws Exception {
-        Usuario usuarioCriado = serviceUsuario.adicionarUsuario(cliente);
 
-        Usuario usuario = serviceUsuario.adicionarUsuario(cliente);
+        Usuario usuarioCriado = serviceUsuario.adicionarUsuario(cliente);
         cliente.setId(usuarioCriado.getId());
 
         if (cliente.getCpf().length() != 11) {

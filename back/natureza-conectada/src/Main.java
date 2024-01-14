@@ -6,6 +6,7 @@ import enums.TipoUsuario;
 import models.Cliente;
 import models.Especialista;
 import models.Usuario;
+import services.ServiceCliente;
 import services.ServiceEspecialista;
 import services.ServiceUsuario;
 
@@ -17,24 +18,23 @@ public class Main {
 
         // Menu.rodarAplicacao();
 
-        ServiceEspecialista serviceEspecialista = new ServiceEspecialista();
+        ServiceCliente serviceCliente = new ServiceCliente();
+
 
         try {
-            Especialista especialista = new Especialista();
+//            Cliente cliente1 = serviceCliente.procurarPorID(3);
+//            Cliente cliente = new Cliente();
+//            cliente.setId(cliente1.getId());
+//
+//            cliente.setNome("Willian");
+//            cliente.setEmail("novoemail8@gmail.com");
+//            cliente.setSenha("senhadifemailicil");
+//            cliente.setCpf("12345678910");
 
-            especialista.setNome("Diuliano Vargas");
-            especialista.setEmail("diulianovargas@gmail.com");
-            especialista.setSenha("senhadificil");
-            especialista.setDocumento("00000000000");
-            especialista.setEspecializacao("informática");
-            especialista.setTipoUsuario(TipoUsuario.ESPECIALISTA);
-            especialista.setRegiaoResponsavel(Estados.RS);
+            //serviceCliente.adicionar(cliente);serviceCliente
 
-//            serviceEspecialista.adicionar(especialista);
+            serviceCliente.deletar(3);
 
-            especialista.setEspecializacao("Grêmio");
-
-            serviceEspecialista.editar(2, especialista);
         }catch (Exception e) {
             e.printStackTrace();
         }
