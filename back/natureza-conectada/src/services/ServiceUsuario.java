@@ -5,7 +5,6 @@ import exceptions.InformacaoNaoEncontrada;
 import exceptions.ObjetoExistente;
 import exceptions.SenhaOuEmailInvalido;
 import interfaces.IServiceUsuario;
-import models.Especialista;
 import models.Usuario;
 import repository.UsuarioRepository;
 
@@ -55,8 +54,7 @@ public class ServiceUsuario implements IServiceUsuario {
         usuarioRepository.remover(id);
     }
 
-    public void editar(int id, Usuario usuarioEditado) throws BancoDeDadosException {
-        usuarioRepository.editar(id, usuarioEditado);
+    public boolean editar(int id, Usuario usuarioEditado) throws BancoDeDadosException {
+        return usuarioRepository.editar(id, usuarioEditado);
     }
 }
-
