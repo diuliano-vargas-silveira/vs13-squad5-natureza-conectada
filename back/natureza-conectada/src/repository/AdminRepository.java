@@ -1,6 +1,8 @@
 package repository;
 import exceptions.BancoDeDadosException;
 import models.Admin;
+import models.Cliente;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +23,10 @@ public class AdminRepository implements Repository<Integer, Admin> {
 
     @Override
     public Admin adicionar(Admin admin) throws BancoDeDadosException {
-        try (Connection conexao = ConexaoBancoDeDados.getConnection()) {
-
+        Connection conexao = null;
+        try {
+            
+            conexao = ConexaoBancoDeDados.getConnection();
             Integer proximoId = this.getProximoId(conexao);
             admin.setId(proximoId.intValue());
 
@@ -48,12 +52,21 @@ public class AdminRepository implements Repository<Integer, Admin> {
         } catch (SQLException erro) {
             System.out.println("ERRO: Não foi possível obter a conexão com o banco de dados.");
             throw new BancoDeDadosException(erro.getCause());
+        } finally {
+            try {
+                fecharConexao(conexao);
+            } catch (SQLException erro) {
+                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
+                erro.printStackTrace();
+            }
         }
     }
 
     @Override
     public boolean remover(Integer id) throws BancoDeDadosException {
-        try (Connection conexao = ConexaoBancoDeDados.getConnection()) {
+        Connection conexao = null;
+        try {
+            conexao = ConexaoBancoDeDados.getConnection();
             String sql = "DELETE FROM VS_13_EQUIPE_5.ADMIN WHERE id_admin = ?";
 
             try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
@@ -69,17 +82,60 @@ public class AdminRepository implements Repository<Integer, Admin> {
 
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
+        }finally {
+            try {
+                fecharConexao(conexao);
+            } catch (SQLException erro) {
+                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
+                erro.printStackTrace();
+            }
         }
     }
 
+    @Override
+    public boolean editar(Integer id, Admin adminEditado) throws BancoDeDadosException {
+        Connection conexao = null;
+        try {
+            conexao = ConexaoBancoDeDados.getConnection();
+            StringBuilder sql_admin = new StringBuilder();
+
+            sql_admin.append("UPDATE VS_13_EQUIPE_5.ADMIN SET ");
+            sql_admin.append(" NOME = ?, ");
+            sql_admin.append(" EMAIL = ? ");
+            sql_admin.append(" WHERE id_cliente = ? ");
+
+            try (PreparedStatement stmt = conexao.prepareStatement(sql_admin.toString())) {
+                stmt.setString(1, adminEditado.getNome());
+                stmt.setString(2, adminEditado.getEmail());
+                stmt.setInt(3, id);
+
+                int res = stmt.executeUpdate();
+                System.out.println("editarAdmin.res=" + res);
+
+                return res > 0;
+            } catch (SQLException e) {
+                throw new BancoDeDadosException(e.getCause());
+            }
+
+        } catch (SQLException e) {
+            throw new BancoDeDadosException(e.getCause());
+        } finally {
+            try {
+                fecharConexao(conexao);
+            } catch (SQLException erro) {
+                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
+                erro.printStackTrace();
+            }
+        }
+    }
 
     @Override
     public List<Admin> listar() throws BancoDeDadosException {
         List<Admin> admins = new ArrayList<>();
-        Connection con = null;
+        Connection conexao = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
-            Statement stmt = con.createStatement();
+            conexao = ConexaoBancoDeDados.getConnection();
+            Statement stmt = conexao.createStatement();
 
             String sql = "SELECT * FROM ADMIN";
 
@@ -97,13 +153,52 @@ public class AdminRepository implements Repository<Integer, Admin> {
             throw new BancoDeDadosException(e.getCause());
         } finally {
             try {
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+                fecharConexao(conexao);
+            } catch (SQLException erro) {
+                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
+                erro.printStackTrace();
             }
         }
         return admins;
     }
+
+    private void fecharConexao(Connection conexao) throws SQLException {
+        if (conexao != null) {
+            conexao.close();
+        }
+    }
+
+    public boolean getId(Admin admin) throws BancoDeDadosException {
+
+        Connection conexao = null;
+
+        try {
+            conexao = ConexaoBancoDeDados.getConnection();
+            String sql = "SELECT ID_ADMIN FROM VS_13_EQUIPE_5.ADMIN WHERE ID_ADMIN = ?";
+
+            PreparedStatement stmt = conexao.prepareStatement(sql);
+            stmt.setInt(1, admin.getId());
+
+            ResultSet resposta = stmt.executeQuery();
+
+            if(resposta.next()){
+                return true;
+            }
+
+        } catch (SQLException e) {
+            throw new BancoDeDadosException(e.getCause());
+        }
+        finally {
+            try {
+                fecharConexao(conexao);
+            } catch (SQLException erro) {
+                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
+                erro.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    
+
 }
