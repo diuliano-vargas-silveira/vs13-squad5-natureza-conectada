@@ -12,10 +12,13 @@ public class Endereco {
     private String complemento;
     private String cidade;
     private Estados estado;
+    private Usuario usuario;
 
     private static final String PAIS = "Brasil";
 
     private Tipo tipo;
+
+    public Endereco() {}
 
     public Endereco(String cep, String logradouro, String numero, String complemento, String cidade, Estados estado, int tipo) {
         this.cep = cep;
@@ -89,6 +92,18 @@ public class Endereco {
 
     public Tipo getTipo() {
         return tipo;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public void setTipo(Tipo tipo) {
+        this.tipo = tipo;
     }
 
     public void setTipo(int tipo) {
