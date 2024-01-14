@@ -14,23 +14,5 @@ public class Main {
 
         // Menu.rodarAplicacao();
 
-        ServiceUsuario serviceUsuario = new ServiceUsuario();
-
-        try {
-            Cliente cliente = new Cliente();
-
-            cliente.setEmail("diuliano.vargas@example.com");
-            cliente.setNome("Diuliano Vargas");
-            cliente.setTipoUsuario(TipoUsuario.CLIENTE);
-            cliente.setSenha("senhadificil");
-
-            Usuario usuario = serviceUsuario.adicionarUsuario(cliente);
-            System.out.println(usuario);
-
-            System.out.println(serviceUsuario.logar(cliente.getEmail(), cliente.getSenha()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 }
