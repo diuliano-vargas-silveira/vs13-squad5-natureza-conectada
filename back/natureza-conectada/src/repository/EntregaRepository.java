@@ -7,7 +7,6 @@ import java.util.List;
 
 import enums.StatusEntrega;
 import enums.TamanhoMuda;
-import enums.TipoMuda;
 import exceptions.BancoDeDadosException;
 import models.Cliente;
 import models.Entrega;
@@ -35,14 +34,14 @@ public class EntregaRepository implements Repository<Integer, Entrega>{
             entrega.setId(proximoId.intValue());
 
             String sql = "INSERT INTO VS_13_EQUIPE_5.ENTREGA\n" +
-             "(ID_ENTREGA, STATUS, ID_CLIENTE, ID_ENDERECO)\n" +
+             "(ID_ENTREGA, ID_CLIENTE, ID_ENDERECO, STATUS)\n" +
               "VALUES(?, ?, ?, ?)\n";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setInt(1, entrega.getId());
-            stmt.setString(2, String.valueOf(entrega.getStatus()));
-            stmt.setInt(3, entrega.getCliente().getId());
-            stmt.setInt(4, entrega.getEnderecoDeEntrega().getId());
+            stmt.setInt(2, entrega.getCliente().getId());
+            stmt.setInt(3, entrega.getEnderecoDeEntrega().getId());
+            stmt.setString(4, String.valueOf(entrega.getStatus()));
             
             int resultado = stmt.executeUpdate();
             System.out.println("A entrega foi adicionada! Resultado: ".concat(String.valueOf(resultado)));
@@ -96,12 +95,16 @@ public class EntregaRepository implements Repository<Integer, Entrega>{
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE VS_13_EQUIPE_5.ENTREGA SET");
+            sql.append(" ID_CLIENTE = ?,");
+            sql.append(" ID_ENDERECO = ?,");
             sql.append(" STATUS = ?");
             sql.append(" WHERE ID_ENTREGA = ?");
             
             PreparedStatement stmt = conexao.prepareStatement(sql.toString());
-            stmt.setString(1, String.valueOf(entrega.getStatus()));
-            stmt.setInt(2, id);
+            stmt.setInt(1, entrega.getCliente().getId());
+            stmt.setInt(2, entrega.getEnderecoDeEntrega().getId());
+            stmt.setString(3, String.valueOf(entrega.getStatus()));
+            stmt.setInt(4, id.intValue());
             
             int resultado = stmt.executeUpdate();
 
@@ -153,12 +156,11 @@ public class EntregaRepository implements Repository<Integer, Entrega>{
 
                     Muda mudaAtual = new Muda();
                     mudaAtual.setId(filtroMuda.getInt("ID_MUDA"));
-                    mudaAtual.setPorte(TamanhoMuda.valueOf(filtroMuda.getString("Porte")));
-                    mudaAtual.setTipo(TipoMuda.valueOf(filtroMuda.getString("Tipo_Muda")));
-                    mudaAtual.setNome(filtroMuda.getString("Nome"));
-                    mudaAtual.setNomeCientifico(filtroMuda.getString("Nome_Cientifico"));
-                    mudaAtual.setAmbienteIdeal(filtroMuda.getString("Ambiente_Ideal"));
-                    mudaAtual.setDescricao(filtroMuda.getString("Descricao"));
+                    mudaAtual.setPorte(TamanhoMuda.valueOf(filtroMuda.getString("PORTE")));
+                    mudaAtual.setNome(filtroMuda.getString("NOME"));
+                    mudaAtual.setNomeCientifico(filtroMuda.getString("NOME_CIENTIFICO"));
+                    mudaAtual.setAmbienteIdeal(filtroMuda.getString("AMBIENTE_IDEAL"));
+                    mudaAtual.setDescricao(filtroMuda.getString("DESCRICAO"));
 
                     entregaAtual.getMudas().add(mudaAtual);
                 }
@@ -169,7 +171,6 @@ public class EntregaRepository implements Repository<Integer, Entrega>{
                 
                 Cliente clienteAtual = new Cliente();
                 clienteAtual.setId(clienteTabela.getInt("ID_CLIENTE"));
-                clienteAtual.setNome(clienteTabela.getString("Nome"));
                 clienteAtual.setCpf(clienteTabela.getString("CPF"));
                 entregaAtual.setCliente(clienteAtual);
                 listaEntrega.add(entregaAtual);
