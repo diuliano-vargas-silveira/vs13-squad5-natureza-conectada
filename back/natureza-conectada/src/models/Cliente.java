@@ -30,6 +30,10 @@ public class Cliente extends Usuario {
         return cpf;
     }
 
+    public int getIdUsuario(){
+        return super.getId();
+    }
+
     public void setEnderecos(ArrayList<Endereco> enderecos) {
         this.enderecos = enderecos;
     }
