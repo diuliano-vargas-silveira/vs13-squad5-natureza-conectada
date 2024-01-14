@@ -28,19 +28,19 @@ public class MudaRepository implements Repository<Integer, Muda>{
             muda.setId(proximoId.intValue());
 
             String sql = "INSERT INTO VS_13_EQUIPE_5.MUDA\n" +
-             "(ID_ENTREGA, ID_ESPECIALISTA, ID_CLIENTE, TIPO_MUDA, NOME, NOME_CIENTIFICO, PORTE, AMBIENTE_IDEAL, DESCRICAO)\n" +
-              "VALUES(?, ?, ?, ?, ?, ? , ?, ?, ?)\n";
+             "(ID_ENTREGA, ID_ESPECIALISTA, ID_CLIENTE, NOME, NOME_CIENTIFICO, PORTE, AMBIENTE_IDEAL, DESCRICAO, TIPO_MUDA)\n" +
+              "VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setInt(1, muda.getId());
             stmt.setInt(2, muda.getIdEspecialista());
             stmt.setInt(3, muda.getIdCliente());
-            stmt.setString(4, String.valueOf(muda.getTipo()));
-            stmt.setString(5, muda.getNome());
-            stmt.setString(6, muda.getNomeCientifico());
-            stmt.setString(7, String.valueOf(muda.getPorte()));
-            stmt.setString(8, muda.getAmbienteIdeal());
+            stmt.setString(4, muda.getNome());
+            stmt.setString(5, muda.getNomeCientifico());
+            stmt.setString(6, String.valueOf(muda.getPorte()));
+            stmt.setString(7, muda.getAmbienteIdeal());
             stmt.setString(8, muda.getDescricao());
+            stmt.setString(9, String.valueOf(muda.getTipo()));
             
             
             int resultado = stmt.executeUpdate();
