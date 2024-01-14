@@ -1,4 +1,5 @@
 package repository;
+
 import exceptions.BancoDeDadosException;
 import models.Admin;
 
@@ -24,30 +25,22 @@ public class AdminRepository implements Repository<Integer, Admin> {
     public Admin adicionar(Admin admin) throws BancoDeDadosException {
         Connection conexao = null;
         try {
-            
+
             conexao = ConexaoBancoDeDados.getConnection();
             Integer proximoId = this.getProximoId(conexao);
-            admin.setId(proximoId.intValue());
+            admin.setIdAdmin(proximoId.intValue());
 
-            String sql = "INSERT INTO VS_13_EQUIPE_5.ADMIN\n" +
-                    "(ID_ADMIN, NOME, EMAIL)\n" +
-                    "VALUES(?, ?, ?)\n";
+            String sql = "INSERT INTO ADMIN\n" +
+                    "(ID_ADMIN, ID_USUARIO)\n" +
+                    "VALUES(?, ?)\n";
 
-            try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
-                stmt.setInt(1, admin.getId());
-                stmt.setString(2, admin.getNome());
-                stmt.setString(3, admin.getEmail());
+            PreparedStatement stmt = conexao.prepareStatement(sql);
 
-                int resultado = stmt.executeUpdate();
-                System.out.println("O administrador foi adicionado! Resultado: " + resultado);
+            stmt.setInt(1, admin.getIdAdmin());
+            stmt.setInt(2, admin.getId());
 
-            } catch (SQLException erro) {
-                System.out.println("ERRO: Algo deu errado para adicionar o administrador ao banco de dados.");
-                throw new BancoDeDadosException(erro.getCause());
-            }
-
-            return admin;
-
+            int resultado = stmt.executeUpdate();
+            System.out.println("O administrador foi adicionado! Resultado: " + resultado);
         } catch (SQLException erro) {
             System.out.println("ERRO: Não foi possível obter a conexão com o banco de dados.");
             throw new BancoDeDadosException(erro.getCause());
@@ -59,6 +52,8 @@ public class AdminRepository implements Repository<Integer, Admin> {
                 erro.printStackTrace();
             }
         }
+
+        return admin;
     }
 
     @Override
@@ -81,7 +76,7 @@ public class AdminRepository implements Repository<Integer, Admin> {
 
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
-        }finally {
+        } finally {
             try {
                 fecharConexao(conexao);
             } catch (SQLException erro) {
@@ -98,7 +93,7 @@ public class AdminRepository implements Repository<Integer, Admin> {
             conexao = ConexaoBancoDeDados.getConnection();
             StringBuilder sql_admin = new StringBuilder();
 
-            sql_admin.append("UPDATE VS_13_EQUIPE_5.ADMIN SET ");
+            sql_admin.append("UPDATE ADMIN SET ");
             sql_admin.append(" NOME = ?, ");
             sql_admin.append(" EMAIL = ? ");
             sql_admin.append(" WHERE id_cliente = ? ");
@@ -195,8 +190,7 @@ public class AdminRepository implements Repository<Integer, Admin> {
 
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
-        }
-        finally {
+        } finally {
             try {
                 fecharConexao(conexao);
             } catch (SQLException erro) {
@@ -207,8 +201,5 @@ public class AdminRepository implements Repository<Integer, Admin> {
         return admin;
     }
 
-
-
-    
 
 }

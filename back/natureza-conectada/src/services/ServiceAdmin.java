@@ -34,8 +34,7 @@ public class ServiceAdmin implements IService<Admin> {
 
     @Override
     public boolean editar(int id, Admin adminEditado) throws BancoDeDadosException {
-        serviceUsuario.editar(adminEditado.getId(), adminEditado);
-        return adminRepository.editar(id, adminEditado);
+        return serviceUsuario.editar(adminEditado.getId(), adminEditado);
     }
 
     @Override
@@ -43,7 +42,7 @@ public class ServiceAdmin implements IService<Admin> {
         Admin admin = procurar(id);
 
         if (admin == null) {
-            throw new InformacaoNaoEncontrada("Não existe nenhum administrador com este ID!");
+            throw new InformacaoNaoEncontrada("NÃ£o existe nenhum administrador com este ID!");
         }
 
         return admin;
