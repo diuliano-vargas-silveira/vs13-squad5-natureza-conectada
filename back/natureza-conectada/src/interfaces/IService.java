@@ -2,15 +2,17 @@ package interfaces;
 
 import exceptions.BancoDeDadosException;
 
+import java.sql.SQLException;
+
 import java.util.List;
 import java.util.Optional;
 
 public interface IService<E> {
 
     void adicionar(E e) throws BancoDeDadosException;
-    void  deletar(int id);
-    boolean editar(int id, E e);
-    E procurarPorID(int id);
-    List<E> listarTodos();
-    Optional<E> procurar(int id);
+    void  deletar(int id) throws SQLException;
+    boolean editar(int id, E e) throws BancoDeDadosException;
+    E procurarPorID(int id) throws SQLException;
+    List<E> listarTodos() throws BancoDeDadosException;
+    E procurar(int id) throws SQLException;
 }

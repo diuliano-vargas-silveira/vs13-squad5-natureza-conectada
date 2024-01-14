@@ -5,6 +5,7 @@ import exceptions.InformacaoNaoEncontrada;
 import exceptions.ObjetoExistente;
 import exceptions.SenhaOuEmailInvalido;
 import interfaces.IServiceUsuario;
+import models.Especialista;
 import models.Usuario;
 import repository.UsuarioRepository;
 
@@ -48,6 +49,14 @@ public class ServiceUsuario implements IServiceUsuario {
     @Override
     public Usuario procurarPorEmail(String email) throws BancoDeDadosException {
         return usuarioRepository.procurarPorEmail(email);
+    }
+
+    public void remover(int id) throws BancoDeDadosException {
+        usuarioRepository.remover(id);
+    }
+
+    public void editar(int id, Usuario usuarioEditado) throws BancoDeDadosException {
+        usuarioRepository.editar(id, usuarioEditado);
     }
 }
 
