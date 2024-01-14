@@ -62,16 +62,10 @@ public class ServiceEspecialista implements IService<Especialista> {
         return especialistaRepository.procurarPorId(id);
     }
 
-    public Especialista procurarPorEmail(String email) {
-        Especialista especialista = especialistaRepository.procurarPorEmail(email);
-
-        return especialista;
-    }
-
-    public List<Relatorio> procurarRelatorioPorEmail(String email) {
-        return serviceRelatorio.listarTodos().stream().filter(relatorio -> {
-            if (Objects.isNull(relatorio.getAvaliador())) return false;
-            return relatorio.getAvaliador().getEmail().equals(email);
-        }).toList();
-    }
+//    public List<Relatorio> procurarRelatorioPorEmail(String email) {
+//        return serviceRelatorio.listarTodos().stream().filter(relatorio -> {
+//            if (Objects.isNull(relatorio.getAvaliador())) return false;
+//            return relatorio.getAvaliador().getEmail().equals(email);
+//        }).toList();
+//    }
 }

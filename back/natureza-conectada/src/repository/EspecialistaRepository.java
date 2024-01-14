@@ -211,10 +211,4 @@ public class EspecialistaRepository implements Repository<Integer, Especialista>
 
         return especialista;
     }
-
-    public Especialista procurarPorEmail(String email) {
-        Especialista especialista = null;
-
-        return especialista;
-    }
 }
