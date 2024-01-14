@@ -28,7 +28,7 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
             Integer proximoId = this.getProximoId(conexao);
             endereco.setId(proximoId.intValue());
 
-            String sql = "INSERT INTO VS_13_EQUIPE_5.ENDERECO\n" +
+            String sql = "INSERT INTO ENDERECO\n" +
                     "(ID_ENDERECO, ID_USUARIO, ID_ESTADO, CEP, LOGRADOURO, NUMERO, COMPLEMENTO, CIDADE)\n" +
                     "VALUES(?, ?, ?, ?, ?, ?, ?, ?)\n";
 

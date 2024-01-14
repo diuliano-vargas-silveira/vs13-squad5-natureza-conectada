@@ -96,7 +96,7 @@ public class ClienteRepository implements Repository<Integer, Cliente>{
         Connection conexao = null;
 
         try {
-            conexao = ConexaoBancoDeDados.getConnection()
+            conexao = ConexaoBancoDeDados.getConnection();
             StringBuilder sql_cliente = new StringBuilder();
 
             sql_cliente.append("UPDATE VS_13_EQUIPE_5.CLIENTE SET ");

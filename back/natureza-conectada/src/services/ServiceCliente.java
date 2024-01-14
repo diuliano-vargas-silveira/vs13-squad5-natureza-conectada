@@ -8,6 +8,7 @@ import interfaces.IService;
 import models.*;
 import repository.ClienteRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,75 +29,75 @@ public class ServiceCliente implements IService<Cliente> {
 
     @Override
     public void deletar(int id) {
-        Cliente cliente =
-
-
+//        Cliente cliente =
+//
+//
 
     }
 
     @Override
     public boolean editar(int id, Cliente clienteEditado) {
-        Cliente cliente = procurarPorID(id);
-
-        int indexRelatorio = BancoDeDados.clientes.indexOf(cliente);
-
-        cliente.setNome(clienteEditado.getNome());
-        cliente.setEmail(clienteEditado.getEmail());
-        cliente.setCpf(clienteEditado.getCpf());
-
-        BancoDeDados.clientes.set(indexRelatorio, cliente);
+//        Cliente cliente = procurarPorID(id);
+//
+//        int indexRelatorio = BancoDeDados.clientes.indexOf(cliente);
+//
+//        cliente.setNome(clienteEditado.getNome());
+//        cliente.setEmail(clienteEditado.getEmail());
+//        cliente.setCpf(clienteEditado.getCpf());
+//
+//        BancoDeDados.clientes.set(indexRelatorio, cliente);
 
         return true;
     }
 
     public boolean editarContato(int idCliente, int idContato, Contato contatoEditado){
-        Cliente cliente = procurarPorID(idCliente);
-
-        for(Contato contato : cliente.getContatos()){
-            if(contato.getId() == idContato){
-                serviceContato.editar(idContato, contatoEditado);
-                return true;
-            }
-        }
+//        Cliente cliente = procurarPorID(idCliente);
+//
+//        for(Contato contato : cliente.getContatos()){
+//            if(contato.getId() == idContato){
+//                serviceContato.editar(idContato, contatoEditado);
+//                return true;
+//            }
+//        }
 
         throw new InformacaoNaoEncontrada("Contato não encontrado.");
     }
 
     public boolean editarEndereco(int idCliente, int idEndereco, Endereco enderecoEditado){
-        Cliente cliente = procurarPorID(idCliente);
-
-        for(Endereco endereco : cliente.getEnderecos()){
-            if(endereco.getId() == idEndereco){
-                serviceEndereco.editar(idEndereco, enderecoEditado);
-                return true;
-            }
-        }
+//        Cliente cliente = procurarPorID(idCliente);
+//
+//        for(Endereco endereco : cliente.getEnderecos()){
+//            if(endereco.getId() == idEndereco){
+//                serviceEndereco.editar(idEndereco, enderecoEditado);
+//                return true;
+//            }
+//        }
 
         throw new InformacaoNaoEncontrada("Endereço não encontrado.");
     }
 
     @Override
     public Cliente procurarPorID(int id) {
-        Optional<Cliente> cliente = procurar(id);
+//        Optional<Cliente> cliente = procurar(id);
+//
+//        if(cliente.isEmpty()){
+//            throw new InformacaoNaoEncontrada("Não existe nenhum cliente com este ID!");
+//        }
 
-        if(cliente.isEmpty()){
-            throw new InformacaoNaoEncontrada("Não existe nenhum cliente com este ID!");
-        }
-
-        return cliente.get();
+        return new Cliente();
     }
 
     @Override
-    public List<Cliente> listarTodos() {return BancoDeDados.clientes;
+    public List<Cliente> listarTodos() {return new ArrayList<>();
     }
 
     @Override
-    public Optional<Cliente> procurar(int id) {
-        return BancoDeDados.clientes.stream().filter(cliente -> cliente.getId() == id).findFirst();
+    public Cliente procurar(int id) {
+        return new Cliente();
     }
 
-    public Optional<Cliente> procurarPorEmail(String email) {
-        return BancoDeDados.clientes.stream().filter(cliente -> cliente.getEmail().equals(email)).findFirst();
+    public Cliente procurarPorEmail(String email) {
+        return new Cliente();
     }
 
     // Métodos para adicionar aos arrays

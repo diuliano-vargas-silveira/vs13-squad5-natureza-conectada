@@ -1,15 +1,11 @@
 // import utils.Menu;
 
-
 import enums.Estados;
-import enums.TipoUsuario;
-import models.Cliente;
+import enums.Tipo;
+import models.Endereco;
 import models.Especialista;
-import models.Usuario;
+import services.ServiceEndereco;
 import services.ServiceEspecialista;
-import services.ServiceUsuario;
-
-import java.util.List;
 
 public class Main {
 
@@ -18,23 +14,25 @@ public class Main {
         // Menu.rodarAplicacao();
 
         ServiceEspecialista serviceEspecialista = new ServiceEspecialista();
+        ServiceEndereco serviceEndereco = new ServiceEndereco();
 
         try {
-            Especialista especialista = new Especialista();
+            Especialista especialista = serviceEspecialista.procurar(2);
 
-            especialista.setNome("Diuliano Vargas");
-            especialista.setEmail("diulianovargas@gmail.com");
-            especialista.setSenha("senhadificil");
-            especialista.setDocumento("00000000000");
-            especialista.setEspecializacao("informática");
-            especialista.setTipoUsuario(TipoUsuario.ESPECIALISTA);
-            especialista.setRegiaoResponsavel(Estados.RS);
+            System.out.println(especialista);
 
-//            serviceEspecialista.adicionar(especialista);
+            Endereco endereco = new Endereco();
 
-            especialista.setEspecializacao("Grêmio");
+            endereco.setTipo(Tipo.COMERCIAL);
+            endereco.setLogradouro("Avenida do Nazário");
+            endereco.setComplemento("");
+            endereco.setEstado(Estados.RS);
+            endereco.setCidade("Canoas");
+            endereco.setNumero("1992");
+            endereco.setCep("92035000");
+            endereco.setUsuario(especialista);
 
-            serviceEspecialista.editar(2, especialista);
+            serviceEndereco.adicionar(endereco);
         }catch (Exception e) {
             e.printStackTrace();
         }
