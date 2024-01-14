@@ -1,41 +1,34 @@
-/*
 package services;
 
-import database.BancoDeDados;
-import enums.Tipo;
-import enums.TipoUsuario;
+import exceptions.BancoDeDadosException;
 import exceptions.InformacaoNaoEncontrada;
 import exceptions.SenhaOuEmailInvalido;
 import interfaces.IServiceUsuario;
-import models.Cliente;
 import models.Usuario;
-
-import java.util.Optional;
+import repository.UsuarioRepository;
 
 public class ServiceUsuario implements IServiceUsuario {
 
-    private static final ServiceCliente serviceCliente = new ServiceCliente();
-    private static final ServiceEspecialista serviceEspecialista = new ServiceEspecialista();
+    private static final UsuarioRepository usuarioRepository = new UsuarioRepository();
 
-    public Usuario logar(String email, String senha) {
-        Optional<Usuario> usuario = procurarPorEmail(email);
+    public Usuario logar(String email, String senha) throws BancoDeDadosException {
+        Usuario usuario = usuarioRepository.procurarPorEmail(email);
 
-        if (usuario.isEmpty()) {
+        if (usuario == null) {
             throw new InformacaoNaoEncontrada("Usuário não existe");
         }
 
-        Usuario usuarioRetorno = usuario.get();
 
-        if (!usuarioRetorno.getSenha().equals(senha)) {
+        if (!usuario.getSenha().equals(senha)) {
             throw new SenhaOuEmailInvalido();
         }
 
-        return usuarioRetorno;
+        return usuario;
     }
 
     @Override
-    public Optional<Usuario> procurarPorEmail(String email) {
-        return BancoDeDados.usuarios.stream().filter(usuario -> usuario.getEmail().equals(email)).findFirst();
+    public Usuario procurarPorEmail(String email) throws BancoDeDadosException {
+        return usuarioRepository.procurarPorEmail(email);
     }
 }
- */
+
