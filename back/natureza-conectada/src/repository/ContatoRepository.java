@@ -13,17 +13,6 @@ public class ContatoRepository  {
 
     private Connection connection;
 
-
-
-
-
-
-
-    // Outros métodos conforme necessário, como atualizar e excluir contatos
-
-
-
-
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_CONTATO.nextval mysequence from DUAL";
         Statement stmt = connection.createStatement();
@@ -34,10 +23,6 @@ public class ContatoRepository  {
         }
         return null;
     }
-
-
-
-
 
     public Contato novoContato(Contato contato,Integer idUsuario) throws BancoDeDadosException {
         String sql = "INSERT INTO contato (ID_CONTATO,descricao, numero, tipo_contato,ID_USUARIO) VALUES (?,?, ?, ?,?)";
@@ -66,10 +51,6 @@ public class ContatoRepository  {
         }
         return contato;
     }
-
-
-
-
 
     public boolean editar(Integer id, Contato contato) throws BancoDeDadosException {
         try{
