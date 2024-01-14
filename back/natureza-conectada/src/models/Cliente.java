@@ -13,6 +13,7 @@ public class Cliente extends Usuario {
 
     // Construtor
     public Cliente() {
+        super.setTipoUsuario(TipoUsuario.CLIENTE);
     }
 
     public Cliente(String nome, String email, String senha, String cpf) {

@@ -4,6 +4,7 @@ import enums.TipoUsuario;
 
 public class Admin extends Usuario{
     public Admin() {
+        super.setTipoUsuario(TipoUsuario.ADMIN);
     }
 
     public Admin(String nome, String email, String senha) {

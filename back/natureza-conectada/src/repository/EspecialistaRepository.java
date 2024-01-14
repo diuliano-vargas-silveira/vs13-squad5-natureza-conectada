@@ -27,21 +27,18 @@ public class EspecialistaRepository implements Repository<Integer, Especialista>
         try {
             conexao = ConexaoBancoDeDados.getConnection();
             Integer proximoId = this.getProximoId(conexao);
-            especialista.setId(proximoId.intValue());
+            especialista.setIdEspecialista(proximoId.intValue());
 
-            String sql = "INSERT INTO VS_13_EQUIPE_5.ESPECIALISTA\n" +
-                    "(ID_ESPECIALISTA, NOME, EMAIL, SENHA, CONTATO, DOCUMENTO, ESPECIALIZACAO, REGIAO_RESPONSAVEL)\n" +
-                    "VALUES(?, ?, ?, ?, ?, ?, ?, ?)\n";
+            String sql = "INSERT INTO ESPECIALISTA\n" +
+                    "(ID_ESPECIALISTA, ID_USUARIO, DOCUMENTO, ESPECIALIZACAO, ID_ESTADO)\n" +
+                    "VALUES(?, ?, ?, ?, ?)\n";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setInt(1, especialista.getId());
-            stmt.setString(2, especialista.getNome());
-            stmt.setString(3, especialista.getEmail());
-            stmt.setString(4, especialista.getSenha());
-            stmt.setObject(5, especialista.getContato());
-            stmt.setString(6, especialista.getDocumento());
-            stmt.setString(7, especialista.getEspecializacao());
-            stmt.setString(8, especialista.getRegiaoResponsavel().toString());
+            stmt.setInt(1, especialista.getIdEspecialista());
+            stmt.setInt(2, especialista.getId());
+            stmt.setString(3, especialista.getDocumento());
+            stmt.setString(4, especialista.getEspecializacao());
+            stmt.setInt(5, especialista.getRegiaoResponsavel().ordinal() + 1);
 
             int resultado = stmt.executeUpdate();
             System.out.println("O especialista foi adicionado! Resultado: " + resultado);
@@ -66,7 +63,7 @@ public class EspecialistaRepository implements Repository<Integer, Especialista>
         Connection conexao = null;
         try {
             conexao = ConexaoBancoDeDados.getConnection();
-            String sql = "DELETE FROM VS_13_EQUIPE_5.ESPECIALISTA WHERE ID_ESPECIALISTA = ?";
+            String sql = "DELETE FROM ESPECIALISTA WHERE ID_ESPECIALISTA = ?";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setInt(1, id.intValue());
@@ -94,20 +91,17 @@ public class EspecialistaRepository implements Repository<Integer, Especialista>
         try {
             conexao = ConexaoBancoDeDados.getConnection();
 
-            StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE VS_13_EQUIPE_5.ESPECIALISTA SET");
-            sql.append(" NOME = ?, EMAIL = ?, SENHA = ?, CONTATO = ?, DOCUMENTO = ?, ESPECIALIZACAO = ?, REGIAO_RESPONSAVEL = ?");
-            sql.append(" WHERE ID_ESPECIALISTA = ?");
+            String sql = "UPDATE ESPECIALISTA SET \n" +
+                    "\tDOCUMENTO = ?,\n" +
+                    "\tESPECIALIZACAO = ?,\n" +
+                    "\tID_ESTADO = ?\n" +
+                    "WHERE ID_ESPECIALISTA = ?";
 
-            PreparedStatement stmt = conexao.prepareStatement(sql.toString());
-            stmt.setString(1, especialista.getNome());
-            stmt.setString(2, especialista.getEmail());
-            stmt.setString(3, especialista.getSenha());
-            stmt.setObject(4, especialista.getContato());
-            stmt.setString(5, especialista.getDocumento());
-            stmt.setString(6, especialista.getEspecializacao());
-            stmt.setString(7, especialista.getRegiaoResponsavel().toString());
-            stmt.setInt(8, id.intValue());
+            PreparedStatement stmt = conexao.prepareStatement(sql);
+            stmt.setString(1, especialista.getDocumento());
+            stmt.setString(2, especialista.getEspecializacao());
+            stmt.setInt(3, especialista.getRegiaoResponsavel().ordinal() + 1);
+            stmt.setInt(4, id);
 
             int resultado = stmt.executeUpdate();
 
@@ -135,7 +129,7 @@ public class EspecialistaRepository implements Repository<Integer, Especialista>
             conexao = ConexaoBancoDeDados.getConnection();
             Statement statment = conexao.createStatement();
 
-            String sqlEspecialista = "SELECT * FROM VS_13_EQUIPE_5.ESPECIALISTA";
+            String sqlEspecialista = "SELECT * FROM ESPECIALISTA";
 
             ResultSet especialistaTabela = statment.executeQuery(sqlEspecialista);
 
@@ -171,5 +165,56 @@ public class EspecialistaRepository implements Repository<Integer, Especialista>
         if (conexao != null) {
             conexao.close();
         }
+    }
+
+    public Especialista procurarPorId(int id) throws SQLException {
+        Especialista especialista = null;
+        Connection connection = null;
+
+        try {
+            connection = ConexaoBancoDeDados.getConnection();
+
+            String sql = "SELECT e.ID_ESPECIALISTA, e.ID_USUARIO, u.NOME, u.EMAIL, e.DOCUMENTO, e.ESPECIALIZACAO, e.ID_ESTADO \n" +
+                    "\tFROM ESPECIALISTA e \n" +
+                    "INNER JOIN USUARIO u ON e.ID_USUARIO = u.ID_USUARIO\n" +
+                    "WHERE e.ID_ESPECIALISTA  = ?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, id);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                especialista = new Especialista();
+
+                especialista.setIdEspecialista(id);
+                especialista.setId(resultSet.getInt("ID_USUARIO"));
+                especialista.setNome(resultSet.getString("NOME"));
+                especialista.setEmail(resultSet.getString("EMAIL"));
+                especialista.setDocumento(resultSet.getString("DOCUMENTO"));
+                especialista.setEspecializacao(resultSet.getString("ESPECIALIZACAO"));
+                especialista.setRegiaoResponsavel(Estados.values()[resultSet.getInt("ID_ESTADO") + 1]);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("ERRO: Algo deu errado ao procurar o especialista no banco de dados.");
+            throw new BancoDeDadosException(e.getCause());
+        } finally {
+            try {
+                fecharConexao(connection);
+            } catch (SQLException erro) {
+                System.out.println("ERRO: Não foi possível encerrar corretamente a conexão com o banco de dados.");
+                erro.printStackTrace();
+            }
+        }
+
+        return especialista;
+    }
+
+    public Especialista procurarPorEmail(String email) {
+        Especialista especialista = null;
+
+        return especialista;
     }
 }
