@@ -3,6 +3,21 @@ package models;
 import enums.TipoUsuario;
 
 public class Admin extends Usuario{
+
+    private int idAdmin;
+
+    public int getIdAdmin() {
+        return idAdmin;
+    }
+
+    public void setIdAdmin(int idAdmin) {
+        this.idAdmin = idAdmin;
+    }
+
+    public Admin() {
+        super.setTipoUsuario(TipoUsuario.ADMIN);
+    }
+
     public Admin(String nome, String email, String senha) {
         super(nome, email, senha, TipoUsuario.ADMIN);
     }
@@ -13,4 +28,5 @@ public class Admin extends Usuario{
                 "\nNome: " + getNome() +
                 "\nE-mail: " + getEmail();
     }
+
 }

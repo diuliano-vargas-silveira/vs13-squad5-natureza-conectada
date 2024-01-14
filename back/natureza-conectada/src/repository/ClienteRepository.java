@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClienteRepository implements Repository<Integer, Cliente>{
+public class ClienteRepository implements Repository<Integer, Cliente> {
 
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
@@ -24,35 +24,37 @@ public class ClienteRepository implements Repository<Integer, Cliente>{
     @Override
     public Cliente adicionar(Cliente cliente) throws BancoDeDadosException {
         Connection conexao = null;
-        try{
+        try {
             conexao = ConexaoBancoDeDados.getConnection();
             Integer proximoId = this.getProximoId(conexao);
-            cliente.setId(proximoId.intValue());
+            cliente.setIdCliente(proximoId);
 
-            String sql = "INSERT INTO VS_13_EQUIPE_5.CLIENTE\n" +
-                    "(ID_CLIENTE, NOME, EMAIL, SENHA, TIPO_USUARIO, CPF)\n" +
-                    "VALUES(?, ?, ?, ?, ?, ?)\n";
+            String sql = "INSERT INTO CLIENTE\n" +
+                    "(ID_CLIENTE, ID_USUARIO, CPF)\n" +
+                    "VALUES(?, ?, ?)\n";
 
-            PreparedStatement stmt = conexao.prepareStatement(sql);
+            try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+                stmt.setInt(1, cliente.getIdCliente());
+                stmt.setInt(2, cliente.getId());
+                stmt.setString(3, cliente.getCpf());
 
-            stmt.setInt(1, cliente.getId());
-            stmt.setString(2, cliente.getNome());
-            stmt.setString(3, cliente.getEmail());
-            stmt.setString(4, cliente.getSenha());
-            stmt.setString(5, String.valueOf(cliente.getTipoUsuario()));
-            stmt.setString(6, cliente.getCpf());
+                int resultado = stmt.executeUpdate();
+                System.out.println("O usuário foi adicionado! Resultado: " + resultado);
 
-            int resultado = stmt.executeUpdate();
-            System.out.println("O usuário foi adicionado! Resultado: ".concat(String.valueOf(resultado)));
+            } catch (SQLException erro) {
+                System.out.println("ERRO: Algo deu errado para adicionar o usuário ao banco de dados.");
+                throw new BancoDeDadosException(erro.getCause());
+            }
+
             return cliente;
 
-        }catch(SQLException erro){
-            System.out.println("ERRO: Algo deu errado para adicionar o usuário ao banco de dados.");
+        } catch (SQLException erro) {
+            System.out.println("ERRO: Não foi possível obter a conexão com o banco de dados.");
             throw new BancoDeDadosException(erro.getCause());
         } finally {
-            try{
+            try {
                 fecharConexao(conexao);
-            }catch(SQLException erro){
+            } catch (SQLException erro) {
                 System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
                 erro.printStackTrace();
             }
@@ -64,100 +66,189 @@ public class ClienteRepository implements Repository<Integer, Cliente>{
         Connection conexao = null;
         try {
             conexao = ConexaoBancoDeDados.getConnection();
+            String sql = "DELETE FROM CLIENTE WHERE id_cliente = ?";
 
-            String sql = "DELETE FROM VS_13_EQUIPE_5.CLIENTE WHERE id_pessoa = ?";
+            try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+                stmt.setInt(1, id);
 
-            PreparedStatement stmt = conexao.prepareStatement(sql);
+                int resultado = stmt.executeUpdate();
+                System.out.println("O cliente foi removido! Resultado: " + resultado);
 
-            stmt.setInt(1, id.intValue());
+                return resultado > 0;
+            } catch (SQLException e) {
+                throw new BancoDeDadosException(e.getCause());
+            }
 
-            int resultado = stmt.executeUpdate();
-            System.out.println("O cliente foi removido! Resultado: ".concat(String.valueOf(resultado)));
-
-            return resultado > 0;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
             try {
                 fecharConexao(conexao);
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } catch (SQLException erro) {
+                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
+                erro.printStackTrace();
             }
         }
     }
 
     @Override
-    public boolean editar(Integer id, Cliente cliente) throws BancoDeDadosException {
+    public boolean editar(Integer id, Cliente clienteEditado) throws BancoDeDadosException {
         Connection conexao = null;
+
         try {
             conexao = ConexaoBancoDeDados.getConnection();
 
-            StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE VS_13_EQUIPE_5.CLIENTE SET ");
-            sql.append(" NOME = ?,");
-            sql.append(" EMAIL = ?,");
-            sql.append(" SENHA = ?, ");
-            sql.append(" CPF = ? ");
-            sql.append(" WHERE id_pessoa = ? ");
+            String sql_cliente = "UPDATE CLIENTE SET\n" +
+                    " CPF = ? \n" +
+                    " WHERE id_cliente = ? ";
 
-            PreparedStatement stmt = conexao.prepareStatement(sql.toString());
-
-            stmt.setString(1, cliente.getNome());
-            stmt.setString(2, cliente.getEmail());
-            stmt.setString(3, cliente.getSenha());
-            stmt.setString(4, cliente.getCpf());
-            stmt.setInt(5, id);
+            PreparedStatement stmt = conexao.prepareStatement(sql_cliente);
+            stmt.setString(1, clienteEditado.getCpf());
+            stmt.setInt(2, id);
 
             int res = stmt.executeUpdate();
             System.out.println("editarPessoa.res=" + res);
 
             return res > 0;
+
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
             try {
                 fecharConexao(conexao);
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } catch (SQLException erro) {
+                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
+                erro.printStackTrace();
             }
         }
     }
 
     @Override
-    public List<Cliente> listar() throws BancoDeDadosException {
+    public List<Cliente> listar() throws SQLException {
         List<Cliente> clientes = new ArrayList<>();
         Connection conexao = null;
+
         try {
             conexao = ConexaoBancoDeDados.getConnection();
+
             Statement stmt = conexao.createStatement();
-
-            String sql = "SELECT ID_CLIENTE, NOME, EMAIL, CPF FROM VS_13_EQUIPE_5.CLIENTE ";
-
-            ResultSet res = stmt.executeQuery(sql);
+            ResultSet res = stmt.executeQuery("SELECT c.ID_CLIENTE, c.CPF, u.NOME, u.EMAIL\n" +
+                    "FROM VS_13_EQUIPE_5.CLIENTE c\n" +
+                    "INNER JOIN VS_13_EQUIPE_5.USUARIO u ON (c.ID_USUARIO = u.ID_USUARIO )");
 
             while (res.next()) {
                 Cliente cliente = new Cliente();
                 cliente.setId(res.getInt("ID_CLIENTE"));
-                cliente.setNome(res.getString("Nome"));
-                cliente.setEmail(res.getString("Email"));
+                cliente.setNome(res.getString("NOME"));
+                cliente.setEmail(res.getString("EMAIL"));
                 cliente.setCpf(res.getString("CPF"));
                 clientes.add(cliente);
             }
+
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
             try {
                 fecharConexao(conexao);
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } catch (SQLException erro) {
+                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
+                erro.printStackTrace();
             }
         }
         return clientes;
+
     }
 
-    private void fecharConexao(Connection conexao) throws SQLException{
-        if(conexao != null){
+    public Cliente listarPorID(int id) throws BancoDeDadosException {
+        Cliente cliente = null;
+        Connection conexao = null;
+
+        try {
+            conexao = ConexaoBancoDeDados.getConnection();
+            String sql = "SELECT c.ID_CLIENTE, c.CPF, u.NOME, u.EMAIL, c.ID_USUARIO\n" +
+                    "FROM\n" +
+                    "\tUSUARIO u \n" +
+                    "INNER JOIN \n" +
+                    "\tCLIENTE c ON (u.ID_USUARIO = c.ID_CLIENTE)\n" +
+                    "WHERE \n" +
+                    "\tc.ID_CLIENTE = ? ";
+
+            PreparedStatement stmt = conexao.prepareStatement(sql);
+            stmt.setInt(1, id);
+
+            ResultSet resposta = stmt.executeQuery();
+
+            if (resposta.next()) {
+                cliente = getCliente(resposta);
+            }
+
+        } catch (SQLException e) {
+            throw new BancoDeDadosException(e.getCause());
+        } finally {
+            try {
+                fecharConexao(conexao);
+            } catch (SQLException erro) {
+                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
+                erro.printStackTrace();
+            }
+        }
+        return cliente;
+    }
+
+    private Cliente getCliente(ResultSet usuario) throws SQLException {
+        Cliente cliente = new Cliente();
+
+        cliente.setIdCliente(usuario.getInt("ID_CLIENTE"));
+        cliente.setNome(usuario.getString("NOME"));
+        cliente.setEmail(usuario.getString("EMAIL"));
+        cliente.setCpf(usuario.getString("CPF"));
+
+        return cliente;
+    }
+
+    private void fecharConexao(Connection conexao) throws SQLException {
+        if (conexao != null) {
             conexao.close();
         }
     }
+
+    public Cliente listarPorEmail(String email) throws SQLException {
+        Cliente cliente = null;
+        Connection conexao = null;
+
+        try {
+            conexao = ConexaoBancoDeDados.getConnection();
+
+            String sqlUsuario = "SELECT c.ID_CLIENTE, c.CPF, u.NOME, u.EMAIL\n" +
+                    "FROM\n" +
+                    "\tUSUARIO u \n" +
+                    "INNER JOIN \n" +
+                    "\tCLIENTE c ON (u.ID_USUARIO = c.ID_CLIENTE)\n" +
+                    "WHERE \n" +
+                    "\tu.EMAIL = ? ";
+
+            PreparedStatement preparedStatement = conexao.prepareStatement(sqlUsuario);
+
+            preparedStatement.setString(1, email);
+
+            ResultSet clienteRes = preparedStatement.executeQuery();
+
+            if (clienteRes.next()) {
+                cliente = getCliente(clienteRes);
+
+            }
+
+        } catch (SQLException e) {
+            throw new BancoDeDadosException(e.getCause());
+        } finally {
+            try {
+                fecharConexao(conexao);
+            } catch (SQLException erro) {
+                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
+                erro.printStackTrace();
+            }
+        }
+        return cliente;
+    }
+
 }

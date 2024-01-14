@@ -4,7 +4,8 @@ import exceptions.EnumNaoExistente;
 
 public enum Tipo {
 
-    RESIDENCIAL, COMERCIAL;
+    RESIDENCIAL,
+    COMERCIAL;
 
     public static Tipo ofTipo(Integer tipo) {
         return switch (tipo) {
