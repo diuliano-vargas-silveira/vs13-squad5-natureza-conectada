@@ -3,6 +3,8 @@ package repository;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import enums.TipoMuda;
 import exceptions.BancoDeDadosException;
 import models.Muda;
 
@@ -101,7 +103,8 @@ public class MudaRepository implements Repository<Integer, Muda>{
             sql.append(" NOME_CIENTIFICO = ?,");
             sql.append(" PORTE = ?,");
             sql.append(" AMBIENTE_IDEAL = ?,");
-            sql.append(" DESCRICAO = ?");
+            sql.append(" DESCRICAO = ?,");
+            sql.append(" TIPO_MUDA = ?");
             sql.append(" WHERE ID_MUDA = ?");
             
             PreparedStatement stmt = conexao.prepareStatement(sql.toString());
@@ -113,7 +116,8 @@ public class MudaRepository implements Repository<Integer, Muda>{
             stmt.setString(5, String.valueOf(muda.getPorte()));
             stmt.setString(6, muda.getAmbienteIdeal());
             stmt.setString(7, muda.getDescricao());
-            stmt.setInt(8, id.intValue());
+            stmt.setString(8, String.valueOf(muda.getTipo()));
+            stmt.setInt(9, id.intValue());
             
             
             int resultado = stmt.executeUpdate();
@@ -154,6 +158,7 @@ public class MudaRepository implements Repository<Integer, Muda>{
                 mudaAtual.setNome(mudaTabela.getString("NOME"));
                 mudaAtual.setIdCliente(mudaTabela.getInt("ID_CLIENTE"));
                 mudaAtual.setIdEspecialista(mudaTabela.getInt("ID_ESPECIALISTA"));
+                mudaAtual.setTipo(TipoMuda.valueOf(mudaTabela.getString("TIPO_MUDA")));
                 listaMuda.add(mudaAtual);
             }
 
