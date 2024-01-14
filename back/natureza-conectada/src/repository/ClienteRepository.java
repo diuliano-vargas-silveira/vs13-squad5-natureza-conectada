@@ -96,7 +96,7 @@ public class ClienteRepository implements Repository<Integer, Cliente>{
         Connection conexao = null;
 
         try {
-            conexao = ConexaoBancoDeDados.getConnection()
+            conexao = ConexaoBancoDeDados.getConnection();
             StringBuilder sql_cliente = new StringBuilder();
 
             sql_cliente.append("UPDATE VS_13_EQUIPE_5.CLIENTE SET ");
@@ -163,21 +163,27 @@ public class ClienteRepository implements Repository<Integer, Cliente>{
 
     }
 
-    public boolean getId(Cliente cliente) throws BancoDeDadosException {
-
+    public Cliente listarPorID(int id) throws BancoDeDadosException {
+        Cliente cliente = null;
         Connection conexao = null;
 
         try {
             conexao = ConexaoBancoDeDados.getConnection();
-            String sql = "SELECT ID_CLIENTE FROM VS_13_EQUIPE_5.CLIENTE WHERE ID_CLIENTE = ?";
+            String sql = "SELECT c.ID_CLIENTE, c.CPF, u.NOME, u.EMAIL\n" +
+                    "FROM\n" +
+                    "\tUSUARIO u \n" +
+                    "INNER JOIN \n" +
+                    "\tCLIENTE c ON (u.ID_USUARIO = c.ID_CLIENTE)\n" +
+                    "WHERE \n" +
+                    "\tc.ID_CLIENTE = ? ";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setInt(1, cliente.getIdCliente());
+            stmt.setInt(1, id);
 
             ResultSet resposta = stmt.executeQuery();
 
-            if(resposta.next()){
-                return true;
+            if (resposta.next()) {
+                cliente = getCliente(resposta);
             }
 
         } catch (SQLException e) {
@@ -191,7 +197,7 @@ public class ClienteRepository implements Repository<Integer, Cliente>{
                 erro.printStackTrace();
             }
         }
-        return false;
+        return cliente;
     }
 
     private Cliente getCliente(ResultSet usuario) throws SQLException {
@@ -234,7 +240,6 @@ public class ClienteRepository implements Repository<Integer, Cliente>{
 
             if (clienteRes.next()) {
                 cliente = getCliente(clienteRes);
-
             }
 
         } catch (SQLException e) {
