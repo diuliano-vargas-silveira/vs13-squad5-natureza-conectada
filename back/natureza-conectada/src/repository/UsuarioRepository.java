@@ -250,4 +250,6 @@ public class UsuarioRepository implements Repository<Integer, Usuario> {
             conexao.close();
         }
     }
+
+
 }

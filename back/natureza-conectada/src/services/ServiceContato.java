@@ -1,68 +1,66 @@
-/* package services;
+ package services;
 
-import database.BancoDeDados;
-import exceptions.InformacaoNaoEncontrada;
-import exceptions.ObjetoExistente;
-import interfaces.IService;
-import models.Contato;
 
-import java.util.List;
-import java.util.Optional;
+ import exceptions.BancoDeDadosException;
+ import models.Contato;
+ import repository.ClienteRepository;
+ import repository.ContatoRepository;
 
-public class ServiceContato implements IService<Contato> {
-    @Override
-    public void adicionar(Contato contato) {
-        Optional<Contato> contatoExistente = procurar(contato.getId());
+ import java.util.ArrayList;
+ import java.util.List;
 
-        if (contatoExistente.isPresent())
-            throw new ObjetoExistente("Este contato já existe");
+ public class ServiceContato  {
 
-        contato.setId(BancoDeDados.gerarNovoIdContato());
-        BancoDeDados.contatos.add(contato);
-    }
+    private ContatoRepository contatoRepository = new ContatoRepository();
+    private ClienteRepository clienteRepository = new ClienteRepository();
 
-    @Override
-    public void deletar(int id) {
-        Contato contatoExistente = procurarPorID(id);
+    public void adicionarContato(Contato contato,Integer idCliente)  {
 
-        BancoDeDados.contatos.remove(contatoExistente);
-    }
+        try{
+            this.contatoRepository.novoContato(contato,idCliente);
+            System.out.println("Contato adicionado com sucesso");
 
-    @Override
-    public boolean editar(int id, Contato contatoEditado) {
-        Contato contatoExistente = procurarPorID(id);
+        }catch (BancoDeDadosException ex){
+            ex.printStackTrace();
 
-        int indexContato = BancoDeDados.contatos.indexOf(contatoExistente);
-
-        contatoExistente.setDescricao(contatoEditado.getDescricao());
-        contatoExistente.setNumero(contatoEditado.getNumero());
-        contatoExistente.setTipo(contatoEditado.getTipo().ordinal());
-
-        BancoDeDados.contatos.set(indexContato, contatoEditado);
-
-        return true;
-    }
-
-    @Override
-    public Contato procurarPorID(int id) {
-        Optional<Contato> contato = procurar(id);
-
-        if (contato.isEmpty()) {
-            throw new InformacaoNaoEncontrada("Não existe nenhum contato com este ID");
         }
 
-        return contato.get();
+
+    }
+     public List<Contato> listaDeContatoPorCliente(Integer idCliente)  {
+        List<Contato> listaDeContatos = new ArrayList<>();
+        try {
+            listaDeContatos = this.contatoRepository.contatosPorCliente(idCliente);
+        }catch (BancoDeDadosException ex){
+            System.out.println("Erro ao buscar contatos do cliente " + ex.getMessage());
+            ex.printStackTrace();
+        }catch (Exception erro){
+            System.out.println("Erro: "+ erro.getMessage());
+            erro.printStackTrace();
+        }
+       return listaDeContatos;
+     }
+    public void EditarContato(Integer idContato, Contato contato){
+        try{
+            this.contatoRepository.editar(idContato,contato);
+
+        }catch (BancoDeDadosException be){
+            System.out.println("Erro: "+ be.getMessage());
+            be.printStackTrace();
+        }
+
+
     }
 
-    @Override
-    public List<Contato> listarTodos() {
-        return BancoDeDados.contatos;
+    public void remover(Integer idContato){
+        try {
+            this.contatoRepository.excluirContato(idContato);
+            System.out.println("contato " + idContato + " excluido com sucesso");
+        }catch (BancoDeDadosException e){
+            System.out.println("Erro ao excluir contato : " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
-    @Override
-    public Optional<Contato> procurar(int id) {
-        return BancoDeDados.contatos.stream().filter(contato -> contato.getId() == id).findFirst();
-    }
 }
 
- */
