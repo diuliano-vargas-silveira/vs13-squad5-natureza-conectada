@@ -5,12 +5,14 @@ import enums.TipoUsuario;
 
 public class Especialista extends Usuario {
 
+    private int idEspecialista;
     private Contato contato;
     private String documento;
     private String especializacao;
     private Estados regiaoResponsavel;
 
     public Especialista() {
+        super.setTipoUsuario(TipoUsuario.ESPECIALISTA);
     }
 
     public Especialista(String nome, String email, String senha, Contato contato, String documento, String especializacao, Estados regiaoResponsavel) {
@@ -21,6 +23,13 @@ public class Especialista extends Usuario {
         this.regiaoResponsavel = regiaoResponsavel;
     }
 
+    public int getIdEspecialista() {
+        return idEspecialista;
+    }
+
+    public void setIdEspecialista(int idEspecialista) {
+        this.idEspecialista = idEspecialista;
+    }
 
     public Contato getContato() {
         return contato;

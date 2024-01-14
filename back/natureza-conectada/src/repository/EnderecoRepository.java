@@ -94,13 +94,14 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
             conexao = ConexaoBancoDeDados.getConnection();
 
             StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE VS_13_EQUIPE_5.ENTREGA SET");
+            sql.append("UPDATE VS_13_EQUIPE_5.ENDERECO SET");
             sql.append(" ESTADO = ?");
             sql.append(" CEP = ?");
             sql.append(" LOGRADOURO = ?");
             sql.append(" NUMERO = ?");
             sql.append(" COMPLEMENTO = ?");
             sql.append(" CIDADE = ?");
+            sql.append(" WHERE ID_ENDERECO");
 
             PreparedStatement stmt = conexao.prepareStatement(sql.toString());
             stmt.setInt(1, endereco.getEstado().ordinal() + 1);
@@ -114,7 +115,7 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
 
             System.out.println("O endereço foi atualizado! Resultado: ".concat(String.valueOf(resultado)));
         }catch(SQLException erro){
-            System.out.println("ERRO: Algo deu errado em editar o edenreço no banco de dados.");
+            System.out.println("ERRO: Algo deu errado em editar o endereço no banco de dados.");
             throw new BancoDeDadosException(erro.getCause());
         } finally {
             try{

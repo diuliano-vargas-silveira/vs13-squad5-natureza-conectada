@@ -49,5 +49,12 @@ public class ServiceUsuario implements IServiceUsuario {
     public Usuario procurarPorEmail(String email) throws BancoDeDadosException {
         return usuarioRepository.procurarPorEmail(email);
     }
-}
 
+    public void remover(int id) throws BancoDeDadosException {
+        usuarioRepository.remover(id);
+    }
+
+    public boolean editar(int id, Usuario usuarioEditado) throws BancoDeDadosException {
+        return usuarioRepository.editar(id, usuarioEditado);
+    }
+}
