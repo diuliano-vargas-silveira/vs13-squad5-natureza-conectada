@@ -1,39 +1,62 @@
 package services;
 
-import database.BancoDeDados;
-import enums.Tipo;
-import enums.TipoUsuario;
+import exceptions.BancoDeDadosException;
 import exceptions.InformacaoNaoEncontrada;
+import exceptions.ObjetoExistente;
 import exceptions.SenhaOuEmailInvalido;
 import interfaces.IServiceUsuario;
-import models.Cliente;
+import models.Especialista;
 import models.Usuario;
+import repository.UsuarioRepository;
 
-import java.util.Optional;
+import java.util.List;
 
 public class ServiceUsuario implements IServiceUsuario {
 
-    private static final ServiceCliente serviceCliente = new ServiceCliente();
-    private static final ServiceEspecialista serviceEspecialista = new ServiceEspecialista();
+    private static final UsuarioRepository usuarioRepository = new UsuarioRepository();
 
-    public Usuario logar(String email, String senha) {
-        Optional<Usuario> usuario = procurarPorEmail(email);
+    public Usuario adicionarUsuario(Usuario usuario) throws BancoDeDadosException {
+        Usuario usuarioBanco = usuarioRepository.procurarPorEmail(usuario.getEmail());
 
-        if (usuario.isEmpty()) {
+        if (usuarioBanco != null) {
+            throw new ObjetoExistente("Usuário já existe no banco de dados!");
+        }
+
+        return usuarioRepository.adicionar(usuario);
+    }
+
+    public Usuario logar(String email, String senha) throws BancoDeDadosException {
+        Usuario usuario = usuarioRepository.procurarPorEmail(email);
+
+        if (usuario == null) {
             throw new InformacaoNaoEncontrada("Usuário não existe");
         }
 
-        Usuario usuarioRetorno = usuario.get();
 
-        if (!usuarioRetorno.getSenha().equals(senha)) {
+        if (!usuario.getSenha().equals(senha)) {
             throw new SenhaOuEmailInvalido();
         }
 
-        return usuarioRetorno;
+        return usuario;
+    }
+
+    public List<Usuario> listarTodos() throws BancoDeDadosException {
+        List<Usuario> usuarios = usuarioRepository.listar();
+
+        return  usuarios;
     }
 
     @Override
-    public Optional<Usuario> procurarPorEmail(String email) {
-        return BancoDeDados.usuarios.stream().filter(usuario -> usuario.getEmail().equals(email)).findFirst();
+    public Usuario procurarPorEmail(String email) throws BancoDeDadosException {
+        return usuarioRepository.procurarPorEmail(email);
+    }
+
+    public void remover(int id) throws BancoDeDadosException {
+        usuarioRepository.remover(id);
+    }
+
+    public void editar(int id, Usuario usuarioEditado) throws BancoDeDadosException {
+        usuarioRepository.editar(id, usuarioEditado);
     }
 }
+

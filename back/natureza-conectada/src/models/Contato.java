@@ -22,6 +22,10 @@ public class Contato {
             throw new IllegalArgumentException("Tipo inválido.");
     }
 
+    public Contato(String telefone1, String endereco1) {
+
+    }
+
     public int getId() {
         return id;
     }

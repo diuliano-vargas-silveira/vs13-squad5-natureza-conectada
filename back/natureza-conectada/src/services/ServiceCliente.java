@@ -1,38 +1,37 @@
 package services;
 
-import database.BancoDeDados;
+
+import exceptions.BancoDeDadosException;
 import exceptions.InformacaoNaoEncontrada;
 import exceptions.ObjetoExistente;
 import interfaces.IService;
-import interfaces.IServiceUsuario;
 import models.*;
+import repository.ClienteRepository;
 
 import java.util.List;
 import java.util.Optional;
 
 public class ServiceCliente implements IService<Cliente> {
 
-    ServiceContato serviceContato = new ServiceContato();
-    ServiceEndereco serviceEndereco = new ServiceEndereco();
+    ServiceUsuario serviceUsuario = new ServiceUsuario();
+    ClienteRepository clienteRepository = new ClienteRepository();
 
     @Override
-    public void adicionar(Cliente cliente) {
-        Optional<Cliente> clienteEncontrado = procurarPorEmail(cliente.getEmail());
+    public void adicionar(Cliente cliente) throws BancoDeDadosException {
 
-        if (clienteEncontrado.isPresent()) {
-            throw new ObjetoExistente("Um cliente com este email já foi criado!");
-        }
+       Usuario usuario = serviceUsuario.adicionarUsuario(cliente);
 
-        cliente.setId(BancoDeDados.gerarNovoIdCliente());
-        BancoDeDados.usuarios.add(cliente);
-        BancoDeDados.clientes.add(cliente);
+       cliente.setId(usuario.getId());
+
+       clienteRepository.adicionar(cliente);
     }
 
     @Override
     public void deletar(int id) {
-        Cliente cliente = procurarPorID(id);
+        Cliente cliente =
 
-        BancoDeDados.clientes.remove(cliente);
+
+
     }
 
     @Override

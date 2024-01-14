@@ -14,4 +14,11 @@ public enum Tipo {
         };
     }
 
+    public static int getByCodigo(int tipoCodigo) {
+        return 0;
+    }
+
+    public int getCodigo() {
+        return 0;
+    }
 }

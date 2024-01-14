@@ -1,85 +1,71 @@
+
 package services;
 
-import database.BancoDeDados;
+import exceptions.BancoDeDadosException;
 import exceptions.InformacaoNaoEncontrada;
-import exceptions.ObjetoExistente;
 import interfaces.IService;
 import models.Especialista;
 import models.Relatorio;
+import models.Usuario;
+import repository.EspecialistaRepository;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 public class ServiceEspecialista implements IService<Especialista> {
 
-    ServiceRelatorio serviceRelatorio = new ServiceRelatorio();
+    EspecialistaRepository especialistaRepository = new EspecialistaRepository();
+    ServiceUsuario serviceUsuario = new ServiceUsuario();
 
     @Override
-    public void adicionar(Especialista especialista) {
-        Optional<Especialista> especialistaExistente = procurarPorEmail(especialista.getEmail());
+    public void adicionar(Especialista especialista) throws BancoDeDadosException {
+        Usuario usuarioCriado = serviceUsuario.adicionarUsuario(especialista);
 
-        if (especialistaExistente.isPresent())
-            throw new ObjetoExistente("Especilista já existente com este email!");
-
-        especialista.setId(BancoDeDados.gerarNovoIdEspecialista());
-        BancoDeDados.usuarios.add(especialista);
-        BancoDeDados.especialistas.add(especialista);
+        especialista.setId(usuarioCriado.getId());
+        especialistaRepository.adicionar(especialista);
     }
 
     @Override
-    public void deletar(int id) {
-        Especialista especialistaExistente = procurarPorID(id);
+    public void deletar(int id) throws SQLException {
+        Especialista especialista = procurarPorID(id);
 
-        BancoDeDados.especialistas.remove(especialistaExistente);
+        especialistaRepository.remover(id);
+        serviceUsuario.remover(especialista.getId());
     }
 
     @Override
-    public boolean editar(int id, Especialista especialistaEditado) {
-        Especialista especialistaExistente = procurarPorID(id);
-
-        int indexEspecialista = BancoDeDados.especialistas.indexOf(especialistaExistente);
-
-        especialistaExistente.setNome(especialistaEditado.getNome());
-        especialistaExistente.setEmail(especialistaEditado.getEmail());
-        especialistaExistente.setSenha(especialistaEditado.getSenha());
-        especialistaExistente.setDocumento(especialistaEditado.getDocumento());
-        especialistaExistente.setRegiaoResponsavel(especialistaEditado.getRegiaoResponsavel());
-        especialistaExistente.setContato(especialistaEditado.getContato());
-
-        BancoDeDados.especialistas.set(indexEspecialista, especialistaExistente);
-        return true;
+    public boolean editar(int id, Especialista especialistaEditado) throws BancoDeDadosException {
+        serviceUsuario.editar(especialistaEditado.getId(), especialistaEditado);
+        return especialistaRepository.editar(id, especialistaEditado);
     }
 
     @Override
-    public Especialista procurarPorID(int id) {
-        Optional<Especialista> especialista = procurar(id);
+    public Especialista procurarPorID(int id) throws SQLException {
+        Especialista especialista = procurar(id);
 
-        if (especialista.isEmpty()) {
+        if (especialista == null) {
             throw new InformacaoNaoEncontrada("Não existe nenhum especialista com este ID!");
         }
 
-        return especialista.get();
+        return especialista;
     }
 
     @Override
-    public List<Especialista> listarTodos() {
-        return BancoDeDados.especialistas;
+    public List<Especialista> listarTodos() throws BancoDeDadosException {
+        return especialistaRepository.listar();
     }
 
     @Override
-    public Optional<Especialista> procurar(int id) {
-        return BancoDeDados.especialistas.stream().filter(cliente -> cliente.getId() == id).findFirst();
+    public Especialista procurar(int id) throws SQLException {
+        return especialistaRepository.procurarPorId(id);
     }
 
-    public Optional<Especialista> procurarPorEmail(String email) {
-        return BancoDeDados.especialistas.stream().filter(especialista -> especialista.getEmail().equals(email)).findFirst();
-    }
-
-    public List<Relatorio> procurarRelatorioPorEmail(String email) {
-        return serviceRelatorio.listarTodos().stream().filter(relatorio -> {
-            if (Objects.isNull(relatorio.getAvaliador())) return false;
-            return relatorio.getAvaliador().getEmail().equals(email);
-        }).toList();
-    }
+//    public List<Relatorio> procurarRelatorioPorEmail(String email) {
+//        return serviceRelatorio.listarTodos().stream().filter(relatorio -> {
+//            if (Objects.isNull(relatorio.getAvaliador())) return false;
+//            return relatorio.getAvaliador().getEmail().equals(email);
+//        }).toList();
+//    }
 }

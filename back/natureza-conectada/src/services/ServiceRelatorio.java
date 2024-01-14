@@ -1,3 +1,4 @@
+/*
 package services;
 
 import database.BancoDeDados;
@@ -112,3 +113,4 @@ public class ServiceRelatorio implements IService<Relatorio> {
     }
 
 }
+ */
