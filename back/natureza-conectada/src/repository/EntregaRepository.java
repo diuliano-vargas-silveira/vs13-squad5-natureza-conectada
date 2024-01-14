@@ -97,10 +97,12 @@ public class EntregaRepository implements Repository<Integer, Entrega>{
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE VS_13_EQUIPE_5.ENTREGA SET");
             sql.append(" STATUS = ?");
+            sql.append(" WHERE ID_ENTREGA = ?");
             
             PreparedStatement stmt = conexao.prepareStatement(sql.toString());
             stmt.setString(1, String.valueOf(entrega.getStatus()));
-
+            stmt.setInt(2, id);
+            
             int resultado = stmt.executeUpdate();
 
             System.out.println("A entrega foi atualizada! Resultado: ".concat(String.valueOf(resultado)));
@@ -119,7 +121,7 @@ public class EntregaRepository implements Repository<Integer, Entrega>{
     }
 
     @Override
-    public List listar() throws BancoDeDadosException {
+    public List<Entrega> listar() throws BancoDeDadosException {
         Connection conexao = null;
         List<Entrega> listaEntrega = new ArrayList<>();
 
