@@ -202,7 +202,6 @@ public class ClienteRepository implements Repository<Integer, Cliente> {
         cliente.setNome(usuario.getString("NOME"));
         cliente.setEmail(usuario.getString("EMAIL"));
         cliente.setCpf(usuario.getString("CPF"));
-        cliente.setId(usuario.getInt("ID_USUARIO"));
 
         return cliente;
     }
@@ -236,6 +235,7 @@ public class ClienteRepository implements Repository<Integer, Cliente> {
 
             if (clienteRes.next()) {
                 cliente = getCliente(clienteRes);
+
             }
 
         } catch (SQLException e) {
