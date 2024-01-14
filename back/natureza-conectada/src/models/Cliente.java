@@ -4,7 +4,7 @@ import enums.TipoUsuario;
 import java.util.ArrayList;
 
 public class Cliente extends Usuario {
-
+    private int id;
     private String cpf;
     private ArrayList<Endereco> enderecos = new ArrayList<>();
     private ArrayList<Contato> contatos = new ArrayList<>();
@@ -21,13 +21,24 @@ public class Cliente extends Usuario {
     }
 
     // Setters e Getters
-
-
     public void setCpf(String cpf) {
         this.cpf = cpf;
     }
     public String getCpf() {
         return cpf;
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+    @Override
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getIdUsuario(){
+        return super.getId();
     }
 
     public void setEnderecos(ArrayList<Endereco> enderecos) {
