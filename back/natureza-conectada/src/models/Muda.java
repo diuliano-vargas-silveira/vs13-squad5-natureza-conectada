@@ -12,6 +12,10 @@ public class Muda {
 
     private int id;
 
+    private int idEspecialista;
+    
+    private int idCliente;
+
     private TipoMuda tipo;
 
     private String nome;
@@ -122,6 +126,22 @@ public class Muda {
 
     public void setEspecialistasDeRegiao(List<Especialista> especialistasDeRegiao) {
         this.especialistasDeRegiao = especialistasDeRegiao;
+    }
+
+    public void setIdEspecialista(int idEspecialista){
+        this.idEspecialista = idEspecialista;
+    }
+    
+    public int getIdEspecialista(){
+        return this.idEspecialista;
+    }
+    
+    public void setIdCliente(int idCliente){
+        this.idCliente = idCliente; 
+    }
+
+    public int getIdCliente(){
+        return this.idCliente;
     }
 }
 
