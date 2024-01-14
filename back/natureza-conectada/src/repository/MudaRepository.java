@@ -29,7 +29,7 @@ public class MudaRepository implements Repository<Integer, Muda>{
 
             String sql = "INSERT INTO VS_13_EQUIPE_5.MUDA\n" +
              "(ID_ENTREGA, ID_ESPECIALISTA, ID_CLIENTE, TIPO_MUDA, NOME, NOME_CIENTIFICO, PORTE, AMBIENTE_IDEAL, DESCRICAO)\n" +
-              "VALUES(?, ?, ?, ?)\n";
+              "VALUES(?, ?, ?, ?, ?, ? , ?, ?, ?)\n";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setInt(1, muda.getId());
@@ -154,6 +154,7 @@ public class MudaRepository implements Repository<Integer, Muda>{
                 mudaAtual.setNome(mudaTabela.getString("NOME"));
                 mudaAtual.setIdCliente(mudaTabela.getInt("ID_CLIENTE"));
                 mudaAtual.setIdEspecialista(mudaTabela.getInt("ID_ESPECIALISTA"));
+                listaMuda.add(mudaAtual);
             }
 
 
