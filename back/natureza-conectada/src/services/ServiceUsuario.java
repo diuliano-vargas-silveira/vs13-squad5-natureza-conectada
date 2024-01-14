@@ -7,6 +7,8 @@ import interfaces.IServiceUsuario;
 import models.Usuario;
 import repository.UsuarioRepository;
 
+import java.util.List;
+
 public class ServiceUsuario implements IServiceUsuario {
 
     private static final UsuarioRepository usuarioRepository = new UsuarioRepository();
@@ -24,6 +26,12 @@ public class ServiceUsuario implements IServiceUsuario {
         }
 
         return usuario;
+    }
+
+    public List<Usuario> listarTodos() throws BancoDeDadosException {
+        List<Usuario> usuarios = usuarioRepository.listar();
+
+        return  usuarios;
     }
 
     @Override

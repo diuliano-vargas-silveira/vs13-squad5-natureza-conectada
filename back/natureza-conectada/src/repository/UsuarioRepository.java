@@ -178,6 +178,7 @@ public class UsuarioRepository implements Repository<Integer, Usuario> {
                 TipoUsuario tipoUsuario = TipoUsuario.valueOf(usuarioTabela.getString("TIPO_USUARIO"));
 
                 usuario = getUsuario(usuarioTabela, tipoUsuario);
+                usuario.setSenha(usuarioTabela.getString("SENHA"));
             }
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado ao listar os usuários do banco de dados.");
