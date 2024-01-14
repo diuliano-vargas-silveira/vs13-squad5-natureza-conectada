@@ -32,7 +32,7 @@ public class UsuarioRepository implements Repository<Integer, Usuario> {
         try {
             conexao = ConexaoBancoDeDados.getConnection();
             Integer proximoId = this.getProximoId(conexao);
-            usuario.setId(proximoId.intValue());
+            usuario.setId(proximoId);
 
             String sql = "INSERT INTO USUARIO\n" +
                     "(ID_USUARIO, NOME, EMAIL, SENHA, TIPO_USUARIO)\n" +
@@ -140,20 +140,7 @@ public class UsuarioRepository implements Repository<Integer, Usuario> {
             while (usuarioTabela.next()) {
                 TipoUsuario tipoUsuario = TipoUsuario.valueOf(usuarioTabela.getString("TIPO_USUARIO"));
 
-                Usuario usuario = null;
-                switch (tipoUsuario) {
-                    case CLIENTE -> {
-                        usuario = getCliente(usuarioTabela);
-                    }
-                    case ESPECIALISTA -> {
-                        usuario = getEspecialista(usuarioTabela);
-                    }
-                    case ADMIN -> {
-                        usuario = getAdmin(usuarioTabela);
-                    }
-                }
-
-                usuario.setTipoUsuario(tipoUsuario);
+                Usuario usuario = getUsuario(usuarioTabela, tipoUsuario);
 
                 listaUsuario.add(usuario);
             }
@@ -170,6 +157,62 @@ public class UsuarioRepository implements Repository<Integer, Usuario> {
             }
         }
         return listaUsuario;
+    }
+
+    public Usuario procurarPorEmail(String email) throws BancoDeDadosException {
+        Connection conexao = null;
+
+        Usuario usuario = null;
+
+        try {
+            conexao = ConexaoBancoDeDados.getConnection();
+
+            String sqlUsuario = "SELECT * FROM USUARIO WHERE EMAIL = ?";
+            PreparedStatement preparedStatement = conexao.prepareStatement(sqlUsuario);
+
+            preparedStatement.setString(1, email);
+
+            ResultSet usuarioTabela = preparedStatement.executeQuery();
+
+            if (usuarioTabela.next()) {
+                TipoUsuario tipoUsuario = TipoUsuario.valueOf(usuarioTabela.getString("TIPO_USUARIO"));
+
+                usuario = getUsuario(usuarioTabela, tipoUsuario);
+                usuario.setSenha(usuarioTabela.getString("SENHA"));
+            }
+        } catch (SQLException erro) {
+            System.out.println("ERRO: Algo deu errado ao listar os usuários do banco de dados.");
+            throw new BancoDeDadosException(erro.getCause());
+        } finally {
+            try {
+                fecharConexao(conexao);
+            } catch (SQLException erro) {
+                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
+                erro.printStackTrace();
+            }
+        }
+
+        return usuario;
+    }
+
+    private Usuario getUsuario(ResultSet usuarioTabela, TipoUsuario tipoUsuario) throws SQLException {
+        Usuario usuario = null;
+
+        switch (tipoUsuario) {
+            case CLIENTE -> {
+                usuario = getCliente(usuarioTabela);
+            }
+            case ESPECIALISTA -> {
+                usuario = getEspecialista(usuarioTabela);
+            }
+            case ADMIN -> {
+                usuario = getAdmin(usuarioTabela);
+            }
+        }
+
+        usuario.setTipoUsuario(tipoUsuario);
+
+        return usuario;
     }
 
     private Usuario getAdmin(ResultSet usuario) throws SQLException {
