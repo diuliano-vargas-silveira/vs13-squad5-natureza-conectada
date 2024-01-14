@@ -1,7 +1,6 @@
 package repository;
 import exceptions.BancoDeDadosException;
 import models.Admin;
-import models.Cliente;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -168,22 +167,31 @@ public class AdminRepository implements Repository<Integer, Admin> {
         }
     }
 
-    public boolean getId(Admin admin) throws BancoDeDadosException {
-
+    public Admin procurarPorId(int id) throws BancoDeDadosException {
+        Admin admin = null;
         Connection conexao = null;
 
         try {
             conexao = ConexaoBancoDeDados.getConnection();
-            String sql = "SELECT ID_ADMIN FROM VS_13_EQUIPE_5.ADMIN WHERE ID_ADMIN = ?";
+            String sql = "SELECT ad.ID_ADMIN, u.NOME, u.EMAIL\n" +
+                    "FROM\n" +
+                    "\tUSUARIO u \n" +
+                    "INNER JOIN \n" +
+                    "\tADMIN ad ON (u.ID_USUARIO = ad.ID_ADMIN)\n" +
+                    "WHERE \n" +
+                    "\tad.ID_ADMIN = ? ";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setInt(1, admin.getId());
+            stmt.setInt(1, id);
 
             ResultSet resposta = stmt.executeQuery();
 
-            if(resposta.next()){
-                return true;
+            if (resposta.next()) {
+                admin.setIdAdmin(resposta.getInt("ID_ADMIN"));
+                admin.setNome(resposta.getString("NOME"));
+                admin.setEmail(resposta.getString("EMAIL"));
             }
+
 
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
@@ -196,8 +204,10 @@ public class AdminRepository implements Repository<Integer, Admin> {
                 erro.printStackTrace();
             }
         }
-        return false;
+        return admin;
     }
+
+
 
     
 

@@ -1,78 +1,61 @@
-/*
 package services;
 
-import database.BancoDeDados;
+import exceptions.BancoDeDadosException;
 import exceptions.InformacaoNaoEncontrada;
-import exceptions.ObjetoExistente;
 import interfaces.IService;
 import models.Admin;
+import models.Usuario;
+import repository.AdminRepository;
 
+import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 public class ServiceAdmin implements IService<Admin> {
+
+    AdminRepository adminRepository = new AdminRepository();
+
+    ServiceUsuario serviceUsuario = new ServiceUsuario();
+
     @Override
-    public void adicionar(Admin admin) {
-        Optional<Admin> adminEncontrado = procurarPorEmail(admin.getEmail());
+    public void adicionar(Admin admin) throws BancoDeDadosException {
+        Usuario usuarioCriado = serviceUsuario.adicionarUsuario(admin);
 
-        if (adminEncontrado.isPresent()) {
-            throw new ObjetoExistente("Um administrador com este email já foi criado!");
-        }
-
-        admin.setId(BancoDeDados.gerarNovoIdAdmin());
-        BancoDeDados.usuarios.add(admin);
-        BancoDeDados.admins.add(admin);
+        admin.setId(usuarioCriado.getId());
+        adminRepository.adicionar(admin);
     }
 
     @Override
-    public void deletar(int id) {
-        Optional<Admin> adminEncontrado = procurar(id);
-        if (adminEncontrado.isPresent()) {
-            BancoDeDados.admins.remove(adminEncontrado.get());
-        } else {
-            throw new InformacaoNaoEncontrada("Não existe um administrador com este ID");
-        }
+    public void deletar(int id) throws SQLException {
+        Admin admin = procurarPorID(id);
+
+        adminRepository.remover(id);
+        serviceUsuario.remover(admin.getId());
     }
 
     @Override
-    public boolean editar(int id, Admin adminEditado) {
-        Optional<Admin> adminEncontrado = procurar(id);
-
-        if (adminEncontrado.isPresent()) {
-            Admin admin = adminEncontrado.get();
-            admin.setNome(adminEditado.getNome());
-            admin.setEmail(adminEditado.getEmail());
-            admin.setSenha(adminEditado.getSenha());
-        } else {
-            throw new InformacaoNaoEncontrada("Não existe um administrador com este ID");
-        }
-
-        return true;
+    public boolean editar(int id, Admin adminEditado) throws BancoDeDadosException {
+        serviceUsuario.editar(adminEditado.getId(), adminEditado);
+        return adminRepository.editar(id, adminEditado);
     }
 
     @Override
-    public Admin procurarPorID(int id) {
-        Optional<Admin> admin = procurar(id);
+    public Admin procurarPorID(int id) throws SQLException {
+        Admin admin = procurar(id);
 
-        if(admin.isEmpty()){
+        if (admin == null) {
             throw new InformacaoNaoEncontrada("Não existe nenhum administrador com este ID!");
         }
 
-        return admin.get();
+        return admin;
     }
 
     @Override
-    public List<Admin> listarTodos() {
-        return BancoDeDados.admins;
+    public List<Admin> listarTodos() throws BancoDeDadosException {
+        return adminRepository.listar();
     }
 
     @Override
-    public Optional<Admin> procurar(int id) {
-        return BancoDeDados.admins.stream().filter(admin -> admin.getId() == id).findFirst();
-    }
-
-    public Optional<Admin> procurarPorEmail(String email) {
-        return BancoDeDados.admins.stream().filter(admin -> admin.getEmail().equals(email)).findFirst();
+    public Admin procurar(int id) throws SQLException {
+        return adminRepository.procurarPorId(id);
     }
 }
-*/
