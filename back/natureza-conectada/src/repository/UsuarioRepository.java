@@ -167,16 +167,18 @@ public class UsuarioRepository implements Repository<Integer, Usuario> {
         try {
             conexao = ConexaoBancoDeDados.getConnection();
 
-            String sqlUsuario = "SELECT * FROM USUARIO WHERE EMAIL = ?";
+            String sqlUsuario = "SELECT * FROM USUARIO WHERE EMAIL = '" + email + "'";
             PreparedStatement preparedStatement = conexao.prepareStatement(sqlUsuario);
 
-            preparedStatement.setString(1, email);
+//            preparedStatement.setString(1, email);
 
             ResultSet usuarioTabela = preparedStatement.executeQuery();
 
-            TipoUsuario tipoUsuario = TipoUsuario.valueOf(usuarioTabela.getString("TIPO_USUARIO"));
+            if (usuarioTabela.next()) {
+                TipoUsuario tipoUsuario = TipoUsuario.valueOf(usuarioTabela.getString("TIPO_USUARIO"));
 
-            usuario = getUsuario(usuarioTabela, tipoUsuario);
+                usuario = getUsuario(usuarioTabela, tipoUsuario);
+            }
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado ao listar os usuários do banco de dados.");
             throw new BancoDeDadosException(erro.getCause());

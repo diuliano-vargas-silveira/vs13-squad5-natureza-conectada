@@ -10,5 +10,14 @@ public class Main {
 
         // Menu.rodarAplicacao();
 
+        ServiceUsuario serviceUsuario = new ServiceUsuario();
+
+        try {
+            Usuario usuario = serviceUsuario.logar("diuliano.vargas@example.com", "senhadificil");
+            System.out.println(usuario);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
