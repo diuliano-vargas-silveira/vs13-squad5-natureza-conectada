@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import enums.TamanhoMuda;
 import enums.TipoMuda;
 import exceptions.BancoDeDadosException;
 import models.Muda;
@@ -174,5 +175,41 @@ public class MudaRepository implements Repository<Integer, Muda>{
         if (conexao != null) {
             conexao.close();
         }
+    }
+
+    public Muda buscarPorId(Integer idMuda) throws BancoDeDadosException {
+        Connection conn = null;
+        Muda muda = new Muda();
+        try {
+            conn = ConexaoBancoDeDados.getConnection();
+            String sql = "SELECT * FROM MUDA WHERE ID_MUDA = ? ";
+            PreparedStatement stm = conn.prepareStatement(sql);
+
+            stm.setInt(1,idMuda);
+            ResultSet resultado = stm.executeQuery();
+            while (resultado.next()){
+                muda.setId(resultado.getInt("ID_MUDA"));
+                muda.setDescricao(resultado.getString("DESCRICAO"));
+                muda.setQuantidade(resultado.getInt("QUANTIDADE"));
+                muda.setNome(resultado.getString("NOME"));
+                muda.setPorte(TamanhoMuda.valueOf(resultado.getString(" PORTE")));
+                muda.setAmbienteIdeal(resultado.getString("AMBIENTE_IDEAL"));
+                muda.setDescricao(resultado.getString("DESCRICAO"));
+            }
+        return muda;
+
+        }catch (SQLException ex) {
+            System.out.println("Erro ao buscar por id, ERRO :"+ ex.getMessage());
+            throw new BancoDeDadosException(ex.getCause());
+        }finally {
+            try {
+                if(conn != null){
+                    conn.close();
+                }
+            }catch (SQLException e){
+                System.out.println("Erro ao fechar conexao do banco de dados, ERRO: " + e.getMessage());
+            }
+        }
+
     }
 }
