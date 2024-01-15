@@ -97,10 +97,17 @@ public class EntregaRepository implements Repository<Integer, Entrega>{
             conexao = ConexaoBancoDeDados.getConnection();
             String sql = "DELETE FROM VS_13_EQUIPE_5.ENTREGA WHERE ID_ENTREGA = ?";
             
-            PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setInt(1, id.intValue());
+            PreparedStatement statementUm = conexao.prepareStatement(sql);
+            statementUm.setInt(1, id.intValue());
 
-            int resultado = stmt.executeUpdate();
+            int resultado = statementUm.executeUpdate();
+
+            String sqlEntregaMuda = "DELETE FROM VS_13_EQUIPE_5.ENTREGA_MUDA WHERE ID_ENTREGA = ?";
+
+            PreparedStatement statementDois = conexao.prepareStatement(sqlEntregaMuda);
+            statementDois.setInt(1, id.intValue());
+
+            int resultadoDois = statementDois.executeUpdate();
             System.out.println("A entrega foi removida! Resultado: ".concat(String.valueOf(resultado)));
             
             return resultado > 0;

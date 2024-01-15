@@ -53,7 +53,7 @@ public class ServiceMudas  {
     }
 
     public List<Muda> listarMudas(){
-        List listaDeMudas = new ArrayList<>();
+        List<Muda> listaDeMudas = new ArrayList<>();
         try {
             listaDeMudas = this.mudaRepository.listar();
         }catch(BancoDeDadosException e) {
