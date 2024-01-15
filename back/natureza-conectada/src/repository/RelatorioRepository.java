@@ -8,9 +8,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RelatorioRepository implements Repository<Integer, Relatorio> {
+public class RelatorioRepository {
 
-    @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_RELATORIO.NEXTVAL mysequence FROM DUAL";
         Statement stmt = connection.createStatement();
@@ -21,8 +20,7 @@ public class RelatorioRepository implements Repository<Integer, Relatorio> {
         return null;
     }
 
-    @Override
-    public Relatorio adicionar(Relatorio relatorio) throws BancoDeDadosException {
+    public Relatorio adicionar(Relatorio relatorio, Integer idCliente, Integer idEspecialista, Integer idMuda) throws BancoDeDadosException {
         Connection conexao = null;
         try {
             conexao = ConexaoBancoDeDados.getConnection();
@@ -30,14 +28,14 @@ public class RelatorioRepository implements Repository<Integer, Relatorio> {
             relatorio.setId(proximoId.intValue());
 
             String sql = "INSERT INTO RELATORIO\n" +
-                    "(ID_RELATORIO, ID_CLIENTE, ID_AVALIADOR, ID_MUDA, ESTADO_MUDA, SUGESTOES, AVALIACAO_ESPECIALISTA)\n" +
+                    "(ID_RELATORIO, ID_CLIENTE, ID_ESPECIALISTA, ID_MUDA, ESTADO_MUDA, SUGESTOES, AVALIACAO)\n" +
                     "VALUES(?, ?, ?, ?, ?, ?, ?)\n";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setInt(1, relatorio.getId());
-            stmt.setInt(2, relatorio.getDono().getId());
-            stmt.setInt(3, relatorio.getAvaliador().getId());
-            stmt.setInt(4, relatorio.getMuda().getId());
+            stmt.setInt(2, idCliente);
+            stmt.setInt(3, idEspecialista);
+            stmt.setInt(4, idMuda);
             stmt.setString(5, relatorio.getEstadoMuda());
             stmt.setString(6, relatorio.getSugestoes());
             stmt.setDouble(7, relatorio.getAvaliacaoEspecialista());
@@ -60,7 +58,6 @@ public class RelatorioRepository implements Repository<Integer, Relatorio> {
         }
     }
 
-    @Override
     public boolean remover(Integer id) throws BancoDeDadosException {
         Connection conexao = null;
         try {
@@ -87,7 +84,6 @@ public class RelatorioRepository implements Repository<Integer, Relatorio> {
         }
     }
 
-    @Override
     public boolean editar(Integer id, Relatorio relatorio) throws BancoDeDadosException {
         Connection conexao = null;
         try {
@@ -124,7 +120,6 @@ public class RelatorioRepository implements Repository<Integer, Relatorio> {
         }
     }
 
-    @Override
     public List<Relatorio> listar() throws BancoDeDadosException {
         Connection conexao = null;
         List<Relatorio> listaRelatorios = new ArrayList<>();

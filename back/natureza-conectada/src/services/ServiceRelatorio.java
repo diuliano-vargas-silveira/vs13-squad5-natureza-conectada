@@ -9,13 +9,12 @@ import repository.RelatorioRepository;
 import java.sql.SQLException;
 import java.util.List;
 
-public class ServiceRelatorio implements IService<Relatorio> {
+public class ServiceRelatorio {
 
     RelatorioRepository relatorioRepository = new RelatorioRepository();
-    @Override
-    public void adicionar(Relatorio relatorio) throws BancoDeDadosException {
+    public void adicionar(Relatorio relatorio, Integer idCliente, Integer idEspecialista, Integer idMuda) throws BancoDeDadosException {
         try{
-            this.relatorioRepository.adicionar(relatorio);
+            this.relatorioRepository.adicionar(relatorio, idCliente, idEspecialista, idMuda);
             System.out.println("Relatório adicionado com sucesso");
 
         }catch (BancoDeDadosException ex){
@@ -25,7 +24,6 @@ public class ServiceRelatorio implements IService<Relatorio> {
         }
     }
 
-    @Override
     public void deletar(int id) throws BancoDeDadosException {
         try {
             this.relatorioRepository.remover(id);
@@ -36,7 +34,6 @@ public class ServiceRelatorio implements IService<Relatorio> {
         }
     }
 
-    @Override
     public boolean editar(int id, Relatorio relatorio) throws BancoDeDadosException {
         boolean resultado = false;
         try {
@@ -48,7 +45,6 @@ public class ServiceRelatorio implements IService<Relatorio> {
         return resultado;
     }
 
-    @Override
     public Relatorio procurarPorID(int id) throws SQLException {
 
         Relatorio relatorio = procurar(id);
@@ -61,11 +57,9 @@ public class ServiceRelatorio implements IService<Relatorio> {
 
     }
 
-    @Override
     public List<Relatorio> listarTodos() throws BancoDeDadosException {
         return relatorioRepository.listar();
     }
-    @Override
     public Relatorio procurar(int id) throws SQLException {
         return relatorioRepository.procurarPorId(id);
     }

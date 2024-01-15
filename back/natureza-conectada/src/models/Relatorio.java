@@ -11,11 +11,11 @@ public class Relatorio {
     private double avaliacaoEspecialista;
 
 
-    public Relatorio() {
-        this.dono = dono;
-        this.muda = muda;
+    public Relatorio(){};
+    public Relatorio(String estadoMuda, String sugestoes, Double avaliacaoEspecialista) {
         this.estadoMuda = estadoMuda;
         this.sugestoes = sugestoes;
+        this.avaliacaoEspecialista = avaliacaoEspecialista;
 
     }
 

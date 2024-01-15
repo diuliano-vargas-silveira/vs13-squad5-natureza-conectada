@@ -12,6 +12,7 @@ public class MockContainer {
 
 
         // Criando Clientes
+        /*
         String[] nomeCliente = {"Willian Cavalheiro", "Diuliano Vargas", "Luísa Santos", "Pedro Antonetti", "Janier Freitas", "Thales Salla", "Carlos Queiroz", "Welton Santos", "Rafael Camilo", "Rafael Ramos"};
         String[] emailCliente = {"willian@dbc.com.br", "Diuliano@dbc.com.br", "luh.santos@dbc.com.br", "pedro@dbc.com.br", "janier@dbc.com.br", "thales@dbc.com.br", "carlos@dbc.com.br", "welton@dbc.com.br", "rcamilo@dbc.com.br", "rramos@dbc.com.br"};
         String[] cpfCliente = {"12345678909", "98765432100", "11122233344", "55566677788", "99900066622", "99900099922", "99900055522", "99900014422", "99900044422", "99900034422"};
@@ -65,6 +66,7 @@ public class MockContainer {
 
         }
 
+
         // Criando Endereços
 
         String[] cepEndereco = {"12345678", "98765432", "54321876", "87654321", "23456789", "67890123", "98765432", "12345678", "54321876", "87654321", "23456789", "67890123", "98765432", "12345678", "54321876", "87654321", "23456789", "67890123", "87654321"};
@@ -73,8 +75,8 @@ public class MockContainer {
         String[] complementoEndereco = {"Palácio do Planalto", "Cristo Redentor", "Pátio do Colégio", "MASP", "Dragão do Mar", "Mineirão", "Recife Antigo", "Forte dos Reis Magos", "Palácio do Buriti", "Praça da Estação", "Arena das Dunas", "Pão de Açúcar", "MASP", "Mercado Central", "Mercado Central", "Praia de Boa Viagem", "Centro de Turismo", "Rio Jacuí", "Depósito Tramonta"};
         String[] cidadeEndereco = {"Brasília", "Rio de Janeiro", "São Paulo", "São Paulo", "Fortaleza", "Belo Horizonte", "Recife", "Natal", "Brasília", "Belo Horizonte", "Natal", "Rio de Janeiro", "São Paulo", "Fortaleza", "Belo Horizonte", "Recife", "Natal", "Charqueadas", "Charqueadas"};
         Estados[] estadoEndereco = {Estados.DF, Estados.RJ, Estados.SP, Estados.SP, Estados.CE, Estados.MG, Estados.PE, Estados.RN, Estados.DF, Estados.MG, Estados.RN, Estados.RJ, Estados.SP, Estados.CE, Estados.MG, Estados.PE, Estados.RN, Estados.RS, Estados.RS};
-        int[] tipoEndereco = {1, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2};
-        int[] idClienteEndereco = {1, 2, 1, 2, 3, 4, 4, 5, 5, 6, 6, 7, 8, 9, 10, 11, 12, 13, 14};
+        Tipo[] tipoEndereco = {Tipo.RESIDENCIAL, Tipo.RESIDENCIAL, Tipo.COMERCIAL, Tipo.COMERCIAL, Tipo.RESIDENCIAL, Tipo.COMERCIAL, Tipo.RESIDENCIAL, Tipo.COMERCIAL, Tipo.RESIDENCIAL, Tipo.COMERCIAL, Tipo.RESIDENCIAL, Tipo.COMERCIAL, Tipo.RESIDENCIAL, Tipo.COMERCIAL, Tipo.RESIDENCIAL, Tipo.COMERCIAL, Tipo.RESIDENCIAL, Tipo.COMERCIAL, Tipo.COMERCIAL};
+        int[] idClienteEndereco = {40, 41, 40, 41, 42, 43, 43, 44, 44, 45, 45, 46, 47, 48, 49, 50, 51, 52, 53};
 
         ServiceEndereco serviceEndereco = new ServiceEndereco();
 
@@ -91,50 +93,63 @@ public class MockContainer {
             serviceEndereco.adicionar(endereco, idClienteEndereco[i]);
         }
 
+        Criando administrador
 
+        ServiceAdmin serviceAdmin = new ServiceAdmin();
+        Admin admin = new Admin("Administrador", "administrador@naturezaconectada.com", "senhadificil");
+        serviceAdmin.adicionar(admin);
 
     }
+
+        // Criando Mudas
+
+        TipoMuda[] tipoMuda = {TipoMuda.PLANTA, TipoMuda.PLANTA, TipoMuda.PLANTA, TipoMuda.PLANTA, TipoMuda.PLANTA, TipoMuda.PLANTA, TipoMuda.PLANTA, TipoMuda.PLANTA, TipoMuda.PLANTA, TipoMuda.PLANTA, TipoMuda.ARVORE, TipoMuda.PLANTA, TipoMuda.PLANTA, TipoMuda.PLANTA, TipoMuda.ARVORE, TipoMuda.ARVORE, TipoMuda.PLANTA, TipoMuda.PLANTA};
+        int[] quantidadeMuda = {3, 10, 50, 1, 7, 7, 4, 8, 4, 3, 11, 21, 35, 64, 2, 13, 17, 18};
+        String[] nomeMuda = {"Rosa", "Lírio", "Orquídea", "Margarida", "Girassol", "Azaleia", "Orégano", "Bromélia", "Lavanda", "Bambu", "Cacto", "Hortênsia", "Suculenta", "Jasmim", "Ipê Amarelo", "Cerejeira", "Samambaia", "Agave", };
+        String[] nomeCientificoMuda = {"Rosa gallica", "Lilium candidum", "Phalaenopsis amabilis", "Leucanthemum vulgare", "Helianthus annuus", "Rhododendron simsii", "Origanum vulgare", "Neoregalia spp.", "Lavandula angustifolia", "Bambusoideae", "Cactaceae", "Hydrangea macrophylla", "Echeveria spp.", "Jasminum spp.", "Handroanthus spp.", "Prunus serrulata", "Nephrolepis exaltata", "Agave americana"};
+        TamanhoMuda[] tamanhoMuda = {TamanhoMuda.PEQUENO, TamanhoMuda.MEDIO, TamanhoMuda.PEQUENO, TamanhoMuda.MEDIO, TamanhoMuda.PEQUENO, TamanhoMuda.MEDIO, TamanhoMuda.PEQUENO, TamanhoMuda.MEDIO, TamanhoMuda.PEQUENO, TamanhoMuda.MEDIO, TamanhoMuda.PEQUENO, TamanhoMuda.MEDIO, TamanhoMuda.PEQUENO, TamanhoMuda.MEDIO, TamanhoMuda.GRANDE, TamanhoMuda.GRANDE, TamanhoMuda.PEQUENO, TamanhoMuda.MEDIO};
+        String[] ambienteIdealMuda = {"Jardim", "Canteiro", "Estufa", "Campo", "Jardim", "Vaso", "Horta", "Vaso", "Canteiro", "Jardim", "Soleira", "Vaso", "Soleira", "Canteiro", "Jardim", "Canteiro", "Vaso", "Soleira"};
+        String[] descricaoMuda = {"Belíssima rosa com pétalas vermelhas", "Lírio branco de grande porte", "Orquídea popular com flores duradouras", "Margarida simples e encantadora", "Girassol amarelo vibrante", "Azaleia de folhas perenes", "Erva aromática para culinária", "Bromélia colorida e exótica", "Lavanda perfumada e relaxante", "Bambu ornamental e resistente", "Cacto de fácil manutenção", "Hortênsia de flores globosas", "Suculenta com rosetas coloridas", "Jasmim perfumado e elegante", "Árvore brasileira com flores amarelas vibrantes", "Árvore ornamental com flores de cerejeira", "Planta ornamental com folhas delicadas", "Planta suculenta resistente, conhecida como 'pita'"};
+
+        ServiceMudas serviceMudas = new ServiceMudas();
+
+        Muda muda = new Muda();
+
+        for (int i = 0; i < 18; i++) {
+            muda.setTipo(tipoMuda[i]);
+            muda.setQuantidade(quantidadeMuda[i]);
+            muda.setNome(nomeMuda[i]);
+            muda.setNomeCientifico(nomeCientificoMuda[i]);
+            muda.setPorte(tamanhoMuda[i]);
+            muda.setAmbienteIdeal(ambienteIdealMuda[i]);
+            muda.setDescricao(descricaoMuda[i]);
+            serviceMudas.adicionar(muda);
+        }
+
+        String[] estadoMudaRelatorio = {"Bom", "Ruim"};
+        String[] sugestoesRelatorio = {"Colocar mais fertilizante", "Regar com mais frequencia"};
+        Double[] avaliacaoEspecialistaRelatorio = {7.2, 4.03};
+        int[] idClienteRelatorio = {31, 32};
+        int[] idAvaliadorRelatorio = {1, 3};
+        int[] idMudaRelatorio = {6, 19};
+
+        ServiceRelatorio serviceRelatorio = new ServiceRelatorio();
+
+        Relatorio relatorio = new Relatorio();
+
+        for (int i = 0; i < 2; i++) {
+            relatorio.setEstadoMuda(estadoMudaRelatorio[i]);
+            relatorio.setSugestoes(sugestoesRelatorio[i]);
+            relatorio.setAvaliacaoEspecialista(avaliacaoEspecialistaRelatorio[i]);
+            serviceRelatorio.adicionar(relatorio, idClienteRelatorio[i], idAvaliadorRelatorio[i], idMudaRelatorio[i]);
+        }
+
+         */
+
     /*
 
         // Mudas - criação de objetos, adições ao banco de dados e criação de listas
-        Muda muda1 = new Muda(1, "Rosa", "Rosa gallica", 1, "Jardim", "Belíssima rosa com pétalas vermelhas");
-        Muda muda2 = new Muda(2, "Lírio", "Lilium candidum", 2, "Canteiro", "Lírio branco de grande porte");
-        Muda muda3 = new Muda(1, "Orquídea", "Phalaenopsis amabilis", 1, "Estufa", "Orquídea popular com flores duradouras");
-        Muda muda4 = new Muda(2, "Margarida", "Leucanthemum vulgare", 2, "Campo", "Margarida simples e encantadora");
-        Muda muda5 = new Muda(1, "Girassol", "Helianthus annuus", 1, "Jardim", "Girassol amarelo vibrante");
-        Muda muda6 = new Muda(2, "Azaleia", "Rhododendron simsii", 2, "Vaso", "Azaleia de folhas perenes");
-        Muda muda7 = new Muda(1, "Orégano", "Origanum vulgare", 1, "Horta", "Erva aromática para culinária");
-        Muda muda8 = new Muda(2, "Bromélia", "Neoregalia spp.", 2, "Vaso", "Bromélia colorida e exótica");
-        Muda muda9 = new Muda(1, "Lavanda", "Lavandula angustifolia", 1, "Canteiro", "Lavanda perfumada e relaxante");
-        Muda muda10 = new Muda(2, "Bambu", "Bambusoideae", 2, "Jardim", "Bambu ornamental e resistente");
-        Muda muda11 = new Muda(1, "Cacto", "Cactaceae", 1, "Soleira", "Cacto de fácil manutenção");
-        Muda muda12 = new Muda(2, "Hortênsia", "Hydrangea macrophylla", 2, "Vaso", "Hortênsia de flores globosas");
-        Muda muda13 = new Muda(1, "Suculenta", "Echeveria spp.", 1, "Soleira", "Suculenta com rosetas coloridas");
-        Muda muda14 = new Muda(2, "Jasmim", "Jasminum spp.", 2, "Canteiro", "Jasmim perfumado e elegante");
-        Muda muda15 = new Muda(1, "Ipê Amarelo", "Handroanthus spp.", 1, "Jardim", "Árvore brasileira com flores amarelas vibrantes");
-        Muda muda16 = new Muda(2, "Cerejeira", "Prunus serrulata", 2, "Canteiro", "Árvore ornamental com flores de cerejeira");
-        Muda muda17 = new Muda(1, "Samambaia", "Nephrolepis exaltata", 1, "Vaso", "Planta ornamental com folhas delicadas");
-        Muda muda18 = new Muda(2, "Agave", "Agave americana", 2, "Soleira", "Planta suculenta resistente, conhecida como 'pita'");
 
-        ServiceMudas serviceMudas = new ServiceMudas();
-        serviceMudas.adicionar(muda1);
-        serviceMudas.adicionar(muda2);
-        serviceMudas.adicionar(muda3);
-        serviceMudas.adicionar(muda4);
-        serviceMudas.adicionar(muda5);
-        serviceMudas.adicionar(muda6);
-        serviceMudas.adicionar(muda7);
-        serviceMudas.adicionar(muda8);
-        serviceMudas.adicionar(muda9);
-        serviceMudas.adicionar(muda10);
-        serviceMudas.adicionar(muda11);
-        serviceMudas.adicionar(muda12);
-        serviceMudas.adicionar(muda13);
-        serviceMudas.adicionar(muda14);
-        serviceMudas.adicionar(muda15);
-        serviceMudas.adicionar(muda16);
-        serviceMudas.adicionar(muda17);
-        serviceMudas.adicionar(muda18);
 
         ArrayList<Muda> listaDeMudas1 = new ArrayList<>();
         listaDeMudas1.add(muda1);
@@ -197,22 +212,9 @@ public class MockContainer {
         serviceEntrega.adicionar(entrega8);
         serviceEntrega.adicionar(entrega9);
         serviceEntrega.adicionar(entrega10);
-
-
-        // Administrador - criação de objetos, adoções ao banco de dados
-        ServiceAdmin serviceAdmin = new ServiceAdmin();
-
-        Admin admin = new Admin("Administrador", "administrador@naturezaconectada.com", "senhadificil");
-        serviceAdmin.adicionar(admin);
-
-        ServiceRelatorio serviceRelatorio = new ServiceRelatorio();
-        Relatorio relatorio = new Relatorio(cliente10, null,  "Bom","");
-        Relatorio relatorio2 = new Relatorio(cliente10, null,  "Ruim", "");
-
-        serviceRelatorio.adicionar(relatorio);
-        serviceRelatorio.adicionar(relatorio2);
+     */
 
     }
-     */
+
 }
 
