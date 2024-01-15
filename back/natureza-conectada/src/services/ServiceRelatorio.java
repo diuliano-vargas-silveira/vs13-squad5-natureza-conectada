@@ -55,27 +55,6 @@ public class ServiceRelatorio {
     }
 
 
-    public void avaliarRelatorio(Relatorio relatorio){
-        try {
-
-            this.relatorioRepository.avaliarRelatorio(relatorio);
-        }catch (BancoDeDadosException ex){
-            System.out.println("Erro ao Avaliar o relatorio ERRO:" + ex.getMessage());
-            ex.printStackTrace();
-        }
-
-    }
-
-    public void listarRelatorioPorCliente(Integer idCliente){
-        try {
-            this.relatorioRepository.listarRelatorioPorCliente(idCliente);
-        }catch (BancoDeDadosException ex){
-            System.out.println("Erro ao Listar relatorios do cliente , ERRO: "+ ex.getMessage());
-            ex.printStackTrace();
-        }
-    }
-
-
     public boolean editar(int id, Relatorio relatorio) throws BancoDeDadosException {
         boolean resultado = false;
         try {

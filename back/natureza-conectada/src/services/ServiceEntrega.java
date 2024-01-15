@@ -16,9 +16,9 @@ public class ServiceEntrega {
 
     private EntregaRepository entregaRepository = new EntregaRepository();
 
-    public void adicionar(Entrega entrega) {
+    public void adicionar(Entrega entrega, Integer idEndereco) {
         try{
-            this.entregaRepository.adicionar(entrega);
+            this.entregaRepository.adicionar(entrega, idEndereco);
             System.out.println("*** Entrega adicionada com sucesso ****");
         }catch(BancoDeDadosException ex){
             ex.printStackTrace();

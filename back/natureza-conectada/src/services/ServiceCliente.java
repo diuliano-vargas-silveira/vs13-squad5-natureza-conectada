@@ -121,7 +121,7 @@ public class ServiceCliente implements IService<Cliente> {
 
     @Override
     public Cliente procurarPorID(int id) throws BancoDeDadosException {
-        Cliente cliente = procurar(id);
+        Cliente cliente = clienteRepository.listarPorID(id);
 
         if(cliente == null){
             throw new InformacaoNaoEncontrada("Não existe nenhum cliente com este ID!");

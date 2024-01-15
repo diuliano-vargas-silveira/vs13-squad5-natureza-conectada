@@ -1,6 +1,7 @@
 package utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import enums.*;
 import models.*;
@@ -12,7 +13,6 @@ public class MockContainer {
 
 
         // Criando Clientes
-        /*
         String[] nomeCliente = {"Willian Cavalheiro", "Diuliano Vargas", "Luísa Santos", "Pedro Antonetti", "Janier Freitas", "Thales Salla", "Carlos Queiroz", "Welton Santos", "Rafael Camilo", "Rafael Ramos"};
         String[] emailCliente = {"willian@dbc.com.br", "Diuliano@dbc.com.br", "luh.santos@dbc.com.br", "pedro@dbc.com.br", "janier@dbc.com.br", "thales@dbc.com.br", "carlos@dbc.com.br", "welton@dbc.com.br", "rcamilo@dbc.com.br", "rramos@dbc.com.br"};
         String[] cpfCliente = {"12345678909", "98765432100", "11122233344", "55566677788", "99900066622", "99900099922", "99900055522", "99900014422", "99900044422", "99900034422"};
@@ -93,13 +93,11 @@ public class MockContainer {
             serviceEndereco.adicionar(endereco, idClienteEndereco[i]);
         }
 
-        Criando administrador
+        // Criando administrador
 
         ServiceAdmin serviceAdmin = new ServiceAdmin();
         Admin admin = new Admin("Administrador", "administrador@naturezaconectada.com", "senhadificil");
         serviceAdmin.adicionar(admin);
-
-    }
 
         // Criando Mudas
 
@@ -115,7 +113,7 @@ public class MockContainer {
 
         Muda muda = new Muda();
 
-        for (int i = 0; i < 18; i++) {
+        for(int i = 0; i < 18; i++) {
             muda.setTipo(tipoMuda[i]);
             muda.setQuantidade(quantidadeMuda[i]);
             muda.setNome(nomeMuda[i]);
@@ -127,11 +125,9 @@ public class MockContainer {
         }
 
         String[] estadoMudaRelatorio = {"Bom", "Ruim"};
-        String[] sugestoesRelatorio = {"Colocar mais fertilizante", "Regar com mais frequencia"};
-        Double[] avaliacaoEspecialistaRelatorio = {7.2, 4.03};
-        int[] idClienteRelatorio = {31, 32};
-        int[] idAvaliadorRelatorio = {1, 3};
-        int[] idMudaRelatorio = {6, 19};
+        int[] idClienteRelatorio = {1, 2};
+        int[] idAvaliadorRelatorio = {1, 2};
+        int[] idMudaRelatorio = {1, 2};
 
         ServiceRelatorio serviceRelatorio = new ServiceRelatorio();
 
@@ -139,82 +135,29 @@ public class MockContainer {
 
         for (int i = 0; i < 2; i++) {
             relatorio.setEstadoMuda(estadoMudaRelatorio[i]);
-            relatorio.setSugestoes(sugestoesRelatorio[i]);
-            relatorio.setAvaliacaoEspecialista(avaliacaoEspecialistaRelatorio[i]);
             serviceRelatorio.adicionar(relatorio, idClienteRelatorio[i], idAvaliadorRelatorio[i], idMudaRelatorio[i]);
         }
 
-         */
+        // Criando Entregas
+        ServiceMudas serviceMudas2 = new ServiceMudas();
+        List<Muda> mudas = new ArrayList<>();
+        mudas.add(serviceMudas.buscarPorId(1));
+        mudas.add(serviceMudas.buscarPorId(2));
+        mudas.get(0).setQuantidade(2);
+        mudas.get(1).setQuantidade(1);
 
-    /*
-
-        // Mudas - criação de objetos, adições ao banco de dados e criação de listas
-
-
-        ArrayList<Muda> listaDeMudas1 = new ArrayList<>();
-        listaDeMudas1.add(muda1);
-        listaDeMudas1.add(muda2);
-
-        ArrayList<Muda> listaDeMudas2 = new ArrayList<>();
-        listaDeMudas2.add(muda3);
-        listaDeMudas2.add(muda4);
-
-        ArrayList<Muda> listaDeMudas3 = new ArrayList<>();
-        listaDeMudas3.add(muda5);
-
-        ArrayList<Muda> listaDeMudas4 = new ArrayList<>();
-        listaDeMudas4.add(muda6);
-        listaDeMudas4.add(muda7);
-        listaDeMudas4.add(muda8);
-
-        ArrayList<Muda> listaDeMudas5 = new ArrayList<>();
-        listaDeMudas5.add(muda9);
-
-        ArrayList<Muda> listaDeMudas6 = new ArrayList<>();
-        listaDeMudas6.add(muda10);
-        listaDeMudas6.add(muda11);
-
-        ArrayList<Muda> listaDeMudas7 = new ArrayList<>();
-        listaDeMudas7.add(muda12);
-        listaDeMudas7.add(muda13);
-
-        ArrayList<Muda> listaDeMudas8 = new ArrayList<>();
-        listaDeMudas8.add(muda14);
-
-        ArrayList<Muda> listaDeMudas9 = new ArrayList<>();
-        listaDeMudas9.add(muda15);
-        listaDeMudas9.add(muda16);
-
-        ArrayList<Muda> listaDeMudas10 = new ArrayList<>();
-        listaDeMudas10.add(muda17);
-        listaDeMudas10.add(muda18);
-
-        // Entregas - objetos
-        Entrega entrega1 = new Entrega( listaDeMudas1, StatusEntrega.RECEBIDO, null);
-        Entrega entrega2 = new Entrega( listaDeMudas2, StatusEntrega.ENVIADO, null);
-        Entrega entrega3 = new Entrega( listaDeMudas3, StatusEntrega.ENTREGUE, null);
-        Entrega entrega4 = new Entrega( listaDeMudas4, StatusEntrega.RECEBIDO, null);
-        Entrega entrega5 = new Entrega( listaDeMudas5, StatusEntrega.ENVIADO, null);
-        Entrega entrega6 = new Entrega( listaDeMudas6, StatusEntrega.ENTREGUE, null);
-        Entrega entrega7 = new Entrega( listaDeMudas7, StatusEntrega.RECEBIDO, null);
-        Entrega entrega8 = new Entrega( listaDeMudas8, StatusEntrega.ENVIADO, null);
-        Entrega entrega9 = new Entrega( listaDeMudas9, StatusEntrega.ENVIADO, null);
-        Entrega entrega10 = new Entrega( listaDeMudas10, StatusEntrega.ENTREGUE, null);
+        ServiceCliente serviceCliente2 = new ServiceCliente();
+        Cliente cliente2 = new Cliente();
+        cliente2 = serviceCliente2.procurarPorID(1);
 
         ServiceEntrega serviceEntrega = new ServiceEntrega();
-        serviceEntrega.adicionar(entrega1);
-        serviceEntrega.adicionar(entrega2);
-        serviceEntrega.adicionar(entrega3);
-        serviceEntrega.adicionar(entrega4);
-        serviceEntrega.adicionar(entrega5);
-        serviceEntrega.adicionar(entrega6);
-        serviceEntrega.adicionar(entrega7);
-        serviceEntrega.adicionar(entrega8);
-        serviceEntrega.adicionar(entrega9);
-        serviceEntrega.adicionar(entrega10);
-     */
+        Entrega entrega = new Entrega();
+        entrega.setMudas(mudas);
+        entrega.setStatus(StatusEntrega.ENVIADO);
+        entrega.setCliente(cliente2);
+
+        serviceEntrega.adicionar(entrega , 1);
 
     }
-
 }
 
