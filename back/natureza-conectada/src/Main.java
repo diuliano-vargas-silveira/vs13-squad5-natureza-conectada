@@ -6,7 +6,8 @@ public class Main {
 
     public static void main(String[] args) {
 
-        // Menu.rodarAplicacao();
+        ServiceMudas  serviceMudas = new ServiceMudas();
+
 
         try {
             MockContainer mockContainer = new MockContainer();

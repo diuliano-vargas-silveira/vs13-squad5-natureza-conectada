@@ -30,19 +30,18 @@ public class MudaRepository implements Repository<Integer, Muda>{
             muda.setId(proximoId.intValue());
 
             String sql = "INSERT INTO VS_13_EQUIPE_5.MUDA\n" +
-             "(ID_ENTREGA, ID_ESPECIALISTA, ID_CLIENTE, NOME, NOME_CIENTIFICO, PORTE, AMBIENTE_IDEAL, DESCRICAO, TIPO_MUDA)\n" +
-              "VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+             "(ID_MUDA,QUANTIDADE, NOME, NOME_CIENTIFICO, PORTE, AMBIENTE_IDEAL, DESCRICAO, TIPO_MUDA)\n" +
+              "VALUES( ?, ?, ?, ?, ?, ?, ?, ?)";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setInt(1, muda.getId());
-            stmt.setInt(2, muda.getIdEspecialista());
-            stmt.setInt(3, muda.getIdCliente());
-            stmt.setString(4, muda.getNome());
-            stmt.setString(5, muda.getNomeCientifico());
-            stmt.setString(6, String.valueOf(muda.getPorte()));
-            stmt.setString(7, muda.getAmbienteIdeal());
-            stmt.setString(8, muda.getDescricao());
-            stmt.setString(9, String.valueOf(muda.getTipo()));
+            stmt.setInt(1, proximoId);
+            stmt.setInt(2,muda.getQuantidade());
+            stmt.setString(3, muda.getNome());
+            stmt.setString(4, muda.getNomeCientifico());
+            stmt.setString(5, String.valueOf(muda.getPorte()));
+            stmt.setString(6, muda.getAmbienteIdeal());
+            stmt.setString(7, muda.getDescricao());
+            stmt.setString(8, String.valueOf(muda.getTipo()));
             
             
             int resultado = stmt.executeUpdate();
@@ -96,9 +95,7 @@ public class MudaRepository implements Repository<Integer, Muda>{
             conexao = ConexaoBancoDeDados.getConnection();
 
             StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE VS_13_EQUIPE_5.MUDA SET");
-            sql.append(" ID_ESPECIALISTA = ?,");
-            sql.append(" ID_CLIENTE = ?,");
+            sql.append("UPDATE MUDA SET");
             sql.append(" NOME = ?,");
             sql.append(" NOME_CIENTIFICO = ?,");
             sql.append(" PORTE = ?,");
@@ -109,15 +106,14 @@ public class MudaRepository implements Repository<Integer, Muda>{
             
             PreparedStatement stmt = conexao.prepareStatement(sql.toString());
 
-            stmt.setInt(1, muda.getIdEspecialista());
-            stmt.setInt(2, muda.getIdCliente());
-            stmt.setString(3, muda.getNome());
-            stmt.setString(4, muda.getNomeCientifico());
-            stmt.setString(5, String.valueOf(muda.getPorte()));
-            stmt.setString(6, muda.getAmbienteIdeal());
-            stmt.setString(7, muda.getDescricao());
-            stmt.setString(8, String.valueOf(muda.getTipo()));
-            stmt.setInt(9, id.intValue());
+
+            stmt.setString(1, muda.getNome());
+            stmt.setString(2, muda.getNomeCientifico());
+            stmt.setString(3, String.valueOf(muda.getPorte()));
+            stmt.setString(4, muda.getAmbienteIdeal());
+            stmt.setString(5, muda.getDescricao());
+            stmt.setString(6, String.valueOf(muda.getTipo()));
+            stmt.setInt(7, id.intValue());
             
             
             int resultado = stmt.executeUpdate();
@@ -138,7 +134,7 @@ public class MudaRepository implements Repository<Integer, Muda>{
     }
 
     @Override
-    public List<Muda> listar() throws SQLException {
+    public List<Muda> listar() throws BancoDeDadosException {
         Connection conexao = null;
         List<Muda> listaMuda = new ArrayList<>();
 
@@ -156,8 +152,6 @@ public class MudaRepository implements Repository<Integer, Muda>{
                 mudaAtual.setAmbienteIdeal(mudaTabela.getString("AMBIENTE_IDEAL"));
                 mudaAtual.setDescricao(mudaTabela.getString("DESCRICAO"));
                 mudaAtual.setNome(mudaTabela.getString("NOME"));
-                mudaAtual.setIdCliente(mudaTabela.getInt("ID_CLIENTE"));
-                mudaAtual.setIdEspecialista(mudaTabela.getInt("ID_ESPECIALISTA"));
                 mudaAtual.setTipo(TipoMuda.valueOf(mudaTabela.getString("TIPO_MUDA")));
                 listaMuda.add(mudaAtual);
             }

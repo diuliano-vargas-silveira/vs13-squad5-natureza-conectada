@@ -133,4 +133,14 @@ public class ServiceCliente implements IService<Cliente> {
     public Cliente procurar(int id) throws BancoDeDadosException {
         return clienteRepository.listarPorID(id);
     }
+
+    public void inserirMudasEntregues(Integer idCliente,Integer idMuda){
+        try {
+            this.clienteRepository.InserirMudaEmCliente(idCliente,idMuda);
+
+        }catch (BancoDeDadosException ex){
+            System.out.println("erro ao Anexar as mudas Entregar, Erro: " + ex.getMessage());
+        }
+
+    }
 }
