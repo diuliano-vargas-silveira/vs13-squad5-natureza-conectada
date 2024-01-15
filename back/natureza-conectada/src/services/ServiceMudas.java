@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ServiceMudas  {
     MudaRepository mudaRepository = new MudaRepository();
-    ServiceCliente serviceCliente = new ServiceCliente();
+
 
     public void adicionar(Muda muda){
         try{
@@ -60,5 +60,16 @@ public class ServiceMudas  {
 
         }
         return listaDeMudas;
+    }
+
+    public Muda buscarPorId(Integer idMuda){
+        try {
+            Muda muda = this.mudaRepository.buscarPorId(idMuda);
+            return muda;
+        }catch (BancoDeDadosException e){
+            System.out.println("Erro ao buscar no Banco de dados");
+            e.printStackTrace();
+        }
+        return null;
     }
 }

@@ -2,13 +2,22 @@ package repository;
 
 import enums.Estados;
 import exceptions.BancoDeDadosException;
+import models.Cliente;
 import models.Especialista;
+import models.Muda;
 import models.Relatorio;
+import services.ServiceCliente;
+import services.ServiceEspecialista;
+import services.ServiceMudas;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RelatorioRepository implements Repository<Integer, Relatorio> {
+    private ServiceCliente serviceCliente = new ServiceCliente();
+    private ServiceEspecialista serviceEspecialista = new ServiceEspecialista();
+    private ServiceMudas serviceMudas = new ServiceMudas();
 
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
@@ -23,6 +32,8 @@ public class RelatorioRepository implements Repository<Integer, Relatorio> {
 
     @Override
     public Relatorio adicionar(Relatorio relatorio) throws BancoDeDadosException {
+
+
         Connection conexao = null;
         try {
             conexao = ConexaoBancoDeDados.getConnection();
@@ -30,17 +41,16 @@ public class RelatorioRepository implements Repository<Integer, Relatorio> {
             relatorio.setId(proximoId.intValue());
 
             String sql = "INSERT INTO RELATORIO\n" +
-                    "(ID_RELATORIO, ID_CLIENTE, ID_AVALIADOR, ID_MUDA, ESTADO_MUDA, SUGESTOES, AVALIACAO_ESPECIALISTA)\n" +
-                    "VALUES(?, ?, ?, ?, ?, ?, ?)\n";
+                    "(ID_RELATORIO, ID_CLIENTE, ID_MUDA, ESTADO_MUDA)\n" +
+                    "VALUES(?, ?,  ?, ?, ?)\n";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setInt(1, relatorio.getId());
             stmt.setInt(2, relatorio.getDono().getId());
-            stmt.setInt(3, relatorio.getAvaliador().getId());
-            stmt.setInt(4, relatorio.getMuda().getId());
-            stmt.setString(5, relatorio.getEstadoMuda());
-            stmt.setString(6, relatorio.getSugestoes());
-            stmt.setDouble(7, relatorio.getAvaliacaoEspecialista());
+            stmt.setInt(3, relatorio.getMuda().getId());
+            stmt.setString(4, relatorio.getEstadoMuda());
+
+
 
             int resultado = stmt.executeUpdate();
             System.out.println("O relatório foi adicionado! Resultado: " + resultado);
@@ -49,6 +59,44 @@ public class RelatorioRepository implements Repository<Integer, Relatorio> {
 
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado para adicionar o relatório ao banco de dados.");
+            throw new BancoDeDadosException(erro.getCause());
+        } finally {
+            try {
+                fecharConexao(conexao);
+            } catch (SQLException erro) {
+                System.out.println("ERRO: Não foi possível encerrar corretamente a conexão com o banco de dados.");
+                erro.printStackTrace();
+            }
+        }
+    }
+
+    public void avaliarRelatorio (Relatorio relatorio) throws BancoDeDadosException {
+        Connection conexao = null;
+        try {
+            conexao = ConexaoBancoDeDados.getConnection();
+
+
+            String sql = "UPDATE RELATORIO SET" +
+                    "ID_ESPECIALISTA = ?," +
+                    "AVALIACAO = ?," +
+                    "SUGESTOES = ?" +
+                    "WHERE ID_RELATORIO = ?";
+
+            PreparedStatement stmt = conexao.prepareStatement(sql);
+            stmt.setInt(1,relatorio.getAvaliador().getId());
+            stmt.setDouble(2, relatorio.getAvaliacaoEspecialista());
+            stmt.setString(3, relatorio.getSugestoes());
+            stmt.setInt(4, relatorio.getId());
+
+
+
+            int resultado = stmt.executeUpdate();
+            System.out.println("O relatório foi avaliado com sucesso! Resultado: " + resultado);
+
+
+
+        } catch (SQLException erro) {
+            System.out.println("ERRO: Algo deu errado para avaliado o relatório ao banco de dados.");
             throw new BancoDeDadosException(erro.getCause());
         } finally {
             try {
@@ -95,17 +143,14 @@ public class RelatorioRepository implements Repository<Integer, Relatorio> {
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE RELATORIO SET");
-            sql.append(" ID_CLIENTE = ?, ID_AVALIADOR = ?, ID_MUDA = ?, ESTADO_MUDA = ?, SUGESTOES = ?, AVALIACAO_ESPECIALISTA = ?");
+            sql.append(" ID_CLIENTE = ?, ID_MUDA = ?, ESTADO_MUDA = ?");
             sql.append(" WHERE ID_RELATORIO = ?");
 
             PreparedStatement stmt = conexao.prepareStatement(sql.toString());
             stmt.setInt(1, relatorio.getDono().getId());
-            stmt.setInt(2, relatorio.getAvaliador().getId());
-            stmt.setInt(3, relatorio.getMuda().getId());
-            stmt.setString(4, relatorio.getEstadoMuda());
-            stmt.setString(5, relatorio.getSugestoes());
-            stmt.setDouble(6, relatorio.getAvaliacaoEspecialista());
-            stmt.setInt(7, id.intValue());
+            stmt.setInt(2, relatorio.getMuda().getId());
+            stmt.setString(3, relatorio.getEstadoMuda());
+            stmt.setInt(4, id.intValue());
 
             int resultado = stmt.executeUpdate();
 
@@ -122,6 +167,49 @@ public class RelatorioRepository implements Repository<Integer, Relatorio> {
                 erro.printStackTrace();
             }
         }
+    }
+
+    public List<Relatorio> listarRelatorioPorCliente(Integer idClinte) throws BancoDeDadosException {
+    Connection conn = null;
+    List<Relatorio> listaRelatorios = new ArrayList<>();
+
+    try {
+        Cliente cliente = serviceCliente.procurarPorID(idClinte);
+        Especialista especialista = new Especialista();
+        Muda muda = new Muda();
+        conn = ConexaoBancoDeDados.getConnection();
+       String sql = "SELECT * FROM RELATORIO R RIGHT JOIN CLIENTE C ON R.ID_CLIENTE =  C.ID_CLIENTE" +
+               "WHERE C.ID_CLIENTE = ?";
+       PreparedStatement stm = conn.prepareStatement(sql);
+
+       stm.setInt(1,idClinte);
+
+       ResultSet resultado = stm.executeQuery();
+       while (resultado.next()){
+           especialista = this.serviceEspecialista.procurarPorID(resultado.getInt("ID_ESPECIALISTA"));
+           muda = this.serviceMudas.buscarPorId(resultado.getInt("ID_MUDA"));
+           Relatorio relatorio = new Relatorio();
+           relatorio.setDono(cliente);
+           relatorio.setId(resultado.getInt("ID-RELATORIO"));
+           relatorio.setAvaliacaoEspecialista(resultado.getDouble("AVALIACAO"));
+           relatorio.setAvaliador(especialista);
+           relatorio.setSugestoes(resultado.getString("SUGESTOES"));
+           relatorio.setEstadoMuda(resultado.getString("ESTADO_MUDA"));
+           relatorio.setMuda(muda);
+       }
+
+    }catch (SQLException ex){
+        System.out.println("Erro ao buscar Relatorios Erro:" + ex.getMessage());
+        throw new BancoDeDadosException(ex.getCause());
+    }finally {
+        try {
+            fecharConexao(conn);
+        } catch (SQLException erro) {
+            System.out.println("ERRO: Não foi possível encerrar corretamente a conexão com o banco de dados.");
+            erro.printStackTrace();
+        }
+    }
+return listaRelatorios;
     }
 
     @Override
@@ -204,5 +292,38 @@ public class RelatorioRepository implements Repository<Integer, Relatorio> {
         }
 
         return relatorioEncontrado;
+    }
+
+    public List<Relatorio> buscarRelatorioAbertos () throws BancoDeDadosException {
+        Connection conn = null;
+        List<Relatorio> relatoriosIncompletos = new ArrayList<>();
+        try {
+            conn = ConexaoBancoDeDados.getConnection();
+            String sql = "Select * from RELATORIO WHERE AVALIACAO IS NULL";
+            PreparedStatement stm = conn.prepareStatement(sql);
+
+            ResultSet resultSet = stm.executeQuery();
+            while (resultSet.next()){
+                Relatorio relatorioEncontrado = new Relatorio();
+                relatorioEncontrado.setId(resultSet.getInt("ID_RELATORIO"));
+                relatorioEncontrado.getDono().setId(resultSet.getInt("ID_CLIENTE"));
+                relatorioEncontrado.getMuda().setId(resultSet.getInt("ID_MUDA"));
+                relatorioEncontrado.setEstadoMuda(resultSet.getString("ESTADO_MUDA"));
+                relatoriosIncompletos.add(relatorioEncontrado);
+            }
+
+        }catch (SQLException e){
+            System.out.println("Erro ao buscar relatorios em aberto, ERRO: "+ e.getMessage());
+            throw new BancoDeDadosException(e.getCause());
+
+        }finally {
+            try {
+                fecharConexao(conn);
+            } catch (SQLException erro) {
+                System.out.println("ERRO: Não foi possível encerrar corretamente a conexão com o banco de dados.");
+                erro.printStackTrace();
+            }
+        }
+        return relatoriosIncompletos;
     }
 }

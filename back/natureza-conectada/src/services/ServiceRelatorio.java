@@ -36,6 +36,27 @@ public class ServiceRelatorio implements IService<Relatorio> {
         }
     }
 
+    public void avaliarRelatorio(Relatorio relatorio){
+        try {
+
+            this.relatorioRepository.avaliarRelatorio(relatorio);
+        }catch (BancoDeDadosException ex){
+            System.out.println("Erro ao Avaliar o relatorio ERRO:" + ex.getMessage());
+            ex.printStackTrace();
+        }
+
+    }
+
+    public void listarRelatorioPorCliente(Integer idCliente){
+        try {
+            this.relatorioRepository.listarRelatorioPorCliente(idCliente);
+        }catch (BancoDeDadosException ex){
+            System.out.println("Erro ao Listar relatorios do cliente , ERRO: "+ ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
+
     @Override
     public boolean editar(int id, Relatorio relatorio) throws BancoDeDadosException {
         boolean resultado = false;
@@ -69,47 +90,14 @@ public class ServiceRelatorio implements IService<Relatorio> {
     public Relatorio procurar(int id) throws SQLException {
         return relatorioRepository.procurarPorId(id);
     }
-
-    /*
-
-    public List<Relatorio>buscarPorCliente (Cliente cliente){
-        List<Relatorio> relatorios = BancoDeDados.relatorios.stream().filter(relatorio -> relatorio.getDono().getId() == cliente.getId()).collect(Collectors.toList());
-
-        for (Relatorio r: relatorios) {
-            System.out.printf("""
-                    Id Relatório: %d
-                    muda: %s
-                    Relatório feito: %s
-                    Sugestão: %s
-                    Avaliador: %s
-                    Avaliação: %.1f
-                    
-                    
-                    
-                    """,r.getId(),r.getMuda().toString(),r.getEstadoMuda(),r.getSugestoes(),r.getAvaliador(),r.getAvaliacaoEspecialista());
+    public List<Relatorio> buscarRelatorioAbertos(){
+        try {
+            this.relatorioRepository.buscarRelatorioAbertos();
+        }catch (BancoDeDadosException ex){
+            System.out.println("Erro ao busar relatorios ERRO: " + ex.getMessage());
+            ex.printStackTrace();
         }
-
-        return relatorios;
     }
 
-    public void imprimirRelatorio(Relatorio relatorio) {
-        System.out.printf("""
-                Id Relatório: %d
-                muda: %s
-                Relatório feito: %s
-                Sugestão: %s
-                Avaliador: %s
-                Avaliação: %.1f
-                                    
-                                    
-                                    
-                """, relatorio.getId(), relatorio.getMuda().toString(), relatorio.getEstadoMuda(), relatorio.getSugestoes(), relatorio.getAvaliacaoEspecialista(), relatorio.getAvaliador());
 
-    }
-
-    public List<Relatorio> procurarRelatoriosSemAvaliador() {
-        return BancoDeDados.relatorios.stream().filter(relatorio -> relatorio.getAvaliador() == null).toList();
-
-    }
-*/
 }
