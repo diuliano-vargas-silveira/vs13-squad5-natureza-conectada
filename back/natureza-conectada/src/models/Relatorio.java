@@ -11,7 +11,7 @@ public class Relatorio {
     private double avaliacaoEspecialista;
 
 
-    public Relatorio(Cliente dono, Muda muda, String estadoMuda, String sugestoes) {
+    public Relatorio() {
         this.dono = dono;
         this.muda = muda;
         this.estadoMuda = estadoMuda;

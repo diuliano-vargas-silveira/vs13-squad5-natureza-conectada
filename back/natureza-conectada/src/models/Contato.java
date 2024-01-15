@@ -2,6 +2,8 @@ package models;
 
 import enums.Tipo;
 
+import java.util.Objects;
+
 public class Contato {
 
     private int id;
