@@ -29,6 +29,7 @@ public class EntregaRepository implements Repository<Integer, Entrega>{
     @Override
     public Entrega adicionar(Entrega entrega) throws BancoDeDadosException {
         Connection conexao = null;
+
         try{
             conexao = ConexaoBancoDeDados.getConnection();
             Integer proximoId = this.getProximoId(conexao);
@@ -38,14 +39,42 @@ public class EntregaRepository implements Repository<Integer, Entrega>{
              "(ID_ENTREGA, ID_CLIENTE, ID_ENDERECO, STATUS)\n" +
               "VALUES(?, ?, ?, ?)\n";
 
-            PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setInt(1, entrega.getId());
-            stmt.setInt(2, entrega.getCliente().getId());
-            stmt.setInt(3, entrega.getEnderecoDeEntrega().getId());
-            stmt.setString(4, String.valueOf(entrega.getStatus()));
-            
-            int resultado = stmt.executeUpdate();
-            System.out.println("A entrega foi adicionada! Resultado: ".concat(String.valueOf(resultado)));
+
+
+            PreparedStatement statementUm = conexao.prepareStatement(sql);
+            statementUm.setInt(1, entrega.getId());
+            statementUm.setInt(2, entrega.getCliente().getId());
+            statementUm.setInt(3, entrega.getEnderecoDeEntrega().getId());
+            statementUm.setString(4, String.valueOf(entrega.getStatus()));
+
+            int resultadoUm = statementUm.executeUpdate();
+
+
+            int quantidade = entrega.getMudas().size();
+            int contador = 1;
+            while(contador <= quantidade){
+                String sqlQueryEntregaMuda = "INSERT INTO VS_13_EQUIPE_5.ENTREGA_MUDA (ID_ENTREGA_MUDA, ID_MUDA, ID_ENTREGA)\n "
+                        +"VALUES (?, ?, ?)";
+                PreparedStatement statementDois = conexao.prepareStatement(sqlQueryEntregaMuda);
+                Statement statementTres = conexao.createStatement();
+                String sqlNextValSeqEntregaMuda = "SELECT SEQ_ENTREGA_MUDA.NEXTVAL mysequence FROM DUAL";
+
+                ResultSet resultadoQueryEntregaMuda = statementTres.executeQuery(sqlNextValSeqEntregaMuda);
+                int proximoIdEntregaMuda = 1;
+                while (resultadoQueryEntregaMuda.next()){
+                    proximoIdEntregaMuda = resultadoQueryEntregaMuda.getInt("mysequence");
+                }
+                statementDois.setInt(1, proximoIdEntregaMuda);
+                statementDois.setInt(2, entrega.getMudas().get(contador).getId());
+                statementDois.setInt(3, proximoId);
+                statementDois.close();
+                statementTres.close();
+                int resultadoDois = statementDois.executeUpdate();
+                contador++;
+            }
+
+            System.out.println("A entrega foi adicionada! Resultado: ".concat(String.valueOf(resultadoUm)));
+
             return entrega;
 
         }catch(SQLException erro){

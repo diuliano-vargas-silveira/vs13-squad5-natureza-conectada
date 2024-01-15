@@ -3,6 +3,7 @@ package services;
 
 
 import exceptions.BancoDeDadosException;
+import models.Entrega;
 import models.Muda;
 import repository.ConexaoBancoDeDados;
 import repository.MudaRepository;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class ServiceMudas  {
     MudaRepository mudaRepository = new MudaRepository();
-
+    ServiceCliente serviceCliente = new ServiceCliente();
 
     public void adicionar(Muda muda){
         try{
@@ -55,9 +56,17 @@ public class ServiceMudas  {
         List listaDeMudas = new ArrayList<>();
         try {
             listaDeMudas = this.mudaRepository.listar();
-        }catch(BancoDeDadosException e){
-            System.out.println("Ocorreu um erro ao LISTAR as mudas, ERRO: "+e.getMessage());
+        }catch(BancoDeDadosException e) {
+            System.out.println("Ocorreu um erro ao LISTAR as mudas, ERRO: " + e.getMessage());
 
+        }
+        if(listaDeMudas.size() == 0){
+            System.out.println("Não existe mudas cadastradas.");
+        }
+        else{
+            for(Muda muda : listaDeMudas){
+                System.out.println(muda.toString());
+            }
         }
         return listaDeMudas;
     }
