@@ -56,11 +56,16 @@ public class Contato {
         return tipo;
     }
 
-    public void setTipo(int tipo) {
-        this.tipo = (tipo == 1) ? Tipo.RESIDENCIAL : ((tipo == 2) ? Tipo.COMERCIAL : null);
-
-        if (this.tipo == null)
+    public void setTipo(String tipo) {
+        if(!Objects.equals(tipo, "RESIDENCIAL") && !Objects.equals(tipo, "COMERCIAL")){
             throw new IllegalArgumentException("Tipo inválido.");
+        } else if (tipo == null) {
+            this.tipo = Tipo.RESIDENCIAL;
+        }
+        else{
+            this.tipo = Tipo.valueOf(tipo);
+        }
+
     }
 
     @Override
