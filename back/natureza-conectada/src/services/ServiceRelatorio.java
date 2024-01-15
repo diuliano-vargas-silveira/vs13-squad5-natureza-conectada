@@ -1,77 +1,76 @@
-/*
 package services;
 
-import database.BancoDeDados;
+import exceptions.BancoDeDadosException;
 import exceptions.InformacaoNaoEncontrada;
-import exceptions.ObjetoExistente;
 import interfaces.IService;
-import models.*;
 import models.Relatorio;
+import repository.RelatorioRepository;
+
+import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class ServiceRelatorio implements IService<Relatorio> {
+
+    RelatorioRepository relatorioRepository = new RelatorioRepository();
     @Override
-    public void adicionar(Relatorio relatorio) {
+    public void adicionar(Relatorio relatorio) throws BancoDeDadosException {
+        try{
+            this.relatorioRepository.adicionar(relatorio);
+            System.out.println("Relatório adicionado com sucesso");
+
+        }catch (BancoDeDadosException ex){
+            System.out.println("Erro: "+ ex.getMessage());
+            ex.printStackTrace();
+
+        }
+    }
+
+    @Override
+    public void deletar(int id) throws BancoDeDadosException {
+        try {
+            this.relatorioRepository.remover(id);
+            System.out.println("Relatório " + id + " excluído com sucesso");
+        }catch (BancoDeDadosException e){
+            System.out.println("Erro ao excluir relatório : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean editar(int id, Relatorio relatorio) throws BancoDeDadosException {
+        boolean resultado = false;
+        try {
+            resultado = relatorioRepository.editar(id, relatorio);
+        }catch (BancoDeDadosException ex){
+        System.out.println("Erro: "+ ex.getMessage());
+        ex.printStackTrace();
+    }
+        return resultado;
+    }
+
+    @Override
+    public Relatorio procurarPorID(int id) throws SQLException {
+
+        Relatorio relatorio = procurar(id);
+
         if (relatorio == null) {
-            throw new IllegalArgumentException("Relatório não pode ser nulo");
+            throw new InformacaoNaoEncontrada("Não existe nenhum relatório com este ID!");
         }
 
-        Optional<Relatorio> relatorioExistente = procurar(relatorio.getId());
+        return relatorio;
 
-        if (relatorioExistente.isPresent()) {
-            throw new ObjetoExistente("Este relatório já existe!");
-        }
-
-        relatorio.setId(BancoDeDados.gerarNovoIdRelatorio());
-        BancoDeDados.relatorios.add(relatorio);
     }
 
     @Override
-    public void deletar(int id) {
-        Relatorio relatorioExistente = procurarPorID(id);
-
-        BancoDeDados.relatorios.remove(relatorioExistente);
+    public List<Relatorio> listarTodos() throws BancoDeDadosException {
+        return relatorioRepository.listar();
     }
-
     @Override
-    public boolean editar(int id, Relatorio relatorio) {
-        Relatorio relatorioEncontrado = procurarPorID(id);
-
-        int indexRelatorio = BancoDeDados.relatorios.indexOf(relatorioEncontrado);
-
-        relatorioEncontrado.setDono(relatorio.getDono());
-        relatorioEncontrado.setAvaliador(relatorio.getAvaliador());
-        relatorioEncontrado.setMuda(relatorio.getMuda());
-        relatorioEncontrado.setEstadoMuda(relatorio.getEstadoMuda());
-        relatorioEncontrado.setSugestoes(relatorio.getSugestoes());
-        relatorioEncontrado.setAvaliacaoEspecialista(relatorio.getAvaliacaoEspecialista());
-
-        BancoDeDados.relatorios.set(indexRelatorio, relatorioEncontrado);
-
-        return true;
+    public Relatorio procurar(int id) throws SQLException {
+        return relatorioRepository.procurarPorId(id);
     }
 
-    @Override
-    public Relatorio procurarPorID(int id) {
-        Optional<Relatorio> relatorioPorID = procurar(id);
-
-        if(relatorioPorID.isEmpty()){
-            throw  new InformacaoNaoEncontrada("Não existe nenhum relatório com este ID");
-        }
-        return relatorioPorID.get();
-    }
-
-    @Override
-    public List<Relatorio> listarTodos() {
-        return BancoDeDados.relatorios;
-    }
-
-    @Override
-    public Optional<Relatorio> procurar(int id) {
-        return BancoDeDados.relatorios.stream().filter(relatorio -> relatorio.getId() == id).findFirst();
-    }
+    /*
 
     public List<Relatorio>buscarPorCliente (Cliente cliente){
         List<Relatorio> relatorios = BancoDeDados.relatorios.stream().filter(relatorio -> relatorio.getDono().getId() == cliente.getId()).collect(Collectors.toList());
@@ -107,10 +106,10 @@ public class ServiceRelatorio implements IService<Relatorio> {
                 """, relatorio.getId(), relatorio.getMuda().toString(), relatorio.getEstadoMuda(), relatorio.getSugestoes(), relatorio.getAvaliacaoEspecialista(), relatorio.getAvaliador());
 
     }
+
     public List<Relatorio> procurarRelatoriosSemAvaliador() {
         return BancoDeDados.relatorios.stream().filter(relatorio -> relatorio.getAvaliador() == null).toList();
 
     }
-
+*/
 }
- */
