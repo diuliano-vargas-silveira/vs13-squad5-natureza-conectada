@@ -8,8 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnderecoRepository implements Repository<Integer, Endereco> {
-    @Override
+public class EnderecoRepository{
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_ENDERECO.NEXTVAL mysequence FROM DUAL";
         Statement stmt = connection.createStatement();
@@ -20,8 +19,7 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
         return null;
     }
 
-    @Override
-    public Endereco adicionar(Endereco endereco) throws BancoDeDadosException {
+    public Endereco adicionar(Endereco endereco, Integer idUsuario) throws BancoDeDadosException {
         Connection conexao = null;
         try{
             conexao = ConexaoBancoDeDados.getConnection();
@@ -34,7 +32,7 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setInt(1, endereco.getId());
-            stmt.setInt(2, endereco.getUsuario().getId());
+            stmt.setInt(2, idUsuario);
             stmt.setInt(3, endereco.getEstado().ordinal() + 1);
             stmt.setString(4, endereco.getCep());
             stmt.setString(5, endereco.getLogradouro());
@@ -60,7 +58,6 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
         }
     }
 
-    @Override
     public boolean remover(Integer id) throws BancoDeDadosException {
         Connection conexao = null;
         try{
@@ -87,7 +84,6 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
         }
     }
 
-    @Override
     public boolean editar(Integer id, Endereco endereco) throws BancoDeDadosException {
         Connection conexao = null;
         try{
@@ -128,7 +124,6 @@ public class EnderecoRepository implements Repository<Integer, Endereco> {
         return true;
     }
 
-    @Override
     public List<Endereco> listar() throws BancoDeDadosException {
         List<Endereco> listaEndereco = new ArrayList<>();
         Connection conexao = null;

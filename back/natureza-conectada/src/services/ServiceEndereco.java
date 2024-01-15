@@ -12,16 +12,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ServiceEndereco implements IService<Endereco> {
+public class ServiceEndereco {
 
     EnderecoRepository enderecoRepository = new EnderecoRepository();
 
-    @Override
-    public void adicionar(Endereco endereco) throws BancoDeDadosException {
-        enderecoRepository.adicionar(endereco);
+    public void adicionar(Endereco endereco, Integer idCliente) throws BancoDeDadosException {
+        try{
+            this.enderecoRepository.adicionar(endereco,idCliente);
+            System.out.println("Endereço adicionado com sucesso");
+
+        }catch (BancoDeDadosException ex){
+            ex.printStackTrace();
+
+        }
     }
 
-    @Override
     public void deletar(int id) {
         Endereco endereco = procurarPorID(id);
 
@@ -29,7 +34,6 @@ public class ServiceEndereco implements IService<Endereco> {
     }
 
 
-    @Override
     public boolean editar(int id, Endereco enderecoEditado) {
 //        Endereco endereco = procurarPorID(id);
 //
@@ -46,7 +50,6 @@ public class ServiceEndereco implements IService<Endereco> {
         return true;
     }
 
-    @Override
     public Endereco procurarPorID(int id) {
 //        Optional<Endereco> endereco = procurar(id);
 //
@@ -57,12 +60,10 @@ public class ServiceEndereco implements IService<Endereco> {
         return new Endereco();
     }
 
-    @Override
     public List<Endereco> listarTodos() {
         return new ArrayList<>();
     }
 
-    @Override
     public Endereco procurar(int id) {
         return new Endereco();
     }

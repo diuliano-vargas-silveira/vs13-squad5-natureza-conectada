@@ -1,12 +1,10 @@
 package utils;
 
 import java.util.ArrayList;
-import enums.StatusEntrega;
-import enums.Estados;
-import enums.TipoUsuario;
+
+import enums.*;
 import models.*;
 import services.*;
-import repository.*;
 
 public class MockContainer {
 
@@ -14,7 +12,6 @@ public class MockContainer {
 
 
         // Criando Clientes
-
         String[] nomeCliente = {"Willian Cavalheiro", "Diuliano Vargas", "Luísa Santos", "Pedro Antonetti", "Janier Freitas", "Thales Salla", "Carlos Queiroz", "Welton Santos", "Rafael Camilo", "Rafael Ramos"};
         String[] emailCliente = {"willian@dbc.com.br", "Diuliano@dbc.com.br", "luh.santos@dbc.com.br", "pedro@dbc.com.br", "janier@dbc.com.br", "thales@dbc.com.br", "carlos@dbc.com.br", "welton@dbc.com.br", "rcamilo@dbc.com.br", "rramos@dbc.com.br"};
         String[] cpfCliente = {"12345678909", "98765432100", "11122233344", "55566677788", "99900066622", "99900099922", "99900055522", "99900014422", "99900044422", "99900034422"};
@@ -35,7 +32,7 @@ public class MockContainer {
         String[] nomeEspecialista = {"Rafael Lazzari", "Ályson Campos", "Mayra Amaral", "Cristina Jung"};
         String[] emailEspecialista = {"rlazzari@dbc.com.br", "alysonc@dbc.com.br", "mayraa@dbc.com.br", "crisjung@dbc.com.br"};
         String[] documentoEspecialista = {"999.999.444-00", "999.999.444-13", "999.999.444-25", "999.999.444-12"};
-        String[] especializaçãoEspecialista = {"Horticultura Ornamental", "Agronomia", "Silvicultura", "Botânica Aplicada:"};
+        String[] especializaçãoEspecialista = {"Horticultura Ornamental", "Agronomia", "Silvicultura", "Botânica Aplicada"};
         Estados[] regiaoResponsavelEspecialista = {Estados.SP, Estados.RS, Estados.PB, Estados.AM};
 
         ServiceEspecialista serviceEspecialista = new ServiceEspecialista();
@@ -51,101 +48,53 @@ public class MockContainer {
             serviceEspecialista.adicionar(especialista);
         }
 
-        // String[] listaCep = {"70000-000", "10001-001", "SW1A 0AA", "2000"};
-        // String[] listaLogradouro = {"Praça dos Três Poderes", "Copacabana Beach"};
-        // for(int i = 0; i < 17; i++){
-        //    EnderecoRepository enderecoRepository = new EnderecoRepository();
-        //    enderecoRepository.adicionar(new Endereco(listaCep[i], listaLogradouro[i],));
-        //}
-
-    }
-        /*
-
-        // Endereços - criação de objetos e adições ao banco de dados
-        Endereco endereco1 = new Endereco("70000-000", "Praça dos Três Poderes", "1", "Palácio do Planalto", "Brasília", Estados.DF, 1);
-        Endereco endereco2 = new Endereco("10001-001", "Copacabana Beach", "1", "Cristo Redentor", "Rio de Janeiro", Estados.RJ, 1);
-        Endereco endereco3 = new Endereco("SW1A 0AA", "Praça da Sé", "1", "Pátio do Colégio", "São Paulo", Estados.SP, 2);
-        Endereco endereco4 = new Endereco("2000", "Ibirapuera Park", "1", "MASP - Museu de Arte de São Paulo", "São Paulo", Estados.SP, 2);
-        Endereco endereco5 = new Endereco("00184", "Praia de Iracema", "1", "Dragão do Mar Center of Art and Culture", "Fortaleza", Estados.CE, 1);
-        Endereco endereco6 = new Endereco("57751", "Praça da Liberdade", "13000", "Mineirão", "Belo Horizonte", Estados.MG, 1);
-        Endereco endereco7 = new Endereco("100000", "Praia de Boa Viagem", "-", "Recife Antigo", "Recife", Estados.PE, 2);
-        Endereco endereco8 = new Endereco("282001", "Praia de Ponta Negra", "1", "Forte dos Reis Magos", "Natal", Estados.RN, 1);
-        Endereco endereco9 = new Endereco("20500", "Praça dos Três Poderes", "1600", "Palácio do Buriti", "Brasília", Estados.DF, 1);
-        Endereco endereco10 = new Endereco("75001", "Praça da Liberdade", "75001", "Praça da Estação", "Belo Horizonte", Estados.MG, 1);
-        Endereco endereco11 = new Endereco("10558", "Praia de Ponta Negra", "1", "Arena das Dunas", "Natal", Estados.RN, 1);
-        Endereco endereco12 = new Endereco("12345", "Copacabana Beach", "1", "Pão de Açúcar", "Rio de Janeiro", Estados.RJ, 1);
-        Endereco endereco13 = new Endereco("70000-001", "Parque do Ibirapuera", "1", "MASP - Museu de Arte de São Paulo", "São Paulo", Estados.SP, 1);
-        Endereco endereco14 = new Endereco("20001", "Praia de Iracema", "1", "Mercado Central", "Fortaleza", Estados.CE, 1);
-        Endereco endereco15 = new Endereco("57752", "Praça da Estação", "13001", "Mercado Central", "Belo Horizonte", Estados.MG, 1);
-        Endereco endereco16 = new Endereco("100001", "Recife Antigo", "-", "Praia de Boa Viagem", "Recife", Estados.PE, 2);
-        Endereco endereco17 = new Endereco("282002", "Ponta Negra", "1", "Centro de Turismo de Natal", "Natal", Estados.RN, 1);
-
-        ServiceEndereco serviceEndereco = new ServiceEndereco();
-        serviceEndereco.adicionar(endereco1);
-        serviceEndereco.adicionar(endereco2);
-        serviceEndereco.adicionar(endereco3);
-        serviceEndereco.adicionar(endereco4);
-        serviceEndereco.adicionar(endereco5);
-        serviceEndereco.adicionar(endereco6);
-        serviceEndereco.adicionar(endereco7);
-        serviceEndereco.adicionar(endereco8);
-        serviceEndereco.adicionar(endereco9);
-        serviceEndereco.adicionar(endereco10);
-        serviceEndereco.adicionar(endereco11);
-        serviceEndereco.adicionar(endereco12);
-        serviceEndereco.adicionar(endereco13);
-        serviceEndereco.adicionar(endereco14);
-        serviceEndereco.adicionar(endereco15);
-        serviceEndereco.adicionar(endereco16);
-        serviceEndereco.adicionar(endereco17);
-
-        // Contatos - criação de objetos e adições ao banco de dados
-        Contato contato1 = new Contato("Celular", "+1 555-1234", 1);
-        Contato contato2 = new Contato("Celular", "+1 555-5678", 1);
-        Contato contato3 = new Contato("Empresa", "+1 555-8765", 2);
-        Contato contato4 = new Contato("Empresa", "+1 555-4321", 2);
-        Contato contato5 = new Contato("Celular", "+1 555-9876", 1);
-        Contato contato6 = new Contato("Empresa", "+1 555-2345", 2);
-        Contato contato7 = new Contato("Celular", "+1 555-6789", 1);
-        Contato contato8 = new Contato("Empresa", "+1 555-3456", 2);
-        Contato contato9 = new Contato("Celular", "+1 555-7890", 1);
-        Contato contato10 = new Contato("Empresa", "+1 555-4567", 2);
-        Contato contato11 = new Contato("Celular", "+1 555-8901", 1);
-        Contato contato12 = new Contato("Empresa", "+1 555-6789", 2);
-        Contato contato13 = new Contato("Celular", "+1 555-0123", 1);
-        Contato contato14 = new Contato("Empresa", "+1 555-3456", 2);
-        Contato contato15 = new Contato("Celular", "+55 11 98765-4321", 1);
-        Contato contato16 = new Contato("Empresa", "+55 21 1234-5678", 2);
-        Contato contato17 = new Contato("Celular", "+55 31 8765-4321", 1);
-        Contato contato18 = new Contato("Empresa", "+55 85 2345-6789", 2);
-        Contato contato19 = new Contato("Empresa", "+51 85 2345-4000", 2);
-        Contato contato20 = new Contato("Empresa", "+51 85 2345-5000", 2);
-        Contato contato21 = new Contato("Empresa", "+51 85 2345-6000", 2);
-        Contato contato22 = new Contato("Empresa", "+51 85 2345-7000", 2);
+        // Criando Contatos
+        String[] descricaoContato = {"Celular", "Celular", "Empresa", "Empresa", "Celular", "Empresa", "Celular", "Empresa", "Celular", "Empresa", "Celular", "Empresa", "Celular", "Empresa", "Celular", "Empresa", "Celular", "Empresa", "Empresa"};
+        String[] numeroContato = {"15913255123", "15943155567", "15901455876", "15902155432", "15942559876", "15943552345", "54965556789", "15992553456", "15986557890", "15974554567", "15996558901", "55253356789", "51990150123", "51995553456", "11987654321", "21123456780", "31876543210", "85234567890", "85234540000"};
+        String[] tipoContato = {"RESIDENCIAL", "RESIDENCIAL", "COMERCIAL", "COMERCIAL", "RESIDENCIAL", "COMERCIAL", "RESIDENCIAL", "COMERCIAL", "RESIDENCIAL", "COMERCIAL", "RESIDENCIAL", "COMERCIAL", "RESIDENCIAL", "COMERCIAL", "RESIDENCIAL", "COMERCIAL", "RESIDENCIAL", "COMERCIAL", "COMERCIAL"};
+        int[] idClienteContato = {1, 2, 1, 2, 3, 3, 4, 4, 5, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
 
         ServiceContato serviceContato = new ServiceContato();
-        serviceContato.adicionar(contato1);
-        serviceContato.adicionar(contato2);
-        serviceContato.adicionar(contato3);
-        serviceContato.adicionar(contato4);
-        serviceContato.adicionar(contato5);
-        serviceContato.adicionar(contato6);
-        serviceContato.adicionar(contato7);
-        serviceContato.adicionar(contato8);
-        serviceContato.adicionar(contato9);
-        serviceContato.adicionar(contato10);
-        serviceContato.adicionar(contato11);
-        serviceContato.adicionar(contato12);
-        serviceContato.adicionar(contato13);
-        serviceContato.adicionar(contato14);
-        serviceContato.adicionar(contato15);
-        serviceContato.adicionar(contato16);
-        serviceContato.adicionar(contato17);
-        serviceContato.adicionar(contato18);
-        serviceContato.adicionar(contato19);
-        serviceContato.adicionar(contato20);
-        serviceContato.adicionar(contato21);
-        serviceContato.adicionar(contato22);
+
+        Contato contato = new Contato();
+        for (int i = 0; i < 19; i++){
+            contato.setDescricao(descricaoContato[i]);
+            contato.setNumero(numeroContato[i]);
+            contato.setTipo(tipoContato[i]);
+            serviceContato.adicionarContato(contato, idClienteContato[i]);
+
+        }
+
+        // Criando Endereços
+
+        String[] cepEndereco = {"12345678", "98765432", "54321876", "87654321", "23456789", "67890123", "98765432", "12345678", "54321876", "87654321", "23456789", "67890123", "98765432", "12345678", "54321876", "87654321", "23456789", "67890123", "87654321"};
+        String[] logradouroEndereco = {"Praça dos Três Poderes", "Copacabana Beach", "Praça da Sé", "Ibirapuera Park", "Praia de Iracema", "Praça da Liberdade", "Praia de Boa Viagem", "Praia de Ponta Negra", "Praça dos Três Poderes", "Praça da Liberdade", "Praia de Ponta Negra", "Copacabana Beach", "Parque do Ibirapuera", "Praia de Iracema", "Praça da Estação", "Recife Antigo", "Ponta Negra", "Rua Rio Paraná", "Rua Agice Ramos"};
+        String[] numeroEndereco = {"123", "456", "789", "1011", "1213", "1415", "1617", "1819", "2021", "2223", "2425", "2627", "2829", "3031", "3233", "3435", "3637", "3839", "4041"};
+        String[] complementoEndereco = {"Palácio do Planalto", "Cristo Redentor", "Pátio do Colégio", "MASP", "Dragão do Mar", "Mineirão", "Recife Antigo", "Forte dos Reis Magos", "Palácio do Buriti", "Praça da Estação", "Arena das Dunas", "Pão de Açúcar", "MASP", "Mercado Central", "Mercado Central", "Praia de Boa Viagem", "Centro de Turismo", "Rio Jacuí", "Depósito Tramonta"};
+        String[] cidadeEndereco = {"Brasília", "Rio de Janeiro", "São Paulo", "São Paulo", "Fortaleza", "Belo Horizonte", "Recife", "Natal", "Brasília", "Belo Horizonte", "Natal", "Rio de Janeiro", "São Paulo", "Fortaleza", "Belo Horizonte", "Recife", "Natal", "Charqueadas", "Charqueadas"};
+        Estados[] estadoEndereco = {Estados.DF, Estados.RJ, Estados.SP, Estados.SP, Estados.CE, Estados.MG, Estados.PE, Estados.RN, Estados.DF, Estados.MG, Estados.RN, Estados.RJ, Estados.SP, Estados.CE, Estados.MG, Estados.PE, Estados.RN, Estados.RS, Estados.RS};
+        int[] tipoEndereco = {1, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2};
+        int[] idClienteEndereco = {1, 2, 1, 2, 3, 4, 4, 5, 5, 6, 6, 7, 8, 9, 10, 11, 12, 13, 14};
+
+        ServiceEndereco serviceEndereco = new ServiceEndereco();
+
+        Endereco endereco = new Endereco();
+
+        for (int i = 0; i < 19; i++) {
+            endereco.setCep(cepEndereco[i]);
+            endereco.setLogradouro(logradouroEndereco[i]);
+            endereco.setNumero(numeroEndereco[i]);
+            endereco.setComplemento(complementoEndereco[i]);
+            endereco.setCidade(cidadeEndereco[i]);
+            endereco.setEstado(estadoEndereco[i]);
+            endereco.setTipo(tipoEndereco[i]);
+            serviceEndereco.adicionar(endereco, idClienteEndereco[i]);
+        }
+
+
+
+    }
+    /*
 
         // Mudas - criação de objetos, adições ao banco de dados e criação de listas
         Muda muda1 = new Muda(1, "Rosa", "Rosa gallica", 1, "Jardim", "Belíssima rosa com pétalas vermelhas");
