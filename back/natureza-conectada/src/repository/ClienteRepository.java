@@ -250,5 +250,40 @@ public class ClienteRepository implements Repository<Integer, Cliente> {
         }
         return cliente;
     }
+    public void InserirMudaEmCliente(Integer idCliente,Integer idMuda) throws BancoDeDadosException {
+        Connection connection = null;
+        try {
+            connection = ConexaoBancoDeDados.getConnection();
+            int proximoId = this.getProximoIDMudaCliente(connection);
+            String sql = "Insert Into CLIENTE_MUDA (ID_CLIENTE_MUDA,ID_MUDA,ID_CLIENTE)" +
+                    "values(?,?,?)";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1,proximoId);
+            stm.setInt(2,idMuda);
+            stm.setInt(3,idCliente);
+        }catch (SQLException ex){
+            System.out.println("Erro ao Inserir Muda ao Cliente, ERRO: " + ex.getMessage());
+            throw new BancoDeDadosException(ex.getCause());
 
+        }finally {
+            try {
+                if(connection != null){
+                    connection.close();
+                }
+            }catch (SQLException erro){
+                System.out.println("Erro ao fechar conexao do banco de Dados, Erro: "+ erro.getMessage());
+                erro.printStackTrace();
+            }
+        }
+
+    }
+    public Integer getProximoIDMudaCliente(Connection connection) throws SQLException {
+        String sql = "SELECT SEQ_CLIENTE_MUDA.NEXTVAL mysequence2 FROM DUAL";
+        Statement stmt = connection.createStatement();
+        ResultSet resultado = stmt.executeQuery(sql);
+        if(resultado.next()){
+            return resultado.getInt("mysequence2");
+        }
+        return null;
+    }
 }
