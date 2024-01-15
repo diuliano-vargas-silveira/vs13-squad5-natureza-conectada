@@ -47,7 +47,9 @@ public class EntregaRepository implements Repository<Integer, Entrega>{
             statementUm.setInt(3, entrega.getEnderecoDeEntrega().getId());
             statementUm.setString(4, String.valueOf(entrega.getStatus()));
 
-            int resultado = statementUm.executeUpdate();
+            int resultadoUm = statementUm.executeUpdate();
+
+
             int quantidade = entrega.getMudas().size();
             int contador = 1;
             while(contador <= quantidade){
@@ -65,9 +67,14 @@ public class EntregaRepository implements Repository<Integer, Entrega>{
                 statementDois.setInt(1, proximoIdEntregaMuda);
                 statementDois.setInt(2, entrega.getMudas().get(contador).getId());
                 statementDois.setInt(3, proximoId);
+                statementDois.close();
+                statementTres.close();
+                int resultadoDois = statementDois.executeUpdate();
                 contador++;
             }
-            System.out.println("A entrega foi adicionada! Resultado: ".concat(String.valueOf(resultado)));
+
+            System.out.println("A entrega foi adicionada! Resultado: ".concat(String.valueOf(resultadoUm)));
+
             return entrega;
 
         }catch(SQLException erro){

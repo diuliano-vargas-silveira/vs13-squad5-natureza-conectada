@@ -261,6 +261,7 @@ public class ClienteRepository implements Repository<Integer, Cliente> {
             stm.setInt(1,proximoId);
             stm.setInt(2,idMuda);
             stm.setInt(3,idCliente);
+            int resultado = stm.executeUpdate();
         }catch (SQLException ex){
             System.out.println("Erro ao Inserir Muda ao Cliente, ERRO: " + ex.getMessage());
             throw new BancoDeDadosException(ex.getCause());
