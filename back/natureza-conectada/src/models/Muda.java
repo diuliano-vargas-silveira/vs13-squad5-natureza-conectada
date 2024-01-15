@@ -28,6 +28,8 @@ public class Muda {
 
     private String descricao;
 
+    private int quantidade;
+
     private List<Especialista> especialistasDeRegiao = new ArrayList<>();
 
     public Muda(){
@@ -53,12 +55,13 @@ public class Muda {
 
     @Override
     public String toString(){
-        return "ID: " + String.valueOf(this.id)
+        return "\nID: " + String.valueOf(this.id)
         + "\nTipo: " + String.valueOf(this.tipo).toLowerCase()
         + "\nNome: " + this.nome
         + "\nNome científico: " + this.nomeCientifico
         + "\nPorte: " + String.valueOf(this.porte).toLowerCase()
         + "\nAmbiente recomendado: " + this.ambienteIdeal
+        + "\nQuantidade: " + this.quantidade
         + "\nDescrição: " + this.descricao;
     }
     
@@ -143,5 +146,9 @@ public class Muda {
     public int getIdCliente(){
         return this.idCliente;
     }
+
+    public void setQuantidade(int quantidade){ this.quantidade = quantidade;}
+
+    public int getQuantidade(){return this.quantidade;}
 }
 
