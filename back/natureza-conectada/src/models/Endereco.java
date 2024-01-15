@@ -116,6 +116,7 @@ public class Endereco {
     @Override
     public String toString() {
         return "\nID: " + getId() + "\nCEP: " + getCep() + "\nLogradouro: " + getLogradouro() + "\nNº: " + getNumero() + "\nComplemento: " + getComplemento()
-                + "\nCidade: " + getCidade() + "\nEstado: " + getEstado() + "\nPaís: " + PAIS + "\nTipo: " + getTipo();
+                + "\nCidade: " + getCidade() + "\nEstado: " + getEstado() + "\nPaís: " + PAIS + "\nTipo: " + getTipo()
+        + "\nCidade: " + getCidade() + "\nEstado: " + getEstado() + "\nTipo: " + getTipo();
     }
 }

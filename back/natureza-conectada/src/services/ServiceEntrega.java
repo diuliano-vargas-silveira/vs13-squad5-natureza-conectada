@@ -1,66 +1,62 @@
-/*
+
 package services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import database.BancoDeDados;
+import exceptions.BancoDeDadosException;
 import exceptions.InformacaoNaoEncontrada;
 import exceptions.ObjetoExistente;
 import interfaces.IService;
 import models.Entrega;
+import repository.EntregaRepository;
 
-public class ServiceEntrega implements IService<Entrega>{
+public class ServiceEntrega {
 
-    @Override
-    public void adicionar(Entrega entrega) {
-        Optional <Entrega> entregaCadastrada = procurar(entrega.getId());
-        if(entregaCadastrada.isPresent()){
-            throw new ObjetoExistente("Está entrega já existe.");
+    private EntregaRepository entregaRepository = new EntregaRepository();
+
+    public void adicionar(Entrega entrega, Integer idEndereco) {
+        try{
+            this.entregaRepository.adicionar(entrega, idEndereco);
+            System.out.println("*** Entrega adicionada com sucesso ****");
+        }catch(BancoDeDadosException ex){
+            ex.printStackTrace();
         }
-        entrega.setId(BancoDeDados.gerarNovoIdEntrega());
-        BancoDeDados.entregas.add(entrega);
     }
 
-    @Override
-    public void deletar(int id) {
-        Entrega entregaDeletar = procurarPorID(id);
-        
-        BancoDeDados.entregas.remove(entregaDeletar);
-    }
 
-    @Override
-    public boolean editar(int id, Entrega entregaAtualizada) {
-        Entrega entregaCadastrada = procurarPorID(id);
-        
-        entregaAtualizada.setId(id);
-        entregaCadastrada.setMudas(entregaAtualizada.getMudas());
-        entregaCadastrada.setStatus(entregaAtualizada.getStatus());
-        entregaCadastrada.setCliente(entregaAtualizada.getCliente());
-        return true;
-    }
-
-    @Override
-    public Entrega procurarPorID(int id) {
-        Optional<Entrega> entregaCadastrada = procurar(id);
-        if(entregaCadastrada.isEmpty()){
-            throw new InformacaoNaoEncontrada("Não existe nenhuma entrega com este ID!");
+    public void deletar(Integer id) {
+        try {
+            this.entregaRepository.remover(id);
+        }catch(BancoDeDadosException ex){
+            ex.printStackTrace();
         }
-        return entregaCadastrada.get();
     }
 
-    @Override
-    public List listarTodos() {
-        return BancoDeDados.entregas;
+    public void editar(int id, Entrega entregaAtualizada) {
+        try{
+            this.entregaRepository.editar(id, entregaAtualizada);
+        }catch (BancoDeDadosException e){
+            e.printStackTrace();
+
+        }
     }
 
-    @Override
-    public Optional<Entrega> procurar(int id) {
-        return BancoDeDados.entregas.stream()
-        .filter(entrega -> entrega.getId() == id)
-        .findFirst();
+    public void listarTodos() {
+        List<Entrega> listaEntrega = new ArrayList<>();
+        try {
+            listaEntrega = this.entregaRepository.listar();
+        }catch(BancoDeDadosException e) {
+            e.printStackTrace();
+        }
+        if(listaEntrega.size() == 0){
+            System.out.println("Não existe entregas registradas.");
+        }
+        else{
+            for(Entrega entregaAtual : listaEntrega){
+                System.out.println(entregaAtual.toString());
+            }
+        }
     }
-
-
 }
- */

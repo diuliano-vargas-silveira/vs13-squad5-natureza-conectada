@@ -194,7 +194,7 @@ public class EspecialistaRepository implements Repository<Integer, Especialista>
                 especialista.setEmail(resultSet.getString("EMAIL"));
                 especialista.setDocumento(resultSet.getString("DOCUMENTO"));
                 especialista.setEspecializacao(resultSet.getString("ESPECIALIZACAO"));
-                especialista.setRegiaoResponsavel(Estados.values()[resultSet.getInt("ID_ESTADO") + 1]);
+                especialista.setRegiaoResponsavel(Estados.values()[resultSet.getInt("ID_ESTADO") - 1]);
             }
 
         } catch (SQLException e) {

@@ -1,73 +1,74 @@
-/*
+
 package services;
 
-import database.BancoDeDados;
+import exceptions.BancoDeDadosException;
 import exceptions.InformacaoNaoEncontrada;
 import exceptions.ObjetoExistente;
 import interfaces.IService;
 import models.Endereco;
+import repository.EnderecoRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ServiceEndereco implements IService<Endereco> {
+public class ServiceEndereco {
 
-    @Override
-    public void adicionar(Endereco endereco) {
-        Optional<Endereco> enderecoExistente = procurar(endereco.getId());
+    EnderecoRepository enderecoRepository = new EnderecoRepository();
 
-        if (enderecoExistente.isPresent())
-            throw new ObjetoExistente("Este endereço, já existe!");
+    public void adicionar(Endereco endereco, Integer idCliente) throws BancoDeDadosException {
+        try{
+            this.enderecoRepository.adicionar(endereco,idCliente);
+            System.out.println("Endereço adicionado com sucesso");
 
-        endereco.setId(BancoDeDados.gerarNovoIdEndereco());
-        BancoDeDados.enderecos.add(endereco);
+        }catch (BancoDeDadosException ex){
+            ex.printStackTrace();
+
+        }
     }
 
-    @Override
     public void deletar(int id) {
         Endereco endereco = procurarPorID(id);
 
-        BancoDeDados.enderecos.remove(endereco);
+//        BancoDeDados.enderecos.remove(endereco);
     }
 
 
-    @Override
     public boolean editar(int id, Endereco enderecoEditado) {
-        Endereco endereco = procurarPorID(id);
-
-        int indexContato = BancoDeDados.enderecos.indexOf(endereco);
-        endereco.setCidade(endereco.getCidade());
-        endereco.setCep(endereco.getCep());
-        endereco.setComplemento(endereco.getComplemento());
-        endereco.setEstado(endereco.getEstado());
-        endereco.setLogradouro(endereco.getLogradouro());
-        endereco.setTipo(endereco.getTipo().ordinal());
-
-        BancoDeDados.enderecos.set(indexContato, enderecoEditado);
+//        Endereco endereco = procurarPorID(id);
+//
+//        int indexContato = BancoDeDados.enderecos.indexOf(endereco);
+//        endereco.setCidade(endereco.getCidade());
+//        endereco.setCep(endereco.getCep());
+//        endereco.setComplemento(endereco.getComplemento());
+//        endereco.setEstado(endereco.getEstado());
+//        endereco.setLogradouro(endereco.getLogradouro());
+//        endereco.setTipo(endereco.getTipo().ordinal());
+//
+//        BancoDeDados.enderecos.set(indexContato, enderecoEditado);
 
         return true;
     }
 
-    @Override
     public Endereco procurarPorID(int id) {
-        Optional<Endereco> endereco = procurar(id);
+//        Optional<Endereco> endereco = procurar(id);
+//
+//        if (endereco.isEmpty()) {
+//            throw new InformacaoNaoEncontrada("Não existe nenhum endereço com este ID!");
+//        }
 
-        if (endereco.isEmpty()) {
-            throw new InformacaoNaoEncontrada("Não existe nenhum endereço com este ID!");
-        }
-
-        return endereco.get();
+        return new Endereco();
     }
 
-    @Override
     public List<Endereco> listarTodos() {
-        return BancoDeDados.enderecos;
+        return new ArrayList<>();
     }
 
-    @Override
-    public Optional<Endereco> procurar(int id) {
-        return BancoDeDados.enderecos.stream().filter(endereco -> endereco.getId() == id).findFirst();
+    public Endereco procurar(int id) {
+        return new Endereco();
     }
+
+//    public List<Endereco> buscarEnderecoPorCliente(int id){
+  //TODO:TERMNAR
+//    }
 }
-
- */

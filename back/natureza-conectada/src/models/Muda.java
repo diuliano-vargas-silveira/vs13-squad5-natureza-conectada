@@ -12,6 +12,8 @@ public class Muda {
 
     private int id;
 
+    private int quantidade;
+
     private TipoMuda tipo;
 
     private String nome;
@@ -24,20 +26,18 @@ public class Muda {
 
     private String descricao;
 
-    private List<Especialista> especialistasDeRegiao = new ArrayList<>();
-
     public Muda(){
 
     }
 
-    public Muda(int tipo, String nome, String nomeCientifico, int porte, String ambienteIdeal, String descricao) {
+    public Muda(int tipo, int quantidade, String nome, String nomeCientifico, int porte, String ambienteIdeal, String descricao) {
 
         if (TipoMuda.ofTipo(tipo) == null) {
             throw new IllegalArgumentException("enum Tipo inválido.");
         } else if (TamanhoMuda.ofTipo(porte) == null) {
             throw new IllegalArgumentException("enum porte inválido.");
         } else {
-
+            this.quantidade = quantidade;
             this.tipo = TipoMuda.ofTipo(tipo);
             this.porte = TamanhoMuda.ofTipo(porte);
             this.nome = nome;
@@ -49,12 +49,13 @@ public class Muda {
 
     @Override
     public String toString(){
-        return "ID: " + String.valueOf(this.id)
+        return "\nID: " + String.valueOf(this.id)
         + "\nTipo: " + String.valueOf(this.tipo).toLowerCase()
         + "\nNome: " + this.nome
         + "\nNome científico: " + this.nomeCientifico
         + "\nPorte: " + String.valueOf(this.porte).toLowerCase()
         + "\nAmbiente recomendado: " + this.ambienteIdeal
+        + "\nQuantidade: " + this.quantidade
         + "\nDescrição: " + this.descricao;
     }
     
@@ -116,12 +117,12 @@ public class Muda {
         this.descricao = descricao;
     }
 
-    public List<Especialista> getEspecialistasDeRegiao() {
-        return especialistasDeRegiao;
+    public int getQuantidade() {
+        return quantidade;
     }
 
-    public void setEspecialistasDeRegiao(List<Especialista> especialistasDeRegiao) {
-        this.especialistasDeRegiao = especialistasDeRegiao;
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
     }
 }
 
