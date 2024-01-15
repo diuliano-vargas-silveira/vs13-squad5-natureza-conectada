@@ -14,10 +14,10 @@
     private ContatoRepository contatoRepository = new ContatoRepository();
     private ClienteRepository clienteRepository = new ClienteRepository();
 
-    public void adicionarContato(Contato contato,Integer idCliente)  {
+    public void adicionarContato(Contato contato,Integer idUsuario)  {
 
         try{
-            this.contatoRepository.novoContato(contato,idCliente);
+            this.contatoRepository.novoContato(contato,idUsuario);
             System.out.println("Contato adicionado com sucesso");
 
         }catch (BancoDeDadosException ex){

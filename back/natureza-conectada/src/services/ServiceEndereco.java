@@ -66,4 +66,8 @@ public class ServiceEndereco implements IService<Endereco> {
     public Endereco procurar(int id) {
         return new Endereco();
     }
+
+//    public List<Endereco> buscarEnderecoPorCliente(int id){
+  //TODO:TERMNAR
+//    }
 }
