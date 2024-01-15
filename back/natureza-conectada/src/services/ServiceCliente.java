@@ -8,6 +8,7 @@ import models.*;
 import repository.ClienteRepository;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceCliente implements IService<Cliente> {
