@@ -1,7 +1,7 @@
-/*
+
 package utils;
 
-import database.BancoDeDados;
+
 import enums.*;
 import models.*;
 import services.*;
@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Menu {
+
     private static int opcaoMenuIncial = 0;
     private static Usuario usuarioCadastrado;
     private static final String QUEBRA_DE_LINHA = "| -------------------------------------------------------------------------- |";
@@ -147,7 +148,7 @@ public class Menu {
 
                     Contato contato = new Contato(decricao, numero, tipoContato);
 
-                    serviceContato.adicionar(contato);
+
 
                     Especialista novoEspecialista = new Especialista();
 
@@ -161,6 +162,9 @@ public class Menu {
                     novoEspecialista.setTipoUsuario(TipoUsuario.ESPECIALISTA);
 
                     serviceEspecialista.adicionar(novoEspecialista);
+                    Usuario usuarioNovo = serviceUsuario.logar(novoEspecialista.getEmail(),novoEspecialista.getSenha());
+
+                    serviceContato.adicionarContato(contato,usuarioNovo.getId());
                     break;
                 default:
                     System.out.println(OPCAO_INVALIDA);
@@ -169,7 +173,7 @@ public class Menu {
             System.err.println(e.getMessage());
         }
     }
-
+/*
     private static void menuCliente() {
         int opcao = 0;
         while (opcao != 6) {
@@ -234,7 +238,7 @@ public class Menu {
         System.out.println(QUEBRA_DE_LINHA);
         System.out.println("| Lista de mudas");
 
-        List<Muda> mudas = serviceMudas.listarTodos();
+        List<Muda> mudas = serviceMudas.listarMudas();
         if(mudas.isEmpty()) {
             System.out.println("Não há mudas disponíveis");
             menuClienteMudas();
@@ -242,10 +246,10 @@ public class Menu {
             mudas.forEach(System.out::println);
             int id = Teclado.nextInt("| Digite o ID da muda escolhida");
             try {
-                Muda mudaEscolhida = serviceMudas.procurarPorID(id);
+                Muda mudaEscolhida = serviceMudas.buscarPorId(id);
                 Cliente clienteLogado = serviceCliente.procurarPorID(usuarioCadastrado.getId());
                 System.out.println("| Escolha um endereço de entrega");
-                clienteLogado.imprimirEnderecos();
+                ;
 
                 int idEnderecoEscolhido = Teclado.nextInt("| Digite o ID");
                 Endereco enderecoEscolhido = serviceEndereco.procurarPorID(idEnderecoEscolhido);
@@ -902,7 +906,7 @@ public class Menu {
                 System.err.println(e.getMessage());
             }
         }
-    }
+    }*/
 
 }
- */
+

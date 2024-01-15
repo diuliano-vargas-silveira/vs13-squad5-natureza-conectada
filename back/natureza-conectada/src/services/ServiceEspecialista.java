@@ -19,7 +19,7 @@ public class ServiceEspecialista implements IService<Especialista> {
     EspecialistaRepository especialistaRepository = new EspecialistaRepository();
     ServiceUsuario serviceUsuario = new ServiceUsuario();
 
-    @Override
+
     public void adicionar(Especialista especialista) throws BancoDeDadosException {
         Usuario usuarioCriado = serviceUsuario.adicionarUsuario(especialista);
 

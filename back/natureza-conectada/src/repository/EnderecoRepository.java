@@ -1,8 +1,11 @@
 package repository;
 
 import enums.Estados;
+import enums.TamanhoMuda;
+import enums.Tipo;
 import exceptions.BancoDeDadosException;
 import models.Endereco;
+import models.Muda;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -165,6 +168,45 @@ public class EnderecoRepository{
         }
         return listaEndereco;
     }
+
+//    public List<Endereco> listarPorCliente(int IdUsuario)
+//        {//TODO:TERMINAR METODO
+//            Connection conn = null;
+//            List<Endereco> enderecos = new ArrayList<>();
+//            try {
+//                conn = ConexaoBancoDeDados.getConnection();
+//                String sql = "SELECT * FROM endereco WHERE ID_ENDERECO = ? ";
+//                PreparedStatement stm = conn.prepareStatement(sql);
+//
+//                stm.setInt(1,IdUsuario);
+//                ResultSet resultado = stm.executeQuery();
+//                while (resultado.next()){
+//                    endereco.setCep(resultado.getString("CEP"));
+//                     endereco.setId(resultado.getInt("ID_ENDERECO"));
+//                     endereco.setCidade(resultado.getString("cidade"));
+//                     endereco.setComplemento(resultado.getString("complemento"));
+////                     endereco.setEstado(ESTADOS.resultado.getInt("ESTADO"));
+//                     endereco.setNumero(resultado.getString("numero"));
+//                     endereco.setTipo(Tipo.valueOf(resultado.getString("tipo")));
+//                     endereco.setLogradouro(resultado.getString("Logradouro"));
+//                }
+//                return enderecos;
+//
+//            }catch (SQLException ex) {
+//                System.out.println("Erro ao buscar por id, ERRO :"+ ex.getMessage());
+//                throw new BancoDeDadosException(ex.getCause());
+//            }finally {
+//                try {
+//                    if(conn != null){
+//                        conn.close();
+//                    }
+//                }catch (SQLException e){
+//                    System.out.println("Erro ao fechar conexao do banco de dados, ERRO: " + e.getMessage());
+//                }
+//            }
+//
+//        }
+
 
     private void fecharConexao(Connection conexao) throws SQLException{
         if(conexao != null){
