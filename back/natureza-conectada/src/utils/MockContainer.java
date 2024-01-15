@@ -1,4 +1,4 @@
-/* package utils;
+package utils;
 
 import java.util.ArrayList;
 import enums.StatusEntrega;
@@ -6,14 +6,60 @@ import enums.Estados;
 import enums.TipoUsuario;
 import models.*;
 import services.*;
+import repository.*;
 
 public class MockContainer {
 
-    public MockContainer(){
-        iniciaObjetos();
-    }
+    public void iniciaObjetos() throws Exception {
 
-    public void iniciaObjetos(){
+
+        // Criando Clientes
+
+        String[] nomeCliente = {"Willian Cavalheiro", "Diuliano Vargas", "Luísa Santos", "Pedro Antonetti", "Janier Freitas", "Thales Salla", "Carlos Queiroz", "Welton Santos", "Rafael Camilo", "Rafael Ramos"};
+        String[] emailCliente = {"willian@dbc.com.br", "Diuliano@dbc.com.br", "luh.santos@dbc.com.br", "pedro@dbc.com.br", "janier@dbc.com.br", "thales@dbc.com.br", "carlos@dbc.com.br", "welton@dbc.com.br", "rcamilo@dbc.com.br", "rramos@dbc.com.br"};
+        String[] cpfCliente = {"12345678909", "98765432100", "11122233344", "55566677788", "99900066622", "99900099922", "99900055522", "99900014422", "99900044422", "99900034422"};
+
+        ServiceCliente serviceCliente = new ServiceCliente();
+
+        Cliente cliente = new Cliente();
+        for (int i = 0; i < 10; i++){
+            cliente.setNome(nomeCliente[i]);
+            cliente.setEmail(emailCliente[i]);
+            cliente.setSenha("senhadificil");
+            cliente.setCpf(cpfCliente[i]);
+            serviceCliente.adicionar(cliente);
+        }
+
+
+        // Criando Especialistas
+        String[] nomeEspecialista = {"Rafael Lazzari", "Ályson Campos", "Mayra Amaral", "Cristina Jung"};
+        String[] emailEspecialista = {"rlazzari@dbc.com.br", "alysonc@dbc.com.br", "mayraa@dbc.com.br", "crisjung@dbc.com.br"};
+        String[] documentoEspecialista = {"999.999.444-00", "999.999.444-13", "999.999.444-25", "999.999.444-12"};
+        String[] especializaçãoEspecialista = {"Horticultura Ornamental", "Agronomia", "Silvicultura", "Botânica Aplicada:"};
+        Estados[] regiaoResponsavelEspecialista = {Estados.SP, Estados.RS, Estados.PB, Estados.AM};
+
+        ServiceEspecialista serviceEspecialista = new ServiceEspecialista();
+
+        Especialista especialista = new Especialista();
+        for (int i = 0; i < 4; i++){
+            especialista.setNome(nomeEspecialista[i]);
+            especialista.setEmail(emailEspecialista[i]);
+            especialista.setSenha("senhadificil");
+            especialista.setDocumento(documentoEspecialista[i]);
+            especialista.setEspecializacao(especializaçãoEspecialista[i]);
+            especialista.setRegiaoResponsavel(regiaoResponsavelEspecialista[i]);
+            serviceEspecialista.adicionar(especialista);
+        }
+
+        // String[] listaCep = {"70000-000", "10001-001", "SW1A 0AA", "2000"};
+        // String[] listaLogradouro = {"Praça dos Três Poderes", "Copacabana Beach"};
+        // for(int i = 0; i < 17; i++){
+        //    EnderecoRepository enderecoRepository = new EnderecoRepository();
+        //    enderecoRepository.adicionar(new Endereco(listaCep[i], listaLogradouro[i],));
+        //}
+
+    }
+        /*
 
         // Endereços - criação de objetos e adições ao banco de dados
         Endereco endereco1 = new Endereco("70000-000", "Praça dos Três Poderes", "1", "Palácio do Planalto", "Brasília", Estados.DF, 1);
@@ -210,115 +256,6 @@ public class MockContainer {
         Admin admin = new Admin("Administrador", "administrador@naturezaconectada.com", "senhadificil");
         serviceAdmin.adicionar(admin);
 
-        // Clientes - criação de objetos, adições ao banco de dados
-        ServiceCliente serviceCliente = new ServiceCliente();
-
-        Cliente cliente1 = new Cliente("Willian Cavalheiro", "willian@dbc.com.br", "senhadificil", "123.456.789-09");
-        serviceCliente.adicionar(cliente1);
-        serviceCliente.adicionarContato(cliente1, contato1);
-        serviceCliente.adicionarContato(cliente1, contato2);
-        serviceCliente.adicionarEndereco(cliente1, endereco1);
-        serviceCliente.adicionarEndereco(cliente1, endereco2);
-        serviceCliente.adicionarMuda(cliente1, muda1);
-        serviceCliente.adicionarMuda(cliente1, muda2);
-        serviceCliente.adicionarEntregas(cliente1, entrega1);
-
-        Cliente cliente2 = new Cliente("Diuliano Vargas", "Diuliano@dbc.com.br", "senhadificil", "987.654.321-00");
-        serviceCliente.adicionar(cliente2);
-        serviceCliente.adicionarContato(cliente2, contato3);
-        serviceCliente.adicionarEndereco(cliente2, endereco3);
-        serviceCliente.adicionarMuda(cliente2, muda3);
-        serviceCliente.adicionarMuda(cliente2, muda4);
-        serviceCliente.adicionarEntregas(cliente2, entrega2);
-
-        Cliente cliente3 = new Cliente("Luísa Santos", "luh.santos@dbc.com.br", "senhadificil", "111.222.333-44");
-        serviceCliente.adicionar(cliente3);
-        serviceCliente.adicionarContato(cliente3, contato4);
-        serviceCliente.adicionarContato(cliente3, contato5);
-        serviceCliente.adicionarEndereco(cliente3, endereco4);
-        serviceCliente.adicionarMuda(cliente3, muda5);
-        serviceCliente.adicionarEntregas(cliente3, entrega3);
-
-        Cliente cliente4 = new Cliente("Pedro Antonetti", "pedro@dbc.com.br", "senhadificil", "555.666.777-88");
-        serviceCliente.adicionar(cliente4);
-        serviceCliente.adicionarContato(cliente4, contato6);
-        serviceCliente.adicionarEndereco(cliente4, endereco5);
-        serviceCliente.adicionarMuda(cliente4, muda6);
-        serviceCliente.adicionarMuda(cliente4, muda7);
-        serviceCliente.adicionarMuda(cliente4, muda8);
-        serviceCliente.adicionarEntregas(cliente4, entrega4);
-
-        Cliente cliente5 = new Cliente("Janier Freitas", "janier@dbc.com.br", "senhadificil", "999.000.666-22");
-        serviceCliente.adicionar(cliente5);
-        serviceCliente.adicionarContato(cliente5, contato7);
-        serviceCliente.adicionarContato(cliente5, contato8);
-        serviceCliente.adicionarEndereco(cliente5, endereco6);
-        serviceCliente.adicionarEndereco(cliente5, endereco7);
-        serviceCliente.adicionarMuda(cliente5, muda9);
-        serviceCliente.adicionarEntregas(cliente5, entrega5);
-
-        Cliente cliente6 = new Cliente("Thales Salla", "thales@dbc.com.br", "senhadificil", "999.000-999-22");
-        serviceCliente.adicionar(cliente6);
-        serviceCliente.adicionarContato(cliente6, contato9);
-        serviceCliente.adicionarContato(cliente6, contato10);
-        serviceCliente.adicionarContato(cliente6, contato11);
-        serviceCliente.adicionarEndereco(cliente6, endereco8);
-        serviceCliente.adicionarMuda(cliente6, muda10);
-        serviceCliente.adicionarMuda(cliente6, muda11);
-        serviceCliente.adicionarEntregas(cliente6, entrega6);
-
-        Cliente cliente7 = new Cliente("Carlos Queiroz", "carlos@dbc.com.br", "senhadificil", "999.000.555-22");
-        serviceCliente.adicionar(cliente7);
-        serviceCliente.adicionarContato(cliente7, contato12);
-        serviceCliente.adicionarEndereco(cliente7, endereco9);
-        serviceCliente.adicionarEndereco(cliente7, endereco10);
-        serviceCliente.adicionarMuda(cliente7, muda12);
-        serviceCliente.adicionarMuda(cliente7, muda13);
-        serviceCliente.adicionarEntregas(cliente7, entrega7);
-
-        Cliente cliente8 = new Cliente("Welton Santos", "welton@dbc.com.br", "senhadificil", "999.000.444-22");
-        serviceCliente.adicionar(cliente8);
-        serviceCliente.adicionarContato(cliente8, contato13);
-        serviceCliente.adicionarContato(cliente8, contato14);
-        serviceCliente.adicionarEndereco(cliente8, endereco11);
-        serviceCliente.adicionarEndereco(cliente8, endereco12);
-        serviceCliente.adicionarMuda(cliente8, muda14);
-        serviceCliente.adicionarEntregas(cliente8, entrega8);
-
-        Cliente cliente9 = new Cliente("Rafael Camilo", "rcamilo@dbc.com.br", "senhadificil", "999.000.444-22");
-        serviceCliente.adicionar(cliente9);
-        serviceCliente.adicionarContato(cliente9, contato15);
-        serviceCliente.adicionarContato(cliente9, contato16);
-        serviceCliente.adicionarEndereco(cliente9, endereco13);
-        serviceCliente.adicionarEndereco(cliente9, endereco14);
-        serviceCliente.adicionarMuda(cliente9, muda15);
-        serviceCliente.adicionarMuda(cliente9, muda16);
-        serviceCliente.adicionarEntregas(cliente9, entrega9);
-
-        Cliente cliente10 = new Cliente("Rafael Ramos", "rramos@dbc.com.br", "senhadificil", "999.000.444-22");
-        serviceCliente.adicionar(cliente10);
-        serviceCliente.adicionarContato(cliente10, contato17);
-        serviceCliente.adicionarContato(cliente10, contato18);
-        serviceCliente.adicionarEndereco(cliente10, endereco15);
-        serviceCliente.adicionarEndereco(cliente10, endereco16);
-        serviceCliente.adicionarEndereco(cliente10, endereco17);
-        serviceCliente.adicionarMuda(cliente10, muda17);
-        serviceCliente.adicionarMuda(cliente10, muda18);
-        serviceCliente.adicionarEntregas(cliente10, entrega10);
-
-        // Especialistas - criação de objetos e adições ao banco de dados
-        ServiceEspecialista serviceEspecialista = new ServiceEspecialista();
-
-        Especialista especialista1 = new Especialista("Rafael Lazzari", "rlazzari@dbc.com.br", "senhadificil", contato19,"999.999.444-00", "Horticultura Ornamental", Estados.SP);
-        Especialista especialista2 = new Especialista("Ályson Campos", "alysonc@dbc.com.br", "senhadificil", contato20,"999.999.444-13", "Agronomia", Estados.RS);
-        Especialista especialista3 = new Especialista("Mayra Amaral", "mayraa@dbc.com.br", "senhadificil", contato21,"999.999.444-25", "Silvicultura", Estados.PB);
-        Especialista especialista4 = new Especialista("Cristina Jung", "crisjung@dbc.com.br", "senhadificil", contato22,"999.999.444-12", "Botânica Aplicada:", Estados.AM);
-
-        serviceEspecialista.adicionar(especialista1);
-        serviceEspecialista.adicionar(especialista2);
-        serviceEspecialista.adicionar(especialista3);
-        serviceEspecialista.adicionar(especialista4);
-
         ServiceRelatorio serviceRelatorio = new ServiceRelatorio();
         Relatorio relatorio = new Relatorio(cliente10, null,  "Bom","");
         Relatorio relatorio2 = new Relatorio(cliente10, null,  "Ruim", "");
@@ -327,5 +264,6 @@ public class MockContainer {
         serviceRelatorio.adicionar(relatorio2);
 
     }
+     */
 }
- */
+
