@@ -255,7 +255,7 @@ public class EntregaRepository{
         }
         return listaEntrega;
     }
-    // Método(s) da classe:
+
     private void fecharConexao(Connection conexao) throws SQLException{
         if(conexao != null){
             conexao.close();

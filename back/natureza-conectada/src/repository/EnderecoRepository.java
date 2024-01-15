@@ -1,11 +1,8 @@
 package repository;
 
 import enums.Estados;
-import enums.TamanhoMuda;
-import enums.Tipo;
 import exceptions.BancoDeDadosException;
 import models.Endereco;
-import models.Muda;
 
 import java.sql.*;
 import java.util.ArrayList;
