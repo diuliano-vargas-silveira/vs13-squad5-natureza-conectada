@@ -49,12 +49,13 @@ public class Muda {
 
     @Override
     public String toString(){
-        return "ID: " + String.valueOf(this.id)
+        return "\nID: " + String.valueOf(this.id)
         + "\nTipo: " + String.valueOf(this.tipo).toLowerCase()
         + "\nNome: " + this.nome
         + "\nNome científico: " + this.nomeCientifico
         + "\nPorte: " + String.valueOf(this.porte).toLowerCase()
         + "\nAmbiente recomendado: " + this.ambienteIdeal
+        + "\nQuantidade: " + this.quantidade
         + "\nDescrição: " + this.descricao;
     }
     

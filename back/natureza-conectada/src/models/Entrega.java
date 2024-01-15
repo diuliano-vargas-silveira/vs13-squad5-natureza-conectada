@@ -51,11 +51,12 @@ public class Entrega implements IEntrega {
     @Override
     public String toString(){
 
+        
         String mensagemMudas = "";
         for(Muda muda : this.mudas){ mensagemMudas += muda.toString() + "\n";}
         return "ID da entrega: " + this.id
         + "\nDescrições da(s) muda(s) da entrega: " + mensagemMudas+
-                "\n Endereço de entrega: "+this.enderecoDeEntrega
+                "\nEndereço de entrega: "+this.enderecoDeEntrega
 
         +"\nStatus: " + String.valueOf(this.status)
         + "\nDados do cliente: " + this.cliente + "\n";
