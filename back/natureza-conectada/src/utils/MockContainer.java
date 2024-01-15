@@ -76,7 +76,7 @@ public class MockContainer {
         String[] cidadeEndereco = {"Brasília", "Rio de Janeiro", "São Paulo", "São Paulo", "Fortaleza", "Belo Horizonte", "Recife", "Natal", "Brasília", "Belo Horizonte", "Natal", "Rio de Janeiro", "São Paulo", "Fortaleza", "Belo Horizonte", "Recife", "Natal", "Charqueadas", "Charqueadas"};
         Estados[] estadoEndereco = {Estados.DF, Estados.RJ, Estados.SP, Estados.SP, Estados.CE, Estados.MG, Estados.PE, Estados.RN, Estados.DF, Estados.MG, Estados.RN, Estados.RJ, Estados.SP, Estados.CE, Estados.MG, Estados.PE, Estados.RN, Estados.RS, Estados.RS};
         Tipo[] tipoEndereco = {Tipo.RESIDENCIAL, Tipo.RESIDENCIAL, Tipo.COMERCIAL, Tipo.COMERCIAL, Tipo.RESIDENCIAL, Tipo.COMERCIAL, Tipo.RESIDENCIAL, Tipo.COMERCIAL, Tipo.RESIDENCIAL, Tipo.COMERCIAL, Tipo.RESIDENCIAL, Tipo.COMERCIAL, Tipo.RESIDENCIAL, Tipo.COMERCIAL, Tipo.RESIDENCIAL, Tipo.COMERCIAL, Tipo.RESIDENCIAL, Tipo.COMERCIAL, Tipo.COMERCIAL};
-        int[] idClienteEndereco = {40, 41, 40, 41, 42, 43, 43, 44, 44, 45, 45, 46, 47, 48, 49, 50, 51, 52, 53};
+        int[] idClienteEndereco = {1, 2, 1, 2, 3, 4, 4, 5, 5, 6, 6, 7, 8, 9, 10, 11, 12, 13, 14};
 
         ServiceEndereco serviceEndereco = new ServiceEndereco();
 

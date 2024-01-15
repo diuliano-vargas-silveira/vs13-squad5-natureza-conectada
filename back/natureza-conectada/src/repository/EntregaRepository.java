@@ -1,4 +1,4 @@
-/*package repository;
+package repository;
 
 
 import java.sql.*;
@@ -261,4 +261,4 @@ public class EntregaRepository{
             conexao.close();
         }
     }
-}*/
+}

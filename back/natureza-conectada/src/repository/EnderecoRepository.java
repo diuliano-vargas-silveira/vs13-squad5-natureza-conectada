@@ -93,17 +93,10 @@ public class EnderecoRepository{
         try{
             conexao = ConexaoBancoDeDados.getConnection();
 
-            StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE VS_13_EQUIPE_5.ENDERECO SET");
-            sql.append(" ESTADO = ?");
-            sql.append(" CEP = ?");
-            sql.append(" LOGRADOURO = ?");
-            sql.append(" NUMERO = ?");
-            sql.append(" COMPLEMENTO = ?");
-            sql.append(" CIDADE = ?");
-            sql.append(" WHERE ID_ENDERECO");
+            String sql = "UPDATE VS_13_EQUIPE_5.ENDERECO SET "
+                    + "ESTADO = ?, CEP = ?, LOGRADOURO = ?, NUMERO = ?, COMPLEMENTO = ?, CIDADE = ? WHERE ID_ENDERECO = ?";
 
-            PreparedStatement stmt = conexao.prepareStatement(sql.toString());
+            PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setInt(1, endereco.getEstado().ordinal() + 1);
             stmt.setString(2, endereco.getCep());
             stmt.setString(3, endereco.getLogradouro());
