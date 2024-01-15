@@ -189,12 +189,11 @@ public class MudaRepository implements Repository<Integer, Muda>{
             ResultSet resultado = stm.executeQuery();
             while (resultado.next()){
                 muda.setId(resultado.getInt("ID_MUDA"));
-                muda.setDescricao(resultado.getString("DESCRICAO"));
-                muda.setQuantidade(resultado.getInt("QUANTIDADE"));
                 muda.setNome(resultado.getString("NOME"));
-                muda.setPorte(TamanhoMuda.valueOf(resultado.getString(" PORTE")));
+                muda.setPorte(TamanhoMuda.valueOf(resultado.getString("PORTE")));
                 muda.setAmbienteIdeal(resultado.getString("AMBIENTE_IDEAL"));
                 muda.setDescricao(resultado.getString("DESCRICAO"));
+                muda.setQuantidade(resultado.getInt("QUANTIDADE"));
             }
         return muda;
 

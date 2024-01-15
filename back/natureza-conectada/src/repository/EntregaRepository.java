@@ -13,9 +13,9 @@ import models.Entrega;
 import models.Muda;
 import services.ServiceCliente;
 
-public class EntregaRepository implements Repository<Integer, Entrega>{
+public class EntregaRepository{
    ServiceCliente serviceCliente = new ServiceCliente();
-    @Override
+
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_ENTREGA.NEXTVAL mysequence FROM DUAL";
         Statement stmt = connection.createStatement();
@@ -26,8 +26,8 @@ public class EntregaRepository implements Repository<Integer, Entrega>{
         return null;
     }
 
-    @Override
-    public Entrega adicionar(Entrega entrega) throws BancoDeDadosException {
+
+    public Entrega adicionar(Entrega entrega, Integer idEndereco) throws BancoDeDadosException {
         Connection conexao = null;
 
         try{
@@ -44,17 +44,17 @@ public class EntregaRepository implements Repository<Integer, Entrega>{
             PreparedStatement statementUm = conexao.prepareStatement(sql);
             statementUm.setInt(1, entrega.getId());
             statementUm.setInt(2, entrega.getCliente().getId());
-            statementUm.setInt(3, entrega.getEnderecoDeEntrega().getId());
+            statementUm.setInt(3, idEndereco);
             statementUm.setString(4, String.valueOf(entrega.getStatus()));
 
             int resultadoUm = statementUm.executeUpdate();
 
 
             int quantidade = entrega.getMudas().size();
-            int contador = 1;
-            while(contador <= quantidade){
-                String sqlQueryEntregaMuda = "INSERT INTO VS_13_EQUIPE_5.ENTREGA_MUDA (ID_ENTREGA_MUDA, ID_MUDA, ID_ENTREGA)\n "
-                        +"VALUES (?, ?, ?)";
+            int contador = 0;
+            while(contador < quantidade){
+                String sqlQueryEntregaMuda = "INSERT INTO VS_13_EQUIPE_5.ENTREGA_MUDA (ID_ENTREGA_MUDA, ID_MUDA, ID_ENTREGA, QUANTIDADE)\n "
+                        +"VALUES (?, ?, ?, ?)";
                 PreparedStatement statementDois = conexao.prepareStatement(sqlQueryEntregaMuda);
                 Statement statementTres = conexao.createStatement();
                 String sqlNextValSeqEntregaMuda = "SELECT SEQ_ENTREGA_MUDA.NEXTVAL mysequence FROM DUAL";
@@ -67,9 +67,10 @@ public class EntregaRepository implements Repository<Integer, Entrega>{
                 statementDois.setInt(1, proximoIdEntregaMuda);
                 statementDois.setInt(2, entrega.getMudas().get(contador).getId());
                 statementDois.setInt(3, proximoId);
+                statementDois.setInt(4, entrega.getMudas().get(contador).getQuantidade());
+                int resultadoDois = statementDois.executeUpdate();
                 statementDois.close();
                 statementTres.close();
-                int resultadoDois = statementDois.executeUpdate();
                 contador++;
             }
 
@@ -90,7 +91,6 @@ public class EntregaRepository implements Repository<Integer, Entrega>{
         }
     }
 
-    @Override
     public boolean remover(Integer id) throws BancoDeDadosException {
         Connection conexao = null;
         try{
@@ -124,7 +124,7 @@ public class EntregaRepository implements Repository<Integer, Entrega>{
         }
     }
 
-    @Override
+
     public boolean editar(Integer id, Entrega entrega) throws BancoDeDadosException {
         Connection conexao = null;
         try {
@@ -163,7 +163,7 @@ public class EntregaRepository implements Repository<Integer, Entrega>{
         return true;
     }
 
-    @Override
+
     public List<Entrega> listar() throws BancoDeDadosException {
         Connection conexao = null;
         List<Entrega> listaEntrega = new ArrayList<>();

@@ -15,9 +15,8 @@ public class Especialista extends Usuario {
         super.setTipoUsuario(TipoUsuario.ESPECIALISTA);
     }
 
-    public Especialista(String nome, String email, String senha, Contato contato, String documento, String especializacao, Estados regiaoResponsavel) {
+    public Especialista(String nome, String email, String senha, String documento, String especializacao, Estados regiaoResponsavel) {
         super(nome, email, senha, TipoUsuario.ESPECIALISTA);
-        this.contato = contato;
         this.documento = documento;
         this.especializacao = especializacao;
         this.regiaoResponsavel = regiaoResponsavel;

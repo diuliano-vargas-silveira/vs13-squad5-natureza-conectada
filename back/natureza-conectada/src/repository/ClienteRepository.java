@@ -160,27 +160,30 @@ public class ClienteRepository implements Repository<Integer, Cliente> {
     }
 
     public Cliente listarPorID(int id) throws BancoDeDadosException {
-        Cliente cliente = null;
+        Cliente cliente = new Cliente();
         Connection conexao = null;
 
         try {
             conexao = ConexaoBancoDeDados.getConnection();
-            String sql = "SELECT c.ID_CLIENTE, c.CPF, u.NOME, u.EMAIL, c.ID_USUARIO\n" +
-                    "FROM\n" +
-                    "\tUSUARIO u \n" +
-                    "INNER JOIN \n" +
-                    "\tCLIENTE c ON (u.ID_USUARIO = c.ID_CLIENTE)\n" +
-                    "WHERE \n" +
-                    "\tc.ID_CLIENTE = ? ";
+            String sql = "SELECT * FROM CLIENTE WHERE ID_CLIENTE = "+ id;
 
-            PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setInt(1, id);
+            Statement stmt = conexao.createStatement();
+            ResultSet resposta = stmt.executeQuery(sql);
 
-            ResultSet resposta = stmt.executeQuery();
+            Statement stmt2 = conexao.createStatement();
 
-            if (resposta.next()) {
-                cliente = getCliente(resposta);
+
+            while(resposta.next()) {
+                cliente.setCpf(resposta.getString("CPF"));
+                String sql2 = "SELECT * FROM USUARIO WHERE ID_USUARIO = "+ resposta.getInt("ID_USUARIO");
+                ResultSet resposta2 = stmt2.executeQuery(sql2);
+                while (resposta2.next()) {
+                    cliente.setNome(resposta2.getString("NOME"));
+                    cliente.setEmail(resposta2.getString("EMAIL"));
+                    cliente.setId(resposta.getInt("ID_CLIENTE"));
+                }
             }
+            return cliente;
 
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
@@ -192,7 +195,6 @@ public class ClienteRepository implements Repository<Integer, Cliente> {
                 erro.printStackTrace();
             }
         }
-        return cliente;
     }
 
     private Cliente getCliente(ResultSet usuario) throws SQLException {
