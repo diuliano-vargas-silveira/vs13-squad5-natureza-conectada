@@ -14,10 +14,7 @@ public class ConexaoBancoDeDados {
     private static final String PASS = "oracle";
     private static final String SCHEMA = "VS_13_EQUIPE_5";
 
-//    private static final String SESSAO_LOCAL = "jdbc:oracle:thin:@localhost:1521:XE";
-//    private static final String USER_LOCAL = "system";
-//    private static final String SENHA_LOCAL = "oracle";
-//    private static final String SCHEMA_LOCAL = "VEM_SER";
+
 
     public static Connection getConnection() throws SQLException {
         String url = "jdbc:oracle:thin:@" + SERVER + ":" + PORT + ":" + DATABASE;
