@@ -11,9 +11,10 @@ import models.Cliente;
 import models.Endereco;
 import models.Entrega;
 import models.Muda;
+import services.ServiceCliente;
 
 public class EntregaRepository implements Repository<Integer, Entrega>{
-
+   ServiceCliente serviceCliente = new ServiceCliente();
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_ENTREGA.NEXTVAL mysequence FROM DUAL";

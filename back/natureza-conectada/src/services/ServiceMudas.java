@@ -1,73 +1,64 @@
-/*
+
 package services;
 
-import database.BancoDeDados;
-import exceptions.InformacaoNaoEncontrada;
-import exceptions.ObjetoExistente;
-import interfaces.IService;
+
+import exceptions.BancoDeDadosException;
 import models.Muda;
+import repository.ConexaoBancoDeDados;
+import repository.MudaRepository;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-public class ServiceMudas implements IService<Muda> {
+public class ServiceMudas  {
+    MudaRepository mudaRepository = new MudaRepository();
+    ServiceCliente serviceCliente = new ServiceCliente();
 
-    @Override
-    public void adicionar(Muda muda) {
-       Optional<Muda> mudaNoBd = procurar(muda.getId());
-
-        if (mudaNoBd.isPresent()){
-           throw new ObjetoExistente("Muda existente no Banco de dados!");
+    public void adicionar(Muda muda){
+        try{
+            this.mudaRepository.adicionar(muda);
+            System.out.println("*** Muda adicionada com sucesso ****");
+        }catch(BancoDeDadosException ex){
+            System.out.println("Erro ao adicionar a muda, Erro: " + ex.getCause());
+            ex.printStackTrace();
+            ex.getMessage();
         }
 
-        muda.setId(BancoDeDados.gerarNovoIDMudas());
-        BancoDeDados.mudas.add(muda);
     }
 
-    @Override
-    public void deletar(int id) {
-        Muda mudaASerDeletada = procurarPorID(id);
+    public void remover (Integer idMuda){
+        try {
 
-        BancoDeDados.mudas.remove(mudaASerDeletada);
-    }
+            this.mudaRepository.remover(idMuda);
+            System.out.println("***** muda Removida *****");
 
-    @Override
-    public boolean editar(int id, Muda muda) {
-        Muda mudaAtualizada = procurarPorID(id);
-
-        int indexMuda = BancoDeDados.mudas.indexOf(mudaAtualizada);
-
-        mudaAtualizada.setNome(muda.getNome());
-        mudaAtualizada.setAmbienteIdeal(muda.getAmbienteIdeal());
-        mudaAtualizada.setPorte(muda.getPorte());
-        mudaAtualizada.setDescricao(muda.getDescricao());
-        mudaAtualizada.setTipo(muda.getTipo());
-        mudaAtualizada.setNomeCientifico(muda.getNomeCientifico());
-
-        BancoDeDados.mudas.set(indexMuda, mudaAtualizada);
-
-        return true;
-    }
-
-    @Override
-    public Muda procurarPorID(int id) {
-        Optional<Muda> mudaPorID = procurar(id);
-
-        if(mudaPorID.isEmpty()){
-           throw  new InformacaoNaoEncontrada("Não existe nenhuma muda com este ID!");
+    }catch(BancoDeDadosException ex){
+            System.out.println("Erro ao adicionar ao remover a Muda, Erro: " + ex.getCause());
+            ex.printStackTrace();
+            ex.getMessage();
         }
 
-        return mudaPorID.get();
     }
 
-    @Override
-    public List<Muda> listarTodos() {
-        return BancoDeDados.mudas;
+    public void editarmuda(Integer idMuda,Muda muda)  {
+        try{
+            this.mudaRepository.editar(idMuda,muda);
+            System.out.println("***** Mudada Editada ********");
+        }catch (BancoDeDadosException e){
+            System.out.println("Erro ao editar Muda ERRO: "+ e.getMessage());
+            e.printStackTrace();
+
+        }
     }
 
-    @Override
-    public Optional<Muda> procurar(int id) {
-        return BancoDeDados.mudas.stream().filter(muda -> muda.getId() == id).findFirst();
+    public List<Muda> listarMudas(){
+        List listaDeMudas = new ArrayList<>();
+        try {
+            listaDeMudas = this.mudaRepository.listar();
+        }catch(BancoDeDadosException e){
+            System.out.println("Ocorreu um erro ao LISTAR as mudas, ERRO: "+e.getMessage());
+
+        }
+        return listaDeMudas;
     }
 }
- */
