@@ -27,8 +27,8 @@ public class EnderecoRepository{
             endereco.setId(proximoId.intValue());
 
             String sql = "INSERT INTO ENDERECO\n" +
-                    "(ID_ENDERECO, ID_USUARIO, ID_ESTADO, CEP, LOGRADOURO, NUMERO, COMPLEMENTO, CIDADE)\n" +
-                    "VALUES(?, ?, ?, ?, ?, ?, ?, ?)\n";
+                    "(ID_ENDERECO, ID_USUARIO, ID_ESTADO, CEP, LOGRADOURO, NUMERO, COMPLEMENTO, CIDADE, TIPO)\n" +
+                    "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)\n";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setInt(1, endereco.getId());
@@ -39,6 +39,7 @@ public class EnderecoRepository{
             stmt.setString(6, endereco.getNumero());
             stmt.setString(7, endereco.getComplemento());
             stmt.setString(8, endereco.getCidade());
+            stmt.setString(9, String.valueOf(endereco.getTipo()));
 
 
             int resultado = stmt.executeUpdate();
