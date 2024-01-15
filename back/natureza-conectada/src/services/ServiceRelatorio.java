@@ -105,14 +105,16 @@ public class ServiceRelatorio {
     public Relatorio procurar(int id) throws SQLException {
         return relatorioRepository.procurarPorId(id);
     }
+
     public List<Relatorio> buscarRelatorioAbertos(){
         try {
-            this.relatorioRepository.buscarRelatorioAbertos();
+            List<Relatorio> relatorios = this.relatorioRepository.buscarRelatorioAbertos();
+            return relatorios;
         }catch (BancoDeDadosException ex){
             System.out.println("Erro ao busar relatorios ERRO: " + ex.getMessage());
             ex.printStackTrace();
         }
+        return null;
     }
-
 
 }
