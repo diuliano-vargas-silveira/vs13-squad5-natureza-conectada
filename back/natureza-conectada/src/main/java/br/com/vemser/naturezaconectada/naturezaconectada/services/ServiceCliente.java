@@ -1,11 +1,11 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-
-import exceptions.BancoDeDadosException;
-import exceptions.InformacaoNaoEncontrada;
-import interfaces.IService;
-import models.*;
-import repository.ClienteRepository;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
+import br.com.vemser.naturezaconectada.naturezaconectada.interfaces.IService;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.Usuario;
+import br.com.vemser.naturezaconectada.naturezaconectada.repository.ClienteRepository;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ServiceCliente implements IService<Cliente> {
 
-    ServiceUsuario serviceUsuario = new ServiceUsuario();
+    ServiceUsuario serviceUsuario;
     ClienteRepository clienteRepository = new ClienteRepository();
 
     @Override
@@ -48,7 +48,7 @@ public class ServiceCliente implements IService<Cliente> {
 
 
     @Override
-    public List<Cliente> listarTodos() throws SQLException {
+    public List<Cliente> listarTodos() throws  BancoDeDadosException {
         return clienteRepository.listar();
     }
 

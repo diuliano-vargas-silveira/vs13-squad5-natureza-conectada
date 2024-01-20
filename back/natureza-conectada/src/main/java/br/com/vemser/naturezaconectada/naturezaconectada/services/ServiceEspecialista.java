@@ -1,24 +1,27 @@
 
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-import exceptions.BancoDeDadosException;
-import exceptions.InformacaoNaoEncontrada;
-import interfaces.IService;
-import models.Especialista;
-import models.Relatorio;
-import models.Usuario;
-import repository.EspecialistaRepository;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
+import br.com.vemser.naturezaconectada.naturezaconectada.interfaces.IService;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.Especialista;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.Usuario;
+import br.com.vemser.naturezaconectada.naturezaconectada.repository.EspecialistaRepository;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
+@Service
 public class ServiceEspecialista implements IService<Especialista> {
 
-    EspecialistaRepository especialistaRepository = new EspecialistaRepository();
-    ServiceUsuario serviceUsuario = new ServiceUsuario();
+    private final EspecialistaRepository especialistaRepository;
+    private final ServiceUsuario serviceUsuario;
 
+    public ServiceEspecialista(EspecialistaRepository especialistaRepository, ServiceUsuario serviceUsuario) {
+        this.especialistaRepository = especialistaRepository;
+        this.serviceUsuario = serviceUsuario;
+    }
 
     public void adicionar(Especialista especialista) throws BancoDeDadosException {
         Usuario usuarioCriado = serviceUsuario.adicionarUsuario(especialista);

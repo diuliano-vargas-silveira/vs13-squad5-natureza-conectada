@@ -2,11 +2,9 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
 
-import exceptions.BancoDeDadosException;
-import models.Entrega;
-import models.Muda;
-import repository.ConexaoBancoDeDados;
-import repository.MudaRepository;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
+import br.com.vemser.naturezaconectada.naturezaconectada.repository.MudaRepository;
 
 import java.util.ArrayList;
 import java.util.List;

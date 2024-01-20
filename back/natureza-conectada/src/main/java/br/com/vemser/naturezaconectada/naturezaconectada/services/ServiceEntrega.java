@@ -1,16 +1,13 @@
 
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.Entrega;
+import br.com.vemser.naturezaconectada.naturezaconectada.repository.EntregaRepository;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import exceptions.BancoDeDadosException;
-import exceptions.InformacaoNaoEncontrada;
-import exceptions.ObjetoExistente;
-import interfaces.IService;
-import models.Entrega;
-import repository.EntregaRepository;
 
 public class ServiceEntrega {
 

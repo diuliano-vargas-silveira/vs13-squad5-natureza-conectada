@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminRepository implements Repository<Integer, Admin> {
+public class AdminRepository implements IRepository<Integer, Admin> {
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT seq_admin.nextval mysequence from DUAL";

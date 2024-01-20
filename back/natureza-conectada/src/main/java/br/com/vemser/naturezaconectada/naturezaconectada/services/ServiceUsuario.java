@@ -1,18 +1,26 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-import exceptions.BancoDeDadosException;
-import exceptions.InformacaoNaoEncontrada;
-import exceptions.ObjetoExistente;
-import exceptions.SenhaOuEmailInvalido;
-import interfaces.IServiceUsuario;
-import models.Usuario;
-import repository.UsuarioRepository;
+
+
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ObjetoExistente;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.SenhaOuEmailInvalido;
+import br.com.vemser.naturezaconectada.naturezaconectada.interfaces.IServiceUsuario;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.Usuario;
+import br.com.vemser.naturezaconectada.naturezaconectada.repository.UsuarioRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class ServiceUsuario implements IServiceUsuario {
 
-    private static final UsuarioRepository usuarioRepository = new UsuarioRepository();
+    private final UsuarioRepository usuarioRepository;
+
+    public ServiceUsuario(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
+    }
 
     public Usuario adicionarUsuario(Usuario usuario) throws BancoDeDadosException {
         Usuario usuarioBanco = usuarioRepository.procurarPorEmail(usuario.getEmail());
