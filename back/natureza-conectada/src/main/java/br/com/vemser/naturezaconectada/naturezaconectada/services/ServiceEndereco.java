@@ -1,12 +1,9 @@
 
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-import exceptions.BancoDeDadosException;
-import exceptions.InformacaoNaoEncontrada;
-import exceptions.ObjetoExistente;
-import interfaces.IService;
-import models.Endereco;
-import repository.EnderecoRepository;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.Endereco;
+import br.com.vemser.naturezaconectada.naturezaconectada.repository.EnderecoRepository;
 
 import java.util.ArrayList;
 import java.util.List;

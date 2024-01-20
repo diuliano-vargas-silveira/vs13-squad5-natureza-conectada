@@ -1,11 +1,11 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-import exceptions.BancoDeDadosException;
-import exceptions.InformacaoNaoEncontrada;
-import interfaces.IService;
-import models.Admin;
-import models.Usuario;
-import repository.AdminRepository;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
+import br.com.vemser.naturezaconectada.naturezaconectada.interfaces.IService;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.Admin;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.Usuario;
+import br.com.vemser.naturezaconectada.naturezaconectada.repository.AdminRepository;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -14,7 +14,7 @@ public class ServiceAdmin implements IService<Admin> {
 
     AdminRepository adminRepository = new AdminRepository();
 
-    ServiceUsuario serviceUsuario = new ServiceUsuario();
+    ServiceUsuario serviceUsuario;
 
     @Override
     public void adicionar(Admin admin) throws BancoDeDadosException {
@@ -25,7 +25,7 @@ public class ServiceAdmin implements IService<Admin> {
     }
 
     @Override
-    public void deletar(int id) throws SQLException {
+    public void deletar(int id) throws SQLException, BancoDeDadosException {
         Admin admin = procurarPorID(id);
 
         adminRepository.remover(id);
@@ -54,7 +54,7 @@ public class ServiceAdmin implements IService<Admin> {
     }
 
     @Override
-    public Admin procurar(int id) throws SQLException {
+    public Admin procurar(int id) throws BancoDeDadosException {
         return adminRepository.procurarPorId(id);
     }
 }

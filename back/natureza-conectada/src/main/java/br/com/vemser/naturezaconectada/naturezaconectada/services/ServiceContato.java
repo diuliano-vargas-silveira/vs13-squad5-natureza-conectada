@@ -1,10 +1,10 @@
  package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
 
- import exceptions.BancoDeDadosException;
- import models.Contato;
- import repository.ClienteRepository;
- import repository.ContatoRepository;
+ import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
+ import br.com.vemser.naturezaconectada.naturezaconectada.models.Contato;
+ import br.com.vemser.naturezaconectada.naturezaconectada.repository.ClienteRepository;
+ import br.com.vemser.naturezaconectada.naturezaconectada.repository.ContatoRepository;
 
  import java.util.ArrayList;
  import java.util.List;
@@ -14,7 +14,7 @@
     private ContatoRepository contatoRepository = new ContatoRepository();
     private ClienteRepository clienteRepository = new ClienteRepository();
 
-    public void adicionarContato(Contato contato,Integer idUsuario)  {
+    public void adicionarContato(Contato contato, Integer idUsuario)  {
 
         try{
             this.contatoRepository.novoContato(contato,idUsuario);

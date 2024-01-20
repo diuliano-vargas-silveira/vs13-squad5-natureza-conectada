@@ -5,7 +5,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDados
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-public interface Repository<CHAVE, OBJETO> {
+public interface IRepository<CHAVE, OBJETO> {
     Integer getProximoId(Connection connection) throws SQLException;
     OBJETO adicionar(OBJETO object) throws BancoDeDadosException;
     boolean remover(CHAVE id) throws BancoDeDadosException;

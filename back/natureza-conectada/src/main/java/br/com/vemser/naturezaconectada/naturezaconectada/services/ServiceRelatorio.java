@@ -1,10 +1,10 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-import exceptions.BancoDeDadosException;
-import exceptions.InformacaoNaoEncontrada;
-import interfaces.IService;
-import models.Relatorio;
-import repository.RelatorioRepository;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.Relatorio;
+import br.com.vemser.naturezaconectada.naturezaconectada.repository.RelatorioRepository;
+
 
 import java.sql.SQLException;
 import java.util.List;
