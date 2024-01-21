@@ -2,61 +2,40 @@ package br.com.vemser.naturezaconectada.naturezaconectada.models;
 
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public abstract class Usuario {
+
+    private static final String PASSWORD_VALIDATION_REGEX = "^(?=.*\\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$";
+
     private int id;
+
+    @NotBlank(message = "Nome não pode estar vazio!")
     private String nome;
+
+    @NotBlank(message = "E-mail não pode estar vazio!")
+    @Email(message = "Formato de e-mail inválido!")
     private String email;
+
+    @NotBlank(message = "Senha não pode estar vazia!")
+    @Length(min = 8, max = 255, message = "Tamanho de senha inválido, tenha no mínimo 8 caractéres!")
+    @Pattern(regexp = PASSWORD_VALIDATION_REGEX,
+            message = "Senha com formato inválido, você precisa de pelo menos 1 número e 1 letra, com no mínimo 8 de tamanho!")
     private String senha;
+
+    @NotNull(message = "Especifique o tipo do seu Usuário")
     private TipoUsuario tipoUsuario;
 
-    public Usuario() {
-    }
-
-    public Usuario(String nome, String email, String senha, TipoUsuario tipoUsuario) {
-        this.nome = nome;
-        this.email = email;
-        this.senha = senha;
-        this.tipoUsuario = tipoUsuario;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
-    public TipoUsuario getTipoUsuario() {
-        return tipoUsuario;
-    }
-
-    public void setTipoUsuario(TipoUsuario tipoUsuario) {
-        this.tipoUsuario = tipoUsuario;
-    }
 }
