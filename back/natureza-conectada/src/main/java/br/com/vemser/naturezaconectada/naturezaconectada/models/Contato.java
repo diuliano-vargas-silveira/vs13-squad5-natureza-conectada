@@ -1,76 +1,32 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.models;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Tipo;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class Contato {
 
     private int id;
+
+    @NotBlank(message = "Descrição não pode ser vazia!")
+    @Length(max = 255, message = "Mensagem muito longa!")
     private String descricao;
+
+    @NotBlank(message = "Número não pode ser vazio!")
+    @Length(min = 11, max = 11, message = "Número tem que ter tamanho de 11!")
     private String numero;
+
+    @NotNull(message = "Tipo de Contato não pode ser nulo!")
     private Tipo tipo;
-
-    public Contato() {
-    }
-
-    public Contato(String descricao, String numero, int tipo) {
-        this.descricao = descricao;
-        this.numero = numero;
-
-        this.tipo = (tipo == 1) ? Tipo.RESIDENCIAL : ((tipo == 2) ? Tipo.COMERCIAL : null);
-
-        if (this.tipo == null)
-            throw new IllegalArgumentException("Tipo inválido.");
-    }
-
-    public Contato(String telefone1, String endereco1) {
-
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public String getNumero() {
-        return numero;
-    }
-
-    public void setNumero(String numero) {
-        this.numero = numero;
-    }
-
-    public Tipo getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        if(!Objects.equals(tipo, "RESIDENCIAL") && !Objects.equals(tipo, "COMERCIAL")){
-            throw new IllegalArgumentException("Tipo inválido.");
-        } else if (tipo == null) {
-            this.tipo = Tipo.RESIDENCIAL;
-        }
-        else{
-            this.tipo = Tipo.valueOf(tipo);
-        }
-
-    }
-
-    @Override
-    public String toString() {
-        return "\nID: " + getId() + "\nDescrição: " + getDescricao() + "\nNumero: " + getNumero() + "\nTipo: " + getTipo();
-    }
 
 }
