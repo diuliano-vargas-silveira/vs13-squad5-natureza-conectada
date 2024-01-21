@@ -3,12 +3,21 @@ package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Endereco;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class EnderecoRepository {
+
+    private final ConexaoBancoDeDados conexaoBancoDeDados;
+
+    public EnderecoRepository(ConexaoBancoDeDados conexaoBancoDeDados) {
+        this.conexaoBancoDeDados = conexaoBancoDeDados;
+    }
+
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_ENDERECO.NEXTVAL mysequence FROM DUAL";
         Statement stmt = connection.createStatement();
@@ -22,7 +31,7 @@ public class EnderecoRepository {
     public Endereco adicionar(Endereco endereco, Integer idUsuario) throws BancoDeDadosException {
         Connection conexao = null;
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             Integer proximoId = this.getProximoId(conexao);
             endereco.setId(proximoId.intValue());
 
@@ -62,7 +71,7 @@ public class EnderecoRepository {
     public boolean remover(Integer id) throws BancoDeDadosException {
         Connection conexao = null;
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             String sql = "DELETE FROM VS_13_EQUIPE_5.ENDERECO WHERE ID_ENDERECO = ?";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
@@ -88,7 +97,7 @@ public class EnderecoRepository {
     public boolean editar(Integer id, Endereco endereco) throws BancoDeDadosException {
         Connection conexao = null;
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             String sql = "UPDATE VS_13_EQUIPE_5.ENDERECO SET "
                     + "ESTADO = ?, CEP = ?, LOGRADOURO = ?, NUMERO = ?, COMPLEMENTO = ?, CIDADE = ? WHERE ID_ENDERECO = ?";
@@ -123,7 +132,7 @@ public class EnderecoRepository {
         Connection conexao = null;
 
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             Statement statment = conexao.createStatement();
 
             String sqlEndereco = "SELECT * FROM VS_13_EQUIPE_5.ENDERECO";

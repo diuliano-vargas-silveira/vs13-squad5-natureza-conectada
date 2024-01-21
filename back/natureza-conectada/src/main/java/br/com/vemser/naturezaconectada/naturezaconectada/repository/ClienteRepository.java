@@ -2,12 +2,20 @@ package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class ClienteRepository implements IRepository<Integer, Cliente> {
+
+    private final ConexaoBancoDeDados conexaoBancoDeDados;
+
+    public ClienteRepository(ConexaoBancoDeDados conexaoBancoDeDados) {
+        this.conexaoBancoDeDados = conexaoBancoDeDados;
+    }
 
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
@@ -25,7 +33,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
     public Cliente adicionar(Cliente cliente) throws BancoDeDadosException {
         Connection conexao = null;
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             Integer proximoId = this.getProximoId(conexao);
             cliente.setIdCliente(proximoId);
 
@@ -65,7 +73,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
     public boolean remover(Integer id) throws BancoDeDadosException {
         Connection conexao = null;
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             String sql = "DELETE FROM CLIENTE WHERE id_cliente = ?";
 
             try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
@@ -96,7 +104,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
         Connection conexao = null;
 
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             String sql_cliente = "UPDATE CLIENTE SET\n" +
                     " CPF = ? \n" +
@@ -129,7 +137,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
         Connection conexao = null;
 
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             Statement stmt = conexao.createStatement();
             ResultSet res = stmt.executeQuery("SELECT c.ID_CLIENTE, c.CPF, u.NOME, u.EMAIL\n" +
@@ -164,7 +172,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
         Connection conexao = null;
 
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             String sql = "SELECT * FROM CLIENTE WHERE ID_CLIENTE = " + id;
 
             Statement stmt = conexao.createStatement();
@@ -219,7 +227,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
         Connection conexao = null;
 
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             String sqlUsuario = "SELECT c.ID_CLIENTE, c.CPF, u.NOME, u.EMAIL\n" +
                     "FROM\n" +
@@ -256,7 +264,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
     public void InserirMudaEmCliente(Integer idCliente, Integer idMuda) throws BancoDeDadosException {
         Connection connection = null;
         try {
-            connection = ConexaoBancoDeDados.getConnection();
+            connection = conexaoBancoDeDados.getConnection();
             int proximoId = this.getProximoIDMudaCliente(connection);
             String sql = "Insert Into CLIENTE_MUDA (ID_CLIENTE_MUDA,ID_MUDA,ID_CLIENTE)" +
                     "values(?,?,?)";

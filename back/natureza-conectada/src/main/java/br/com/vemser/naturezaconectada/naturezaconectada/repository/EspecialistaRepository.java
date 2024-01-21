@@ -2,7 +2,6 @@ package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
-import br.com.vemser.naturezaconectada.naturezaconectada.models.Contato;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Especialista;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +12,12 @@ import java.util.List;
 
 @Repository
 public class EspecialistaRepository implements IRepository<Integer, Especialista> {
+
+    private final ConexaoBancoDeDados conexaoBancoDeDados;
+
+    public EspecialistaRepository(ConexaoBancoDeDados conexaoBancoDeDados) {
+        this.conexaoBancoDeDados = conexaoBancoDeDados;
+    }
 
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
@@ -29,7 +34,7 @@ public class EspecialistaRepository implements IRepository<Integer, Especialista
     public Especialista adicionar(Especialista especialista) throws BancoDeDadosException {
         Connection conexao = null;
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             Integer proximoId = this.getProximoId(conexao);
             especialista.setIdEspecialista(proximoId.intValue());
 
@@ -66,7 +71,7 @@ public class EspecialistaRepository implements IRepository<Integer, Especialista
     public boolean remover(Integer id) throws BancoDeDadosException {
         Connection conexao = null;
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             String sql = "DELETE FROM ESPECIALISTA WHERE ID_ESPECIALISTA = ?";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
@@ -93,7 +98,7 @@ public class EspecialistaRepository implements IRepository<Integer, Especialista
     public boolean editar(Integer id, Especialista especialista) throws BancoDeDadosException {
         Connection conexao = null;
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             String sql = "UPDATE ESPECIALISTA SET \n" +
                     "\tDOCUMENTO = ?,\n" +
@@ -130,7 +135,7 @@ public class EspecialistaRepository implements IRepository<Integer, Especialista
         List<Especialista> listaEspecialistas = new ArrayList<>();
 
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             Statement statment = conexao.createStatement();
 
             String sqlEspecialista = """
@@ -177,7 +182,7 @@ public class EspecialistaRepository implements IRepository<Integer, Especialista
         Connection connection = null;
 
         try {
-            connection = ConexaoBancoDeDados.getConnection();
+            connection = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT e.ID_ESPECIALISTA, e.ID_USUARIO, u.NOME, u.EMAIL, e.DOCUMENTO, e.ESPECIALIZACAO, e.ID_ESTADO \n" +
                     "\tFROM ESPECIALISTA e \n" +

@@ -6,15 +6,22 @@ import br.com.vemser.naturezaconectada.naturezaconectada.interfaces.IService;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Usuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.ClienteRepository;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class ServiceCliente implements IService<Cliente> {
 
-    ServiceUsuario serviceUsuario;
-    ClienteRepository clienteRepository = new ClienteRepository();
+    private final ServiceUsuario serviceUsuario;
+    private final ClienteRepository clienteRepository;
+
+    public ServiceCliente(ServiceUsuario serviceUsuario, ClienteRepository clienteRepository) {
+        this.serviceUsuario = serviceUsuario;
+        this.clienteRepository = clienteRepository;
+    }
 
     @Override
     public void adicionar(Cliente cliente) throws Exception {

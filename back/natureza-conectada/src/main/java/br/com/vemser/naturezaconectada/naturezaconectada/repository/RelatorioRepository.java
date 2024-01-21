@@ -8,16 +8,26 @@ import br.com.vemser.naturezaconectada.naturezaconectada.models.Relatorio;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceCliente;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceEspecialista;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceMudas;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class RelatorioRepository {
 
-    private ServiceCliente serviceCliente = new ServiceCliente();
-    private ServiceEspecialista serviceEspecialista;
-    private ServiceMudas serviceMudas = new ServiceMudas();
+    private final ServiceCliente serviceCliente;
+    private final ServiceEspecialista serviceEspecialista;
+    private final ServiceMudas serviceMudas;
+    private final ConexaoBancoDeDados conexaoBancoDeDados;
+
+    public RelatorioRepository(ServiceCliente serviceCliente, ServiceEspecialista serviceEspecialista, ServiceMudas serviceMudas, ConexaoBancoDeDados conexaoBancoDeDados) {
+        this.serviceCliente = serviceCliente;
+        this.serviceEspecialista = serviceEspecialista;
+        this.serviceMudas = serviceMudas;
+        this.conexaoBancoDeDados = conexaoBancoDeDados;
+    }
 
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_RELATORIO.NEXTVAL mysequence FROM DUAL";
@@ -32,7 +42,7 @@ public class RelatorioRepository {
     public Relatorio adicionar(Relatorio relatorio, Integer idCliente, Integer idEspecialista, Integer idMuda) throws BancoDeDadosException {
         Connection conexao = null;
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             Integer proximoId = this.getProximoId(conexao);
             relatorio.setId(proximoId.intValue());
 
@@ -67,7 +77,7 @@ public class RelatorioRepository {
     public void avaliarRelatorio (Relatorio relatorio) throws BancoDeDadosException {
         Connection conexao = null;
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
 
             String sql = "UPDATE RELATORIO SET" +
@@ -105,7 +115,7 @@ public class RelatorioRepository {
     public boolean remover(Integer id) throws BancoDeDadosException {
         Connection conexao = null;
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             String sql = "DELETE FROM RELATORIO WHERE ID_RELATORIO = ?";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
@@ -131,7 +141,7 @@ public class RelatorioRepository {
     public boolean editar(Integer id, Relatorio relatorio) throws BancoDeDadosException {
         Connection conexao = null;
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE RELATORIO SET");
@@ -167,9 +177,9 @@ public class RelatorioRepository {
 
     try {
         Cliente cliente = serviceCliente.procurarPorID(idClinte);
-        Especialista especialista = new Especialista();
-        Muda muda = new Muda();
-        conn = ConexaoBancoDeDados.getConnection();
+        Especialista especialista;
+        Muda muda;
+        conn = conexaoBancoDeDados.getConnection();
        String sql = "SELECT * FROM RELATORIO R RIGHT JOIN CLIENTE C ON R.ID_CLIENTE =  C.ID_CLIENTE" +
                "WHERE C.ID_CLIENTE = ?";
        PreparedStatement stm = conn.prepareStatement(sql);
@@ -209,7 +219,7 @@ return listaRelatorios;
         List<Relatorio> listaRelatorios = new ArrayList<>();
 
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             Statement statement = conexao.createStatement();
 
             String sqlRelatorio = "SELECT * FROM RELATORIO";
@@ -251,7 +261,7 @@ return listaRelatorios;
         Relatorio relatorioEncontrado = null;
 
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT * FROM RELATORIO WHERE ID_RELATORIO = ?";
 
@@ -289,7 +299,7 @@ return listaRelatorios;
         Connection conn = null;
         List<Relatorio> relatoriosIncompletos = new ArrayList<>();
         try {
-            conn = ConexaoBancoDeDados.getConnection();
+            conn = conexaoBancoDeDados.getConnection();
             String sql = "Select * from RELATORIO WHERE AVALIACAO IS NULL";
             PreparedStatement stm = conn.prepareStatement(sql);
 
