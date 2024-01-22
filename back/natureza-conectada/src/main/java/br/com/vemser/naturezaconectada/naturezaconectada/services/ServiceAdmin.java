@@ -6,15 +6,21 @@ import br.com.vemser.naturezaconectada.naturezaconectada.interfaces.IService;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Admin;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Usuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.AdminRepository;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
 
+@Service
 public class ServiceAdmin implements IService<Admin> {
 
-    AdminRepository adminRepository = new AdminRepository();
+    private final AdminRepository adminRepository;
+    private final ServiceUsuario serviceUsuario;
 
-    ServiceUsuario serviceUsuario;
+    public ServiceAdmin(AdminRepository adminRepository, ServiceUsuario serviceUsuario) {
+        this.adminRepository = adminRepository;
+        this.serviceUsuario = serviceUsuario;
+    }
 
     @Override
     public void adicionar(Admin admin) throws BancoDeDadosException {

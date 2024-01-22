@@ -4,14 +4,21 @@ import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDados
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Relatorio;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.RelatorioRepository;
+import org.springframework.stereotype.Service;
 
 
 import java.sql.SQLException;
 import java.util.List;
 
+@Service
 public class ServiceRelatorio {
 
-    RelatorioRepository relatorioRepository = new RelatorioRepository();
+    RelatorioRepository relatorioRepository;
+
+    public ServiceRelatorio(RelatorioRepository relatorioRepository) {
+        this.relatorioRepository = relatorioRepository;
+    }
+
     public void adicionar(Relatorio relatorio, Integer idCliente, Integer idEspecialista, Integer idMuda) throws BancoDeDadosException {
         try{
             this.relatorioRepository.adicionar(relatorio, idCliente, idEspecialista, idMuda);

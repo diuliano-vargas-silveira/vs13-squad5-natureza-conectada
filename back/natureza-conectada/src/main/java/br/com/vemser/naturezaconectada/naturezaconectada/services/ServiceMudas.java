@@ -5,19 +5,26 @@ package br.com.vemser.naturezaconectada.naturezaconectada.services;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.MudaRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServiceMudas  {
-    MudaRepository mudaRepository = new MudaRepository();
-    ServiceCliente serviceCliente = new ServiceCliente();
+@Service
+public class ServiceMudas {
+    private final MudaRepository mudaRepository;
+    private final ServiceCliente serviceCliente;
 
-    public void adicionar(Muda muda){
-        try{
+    public ServiceMudas(MudaRepository mudaRepository, ServiceCliente serviceCliente) {
+        this.mudaRepository = mudaRepository;
+        this.serviceCliente = serviceCliente;
+    }
+
+    public void adicionar(Muda muda) {
+        try {
             this.mudaRepository.adicionar(muda);
             System.out.println("*** Muda adicionada com sucesso ****");
-        }catch(BancoDeDadosException ex){
+        } catch (BancoDeDadosException ex) {
             System.out.println("Erro ao adicionar a muda, Erro: " + ex.getCause());
             ex.printStackTrace();
             ex.getMessage();
@@ -25,13 +32,13 @@ public class ServiceMudas  {
 
     }
 
-    public void remover (Integer idMuda){
+    public void remover(Integer idMuda) {
         try {
 
             this.mudaRepository.remover(idMuda);
             System.out.println("***** muda Removida *****");
 
-    }catch(BancoDeDadosException ex){
+        } catch (BancoDeDadosException ex) {
             System.out.println("Erro ao adicionar ao remover a Muda, Erro: " + ex.getCause());
             ex.printStackTrace();
             ex.getMessage();
@@ -39,41 +46,40 @@ public class ServiceMudas  {
 
     }
 
-    public void editarmuda(Integer idMuda,Muda muda)  {
-        try{
-            this.mudaRepository.editar(idMuda,muda);
+    public void editarmuda(Integer idMuda, Muda muda) {
+        try {
+            this.mudaRepository.editar(idMuda, muda);
             System.out.println("***** Mudada Editada ********");
-        }catch (BancoDeDadosException e){
-            System.out.println("Erro ao editar Muda ERRO: "+ e.getMessage());
+        } catch (BancoDeDadosException e) {
+            System.out.println("Erro ao editar Muda ERRO: " + e.getMessage());
             e.printStackTrace();
 
         }
     }
 
-    public List<Muda> listarMudas(){
+    public List<Muda> listarMudas() {
         List<Muda> listaDeMudas = new ArrayList<>();
         try {
             listaDeMudas = this.mudaRepository.listar();
-        }catch(BancoDeDadosException e) {
+        } catch (BancoDeDadosException e) {
             System.out.println("Ocorreu um erro ao LISTAR as mudas, ERRO: " + e.getMessage());
 
         }
-        if(listaDeMudas.size() == 0){
+        if (listaDeMudas.size() == 0) {
             System.out.println("Não existe mudas cadastradas.");
-        }
-        else{
-            for(Muda muda : listaDeMudas){
+        } else {
+            for (Muda muda : listaDeMudas) {
                 System.out.println(muda.toString());
             }
         }
         return listaDeMudas;
     }
 
-    public Muda buscarPorId(Integer idMuda){
+    public Muda buscarPorId(Integer idMuda) {
         try {
             Muda muda = this.mudaRepository.buscarPorId(idMuda);
             return muda;
-        }catch (BancoDeDadosException e){
+        } catch (BancoDeDadosException e) {
             System.out.println("Erro ao buscar no Banco de dados");
             e.printStackTrace();
         }

@@ -4,14 +4,20 @@ package br.com.vemser.naturezaconectada.naturezaconectada.services;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Entrega;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.EntregaRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class ServiceEntrega {
 
-    private EntregaRepository entregaRepository = new EntregaRepository();
+    private EntregaRepository entregaRepository;
+
+    public ServiceEntrega(EntregaRepository entregaRepository) {
+        this.entregaRepository = entregaRepository;
+    }
 
     public void adicionar(Entrega entrega, Integer idEndereco) {
         try{

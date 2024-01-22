@@ -4,12 +4,20 @@ import br.com.vemser.naturezaconectada.naturezaconectada.enums.TamanhoMuda;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoMuda;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class MudaRepository implements IRepository<Integer, Muda> {
+
+    private final ConexaoBancoDeDados conexaoBancoDeDados;
+
+    public MudaRepository(ConexaoBancoDeDados conexaoBancoDeDados) {
+        this.conexaoBancoDeDados = conexaoBancoDeDados;
+    }
 
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
@@ -26,7 +34,7 @@ public class MudaRepository implements IRepository<Integer, Muda> {
     public Muda adicionar(Muda muda) throws BancoDeDadosException {
         Connection conexao = null;
         try{
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             Integer proximoId = this.getProximoId(conexao);
             muda.setId(proximoId.intValue());
 
@@ -66,7 +74,7 @@ public class MudaRepository implements IRepository<Integer, Muda> {
     public boolean remover(Integer id) throws BancoDeDadosException {
         Connection conexao = null;
         try{
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             String sql = "DELETE FROM VS_13_EQUIPE_5.MUDA WHERE ID_MUDA = ?";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
@@ -93,7 +101,7 @@ public class MudaRepository implements IRepository<Integer, Muda> {
     public boolean editar(Integer id, Muda muda) throws BancoDeDadosException {
         Connection conexao = null;
         try{
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE MUDA SET");
@@ -140,7 +148,7 @@ public class MudaRepository implements IRepository<Integer, Muda> {
         List<Muda> listaMuda = new ArrayList<>();
 
         try{
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             Statement statment = conexao.createStatement();
 
             String sqlEntrega = "SELECT * FROM VS_13_EQUIPE_5.MUDA";
@@ -181,7 +189,7 @@ public class MudaRepository implements IRepository<Integer, Muda> {
         Connection conn = null;
         Muda muda = new Muda();
         try {
-            conn = ConexaoBancoDeDados.getConnection();
+            conn = conexaoBancoDeDados.getConnection();
             String sql = "SELECT * FROM MUDA WHERE ID_MUDA = ? ";
             PreparedStatement stm = conn.prepareStatement(sql);
 

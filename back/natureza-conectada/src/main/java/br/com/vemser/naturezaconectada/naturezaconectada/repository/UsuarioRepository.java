@@ -15,6 +15,12 @@ import java.util.List;
 @Repository
 public class UsuarioRepository implements IRepository<Integer, Usuario> {
 
+    private final ConexaoBancoDeDados conexaoBancoDeDados;
+
+    public UsuarioRepository(ConexaoBancoDeDados conexaoBancoDeDados) {
+        this.conexaoBancoDeDados = conexaoBancoDeDados;
+    }
+
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_USUARIO.nextval mysequence FROM DUAL";
@@ -32,7 +38,7 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
     public Usuario adicionar(Usuario usuario) throws BancoDeDadosException {
         Connection conexao = null;
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             Integer proximoId = this.getProximoId(conexao);
             usuario.setId(proximoId);
 
@@ -67,7 +73,7 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
     public boolean remover(Integer id) throws BancoDeDadosException {
         Connection conexao = null;
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             String sql = "DELETE FROM USUARIO WHERE ID_USUARIO = ?";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
@@ -94,7 +100,7 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
     public boolean editar(Integer id, Usuario usuario) throws BancoDeDadosException {
         Connection conexao = null;
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE USUARIO SET");
@@ -132,7 +138,7 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
         List<Usuario> listaUsuario = new ArrayList<>();
 
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             Statement statment = conexao.createStatement();
 
             String sqlUsuario = "SELECT * FROM USUARIO";
@@ -167,7 +173,7 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
         Usuario usuario = null;
 
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             String sqlUsuario = "SELECT * FROM USUARIO WHERE EMAIL = ?";
             PreparedStatement preparedStatement = conexao.prepareStatement(sqlUsuario);

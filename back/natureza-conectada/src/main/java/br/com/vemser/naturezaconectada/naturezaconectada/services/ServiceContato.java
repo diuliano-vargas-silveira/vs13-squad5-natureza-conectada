@@ -5,16 +5,23 @@
  import br.com.vemser.naturezaconectada.naturezaconectada.models.Contato;
  import br.com.vemser.naturezaconectada.naturezaconectada.repository.ClienteRepository;
  import br.com.vemser.naturezaconectada.naturezaconectada.repository.ContatoRepository;
+ import org.springframework.stereotype.Service;
 
  import java.util.ArrayList;
  import java.util.List;
 
+ @Service
  public class ServiceContato  {
 
-    private ContatoRepository contatoRepository = new ContatoRepository();
-    private ClienteRepository clienteRepository = new ClienteRepository();
+    private ContatoRepository contatoRepository;
+    private ClienteRepository clienteRepository;
 
-    public void adicionarContato(Contato contato, Integer idUsuario)  {
+     public ServiceContato(ContatoRepository contatoRepository, ClienteRepository clienteRepository) {
+         this.contatoRepository = contatoRepository;
+         this.clienteRepository = clienteRepository;
+     }
+
+     public void adicionarContato(Contato contato, Integer idUsuario)  {
 
         try{
             this.contatoRepository.novoContato(contato,idUsuario);

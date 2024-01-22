@@ -2,12 +2,21 @@ package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Admin;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class AdminRepository implements IRepository<Integer, Admin> {
+
+    private final ConexaoBancoDeDados conexaoBancoDeDados;
+
+    public AdminRepository(ConexaoBancoDeDados conexaoBancoDeDados) {
+        this.conexaoBancoDeDados = conexaoBancoDeDados;
+    }
+
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT seq_admin.nextval mysequence from DUAL";
@@ -26,7 +35,7 @@ public class AdminRepository implements IRepository<Integer, Admin> {
         Connection conexao = null;
         try {
 
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             Integer proximoId = this.getProximoId(conexao);
             admin.setIdAdmin(proximoId.intValue());
 
@@ -60,7 +69,7 @@ public class AdminRepository implements IRepository<Integer, Admin> {
     public boolean remover(Integer id) throws BancoDeDadosException {
         Connection conexao = null;
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             String sql = "DELETE FROM VS_13_EQUIPE_5.ADMIN WHERE id_admin = ?";
 
             try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
@@ -90,7 +99,7 @@ public class AdminRepository implements IRepository<Integer, Admin> {
     public boolean editar(Integer id, Admin adminEditado) throws BancoDeDadosException {
         Connection conexao = null;
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             StringBuilder sql_admin = new StringBuilder();
 
             sql_admin.append("UPDATE ADMIN SET ");
@@ -128,7 +137,7 @@ public class AdminRepository implements IRepository<Integer, Admin> {
         List<Admin> admins = new ArrayList<>();
         Connection conexao = null;
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             Statement stmt = conexao.createStatement();
 
             String sql = "SELECT * FROM ADMIN";
@@ -167,7 +176,7 @@ public class AdminRepository implements IRepository<Integer, Admin> {
         Connection conexao = null;
 
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             String sql = "SELECT ad.ID_ADMIN, u.NOME, u.EMAIL\n" +
                     "FROM\n" +
                     "\tUSUARIO u \n" +

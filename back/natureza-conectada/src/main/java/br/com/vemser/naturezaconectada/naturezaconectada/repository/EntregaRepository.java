@@ -8,13 +8,21 @@ import br.com.vemser.naturezaconectada.naturezaconectada.models.Endereco;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Entrega;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceCliente;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class EntregaRepository {
-    ServiceCliente serviceCliente = new ServiceCliente();
+    private final ServiceCliente serviceCliente;
+    private final ConexaoBancoDeDados conexaoBancoDeDados;
+
+    public EntregaRepository(ServiceCliente serviceCliente, ConexaoBancoDeDados conexaoBancoDeDados) {
+        this.serviceCliente = serviceCliente;
+        this.conexaoBancoDeDados = conexaoBancoDeDados;
+    }
 
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_ENTREGA.NEXTVAL mysequence FROM DUAL";
@@ -31,7 +39,7 @@ public class EntregaRepository {
         Connection conexao = null;
 
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             Integer proximoId = this.getProximoId(conexao);
             entrega.setId(proximoId.intValue());
 
@@ -93,7 +101,7 @@ public class EntregaRepository {
     public boolean remover(Integer id) throws BancoDeDadosException {
         Connection conexao = null;
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             String sql = "DELETE FROM VS_13_EQUIPE_5.ENTREGA WHERE ID_ENTREGA = ?";
 
             PreparedStatement statementUm = conexao.prepareStatement(sql);
@@ -127,11 +135,9 @@ public class EntregaRepository {
     public boolean editar(Integer id, Entrega entrega) throws BancoDeDadosException {
         Connection conexao = null;
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
-
+            conexao = conexaoBancoDeDados.getConnection();
 
             String sql = "UPDATE VS_13_EQUIPE_5.ENTREGA SET STATUS = ? WHERE ID_ENTREGA = ?";
-
 
             if (String.valueOf(entrega.getStatus()).equals("ENTREGUE")) {
                 List<Muda> novaLista = entrega.getMudas();
@@ -168,7 +174,7 @@ public class EntregaRepository {
         List<Entrega> listaEntrega = new ArrayList<>();
 
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             Statement statement = conexao.createStatement();
             Statement statementDois = conexao.createStatement();
             Statement statementTres = conexao.createStatement();
@@ -227,15 +233,15 @@ public class EntregaRepository {
                     String sqlEndereco = "SELECT * FROM VS_13_EQUIPE_5.ENDERECO e WHERE e.ID_USUARIO = " + idUsuario;
                     ResultSet queryEndereco = statementCinco.executeQuery(sqlEndereco);
                     while (queryEndereco.next()) {
-                        entregaAtual.setEnderecoDeEntrega(new Endereco());
-                        entregaAtual.getEnderecoDeEntrega().setCep(queryEndereco.getString("CEP"));
-                        entregaAtual.getEnderecoDeEntrega().setLogradouro(queryEndereco.getString("LOGRADOURO"));
-                        entregaAtual.getEnderecoDeEntrega().setId(queryEndereco.getInt("ID_ENDERECO"));
-                        entregaAtual.getEnderecoDeEntrega().setCidade(queryEndereco.getString("CIDADE"));
-                        entregaAtual.getEnderecoDeEntrega().setNumero(queryEndereco.getString("NUMERO"));
-                        entregaAtual.getEnderecoDeEntrega().setComplemento(queryEndereco.getString("COMPLEMENTO"));
-                        entregaAtual.getEnderecoDeEntrega().setEstado(Estados.ofTipo((Integer) queryEndereco.getInt("ID_ESTADO")));
-                        entregaAtual.getEnderecoDeEntrega().setTipo(Tipo.valueOf(queryEndereco.getString("TIPO")));
+//                        entregaAtual.getCliente(new Endereco());
+//                        entregaAtual.getEnderecoDeEntrega().setCep(queryEndereco.getString("CEP"));
+//                        entregaAtual.getEnderecoDeEntrega().setLogradouro(queryEndereco.getString("LOGRADOURO"));
+//                        entregaAtual.getEnderecoDeEntrega().setId(queryEndereco.getInt("ID_ENDERECO"));
+//                        entregaAtual.getEnderecoDeEntrega().setCidade(queryEndereco.getString("CIDADE"));
+//                        entregaAtual.getEnderecoDeEntrega().setNumero(queryEndereco.getString("NUMERO"));
+//                        entregaAtual.getEnderecoDeEntrega().setComplemento(queryEndereco.getString("COMPLEMENTO"));
+//                        entregaAtual.getEnderecoDeEntrega().setEstado(Estados.ofTipo((Integer) queryEndereco.getInt("ID_ESTADO")));
+//                        entregaAtual.getEnderecoDeEntrega().setTipo(Tipo.valueOf(queryEndereco.getString("TIPO")));
                     }
                     entregaAtual.setCliente(clienteAtual);
                 }
