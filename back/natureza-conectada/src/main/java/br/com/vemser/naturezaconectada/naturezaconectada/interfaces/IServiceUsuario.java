@@ -1,8 +1,8 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.interfaces;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
-import br.com.vemser.naturezaconectada.naturezaconectada.models.Usuario;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.UsuarioResponseDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 
 public interface IServiceUsuario {
-    Usuario procurarPorEmail(String email) throws Exception;
+    UsuarioResponseDTO procurarPorEmail(String email) throws Exception;
 }

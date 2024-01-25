@@ -1,7 +1,5 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
