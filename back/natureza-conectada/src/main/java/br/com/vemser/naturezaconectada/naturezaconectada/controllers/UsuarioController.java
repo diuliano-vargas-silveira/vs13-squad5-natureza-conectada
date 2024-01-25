@@ -1,5 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.controllers;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces.IUsuarioController;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.UsuarioRequestDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.UsuarioResponseDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
@@ -20,7 +21,7 @@ import java.util.List;
 @RequestMapping("/usuario")
 @Validated
 @Slf4j
-public class UsuarioController {
+public class UsuarioController implements IUsuarioController {
 
     private final ServiceUsuario usuarioService;
 
