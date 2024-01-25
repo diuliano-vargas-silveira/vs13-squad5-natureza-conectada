@@ -2,6 +2,7 @@ package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Admin;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Especialista;
@@ -168,40 +169,86 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
     }
 
     public Usuario procurarPorEmail(String email) throws BancoDeDadosException {
-        Connection conexao = null;
-
         Usuario usuario = null;
-
+        Connection con = null;
         try {
-            conexao = conexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
+            String sql = "SELECT * FROM USUARIO WHERE EMAIL = ?";
 
-            String sqlUsuario = "SELECT * FROM USUARIO WHERE EMAIL = ?";
-            PreparedStatement preparedStatement = conexao.prepareStatement(sqlUsuario);
+            try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+                pstmt.setString(1, email);
 
-            preparedStatement.setString(1, email);
-
-            ResultSet usuarioTabela = preparedStatement.executeQuery();
-
-            if (usuarioTabela.next()) {
-                TipoUsuario tipoUsuario = TipoUsuario.valueOf(usuarioTabela.getString("TIPO_USUARIO"));
-
-                usuario = getUsuario(usuarioTabela, tipoUsuario);
-                usuario.setSenha(usuarioTabela.getString("SENHA"));
+                try (ResultSet res = pstmt.executeQuery()) {
+                    if (res.next()) {
+                        usuario = new Usuario();
+                        usuario.setId(res.getInt("ID_USUARIO"));
+                        usuario.setNome(res.getString("NOME"));
+                        usuario.setEmail(res.getString("EMAIL"));
+                        usuario.setTipoUsuario(TipoUsuario.valueOf(res.getString("TIPO_USUARIO")));
+                    } else {
+                        throw new RegraDeNegocioException("Nenhum usuario encontrado para o Id: " + email);
+                    }
+                } catch (RegraDeNegocioException e) {
+                    throw new RuntimeException(e);
+                }
             }
-        } catch (SQLException erro) {
-            System.out.println("ERRO: Algo deu errado ao listar os usuários do banco de dados.");
-            throw new BancoDeDadosException(erro.getMessage());
+            return usuario;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new BancoDeDadosException("ERRO: Algo deu errado ao buscar o usuário do banco de dados.");
         } finally {
             try {
-                fecharConexao(conexao);
-            } catch (SQLException erro) {
-                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
-                erro.printStackTrace();
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
-
-        return usuario;
     }
+
+
+    public Usuario procurarPorId(int id) throws BancoDeDadosException {
+        Usuario usuario = null;
+        Connection con = null;
+        try {
+            con = conexaoBancoDeDados.getConnection();
+            String sql = "SELECT * FROM USUARIO WHERE ID_USUARIO = ?";
+
+            try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+                pstmt.setLong(1, id);
+
+                try (ResultSet res = pstmt.executeQuery()) {
+                    if (res.next()) {
+                        usuario = new Usuario();
+                        usuario.setId(res.getInt("ID_USUARIO"));
+                        usuario.setNome(res.getString("NOME"));
+                        usuario.setEmail(res.getString("EMAIL"));
+                        usuario.setTipoUsuario(TipoUsuario.valueOf(res.getString("TIPO_USUARIO")));
+                    } else {
+                        throw new RegraDeNegocioException("Nenhum usuario encontrado para o Id: " + id);
+                    }
+                } catch (RegraDeNegocioException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return usuario;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new BancoDeDadosException("ERRO: Algo deu errado ao buscar o usuário do banco de dados.");
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     private Usuario getUsuario(ResultSet usuarioTabela, TipoUsuario tipoUsuario) throws SQLException {
         Usuario usuario = null;
