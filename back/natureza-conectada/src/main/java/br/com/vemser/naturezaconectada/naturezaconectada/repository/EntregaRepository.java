@@ -1,10 +1,11 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
 
-import br.com.vemser.naturezaconectada.naturezaconectada.enums.*;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.StatusEntrega;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.TamanhoMuda;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoMuda;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
-import br.com.vemser.naturezaconectada.naturezaconectada.models.Endereco;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Entrega;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceCliente;
@@ -35,7 +36,7 @@ public class EntregaRepository {
     }
 
 
-    public Entrega adicionar(Entrega entrega, Integer idEndereco) throws BancoDeDadosException {
+    public Entrega adicionar(Entrega entrega, Integer idEndereco) throws Exception {
         Connection conexao = null;
 
         try {
@@ -87,7 +88,7 @@ public class EntregaRepository {
 
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado para adicionar á entrega ao banco de dados.");
-            throw new BancoDeDadosException(erro.getMessage());
+            throw new Exception(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -98,7 +99,7 @@ public class EntregaRepository {
         }
     }
 
-    public boolean remover(Integer id) throws BancoDeDadosException {
+    public boolean remover(Integer id) throws Exception {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
@@ -120,7 +121,7 @@ public class EntregaRepository {
             return resultado > 0;
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado para remover á entrega do banco de dados.");
-            throw new BancoDeDadosException(erro.getMessage());
+            throw new Exception(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -132,7 +133,7 @@ public class EntregaRepository {
     }
 
 
-    public boolean editar(Integer id, Entrega entrega) throws BancoDeDadosException {
+    public boolean editar(Integer id, Entrega entrega) throws Exception {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
@@ -156,7 +157,7 @@ public class EntregaRepository {
             System.out.println("A entrega foi atualizada! Resultado: ".concat(String.valueOf(resultado)));
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado em editar á entrega no banco de dados.");
-            throw new BancoDeDadosException(erro.getMessage());
+            throw new Exception(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -169,7 +170,7 @@ public class EntregaRepository {
     }
 
 
-    public List<Entrega> listar() throws BancoDeDadosException {
+    public List<Entrega> listar() throws Exception {
         Connection conexao = null;
         List<Entrega> listaEntrega = new ArrayList<>();
 
@@ -250,7 +251,7 @@ public class EntregaRepository {
 
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado ao listar as entregas do banco de dados.");
-            throw new BancoDeDadosException(erro.getMessage());
+            throw new Exception(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);

@@ -1,19 +1,20 @@
-package br.com.vemser.naturezaconectada.naturezaconectada.models;
+package br.com.vemser.naturezaconectada.naturezaconectada.dto.response;
+
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TamanhoMuda;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoMuda;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
-public class Muda {
+@Hidden
+public class MudaDTO {
 
     private int id;
-
-    private int quantidade;
 
     private TipoMuda tipo;
 
@@ -26,6 +27,4 @@ public class Muda {
     private String ambienteIdeal;
 
     private String descricao;
-
 }
-

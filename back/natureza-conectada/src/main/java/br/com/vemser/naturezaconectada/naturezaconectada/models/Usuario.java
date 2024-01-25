@@ -4,7 +4,6 @@ package br.com.vemser.naturezaconectada.naturezaconectada.models;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 

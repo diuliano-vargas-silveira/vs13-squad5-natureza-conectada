@@ -1,7 +1,7 @@
  package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
 
- import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
+ import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
  import br.com.vemser.naturezaconectada.naturezaconectada.models.Contato;
  import br.com.vemser.naturezaconectada.naturezaconectada.repository.ClienteRepository;
  import br.com.vemser.naturezaconectada.naturezaconectada.repository.ContatoRepository;
@@ -27,7 +27,7 @@
             this.contatoRepository.novoContato(contato,idUsuario);
             System.out.println("Contato adicionado com sucesso");
 
-        }catch (BancoDeDadosException ex){
+        }catch (Exception ex){
             ex.printStackTrace();
 
         }
@@ -38,10 +38,10 @@
         List<Contato> listaDeContatos = new ArrayList<>();
         try {
             listaDeContatos = this.contatoRepository.contatosPorCliente(idCliente);
-        }catch (BancoDeDadosException ex){
+        }catch (Exception ex){
             System.out.println("Erro ao buscar contatos do cliente " + ex.getMessage());
             ex.printStackTrace();
-        }catch (Exception erro){
+        }catch (java.lang.Exception erro){
             System.out.println("Erro: "+ erro.getMessage());
             erro.printStackTrace();
         }
@@ -51,7 +51,7 @@
         try{
             this.contatoRepository.editar(idContato,contato);
 
-        }catch (BancoDeDadosException be){
+        }catch (Exception be){
             System.out.println("Erro: "+ be.getMessage());
             be.printStackTrace();
         }
@@ -63,7 +63,7 @@
         try {
             this.contatoRepository.excluirContato(idContato);
             System.out.println("contato " + idContato + " excluido com sucesso");
-        }catch (BancoDeDadosException e){
+        }catch (Exception e){
             System.out.println("Erro ao excluir contato : " + e.getMessage());
             e.printStackTrace();
         }

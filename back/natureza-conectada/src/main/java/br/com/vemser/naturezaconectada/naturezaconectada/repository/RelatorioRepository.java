@@ -1,9 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
-import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
-import br.com.vemser.naturezaconectada.naturezaconectada.models.Especialista;
-import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Relatorio;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceCliente;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceEspecialista;
@@ -39,7 +36,7 @@ public class RelatorioRepository {
         return null;
     }
 
-    public Relatorio adicionar(Relatorio relatorio, Integer idCliente, Integer idEspecialista, Integer idMuda) throws BancoDeDadosException {
+    public Relatorio adicionar(Relatorio relatorio, Integer idCliente, Integer idEspecialista, Integer idMuda) throws Exception {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
@@ -63,7 +60,7 @@ public class RelatorioRepository {
 
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado para adicionar o relatório ao banco de dados.");
-            throw new BancoDeDadosException(erro.getMessage());
+            throw new Exception(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -74,7 +71,7 @@ public class RelatorioRepository {
         }
     }
 
-    public void avaliarRelatorio (Relatorio relatorio) throws BancoDeDadosException {
+    public void avaliarRelatorio (Relatorio relatorio) throws Exception {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
@@ -101,7 +98,7 @@ public class RelatorioRepository {
 
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado para avaliado o relatório ao banco de dados.");
-            throw new BancoDeDadosException(erro.getMessage());
+            throw new Exception(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -112,7 +109,7 @@ public class RelatorioRepository {
         }
     }
 
-    public boolean remover(Integer id) throws BancoDeDadosException {
+    public boolean remover(Integer id) throws Exception {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
@@ -127,7 +124,7 @@ public class RelatorioRepository {
             return resultado > 0;
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado para remover o relatório do banco de dados.");
-            throw new BancoDeDadosException(erro.getMessage());
+            throw new Exception(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -138,7 +135,7 @@ public class RelatorioRepository {
         }
     }
 
-    public boolean editar(Integer id, Relatorio relatorio) throws BancoDeDadosException {
+    public boolean editar(Integer id, Relatorio relatorio) throws Exception {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
@@ -160,7 +157,7 @@ public class RelatorioRepository {
             return resultado > 0;
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado ao editar o relatório no banco de dados.");
-            throw new BancoDeDadosException(erro.getMessage());
+            throw new Exception(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -171,50 +168,50 @@ public class RelatorioRepository {
         }
     }
 
-    public List<Relatorio> listarRelatorioPorCliente(Integer idClinte) throws BancoDeDadosException {
-    Connection conn = null;
-    List<Relatorio> listaRelatorios = new ArrayList<>();
+//    public List<Relatorio> listarRelatorioPorCliente(Integer idClinte) throws Exception {
+//    Connection conn = null;
+//    List<Relatorio> listaRelatorios = new ArrayList<>();
+//
+//    try {
+//        Cliente cliente = serviceCliente.procurarPorID(idClinte);
+//        Especialista especialista;
+//        Muda muda;
+//        conn = conexaoBancoDeDados.getConnection();
+//       String sql = "SELECT * FROM RELATORIO R RIGHT JOIN CLIENTE C ON R.ID_CLIENTE =  C.ID_CLIENTE" +
+//               "WHERE C.ID_CLIENTE = ?";
+//       PreparedStatement stm = conn.prepareStatement(sql);
+//
+//       stm.setInt(1,idClinte);
+//
+//       ResultSet resultado = stm.executeQuery();
+//       while (resultado.next()){
+//           especialista = this.serviceEspecialista.procurarPorID(resultado.getInt("ID_ESPECIALISTA"));
+//           muda = this.serviceMudas.buscarPorId(resultado.getInt("ID_MUDA"));
+//           Relatorio relatorio = new Relatorio();
+//           relatorio.setDono(cliente);
+//           relatorio.setId(resultado.getInt("ID-RELATORIO"));
+//           relatorio.setAvaliacaoEspecialista(resultado.getDouble("AVALIACAO"));
+//           relatorio.setAvaliador(especialista);
+//           relatorio.setSugestoes(resultado.getString("SUGESTOES"));
+//           relatorio.setEstadoMuda(resultado.getString("ESTADO_MUDA"));
+//           relatorio.setMuda(muda);
+//       }
+//
+//    }catch (SQLException ex){
+//        System.out.println("Erro ao buscar Relatorios Erro:" + ex.getMessage());
+//        throw new Exception(ex.getMessage());
+//    }finally {
+//        try {
+//            fecharConexao(conn);
+//        } catch (SQLException erro) {
+//            System.out.println("ERRO: Não foi possível encerrar corretamente a conexão com o banco de dados.");
+//            erro.printStackTrace();
+//        }
+//    }
+//return listaRelatorios;
+//    }
 
-    try {
-        Cliente cliente = serviceCliente.procurarPorID(idClinte);
-        Especialista especialista;
-        Muda muda;
-        conn = conexaoBancoDeDados.getConnection();
-       String sql = "SELECT * FROM RELATORIO R RIGHT JOIN CLIENTE C ON R.ID_CLIENTE =  C.ID_CLIENTE" +
-               "WHERE C.ID_CLIENTE = ?";
-       PreparedStatement stm = conn.prepareStatement(sql);
-
-       stm.setInt(1,idClinte);
-
-       ResultSet resultado = stm.executeQuery();
-       while (resultado.next()){
-           especialista = this.serviceEspecialista.procurarPorID(resultado.getInt("ID_ESPECIALISTA"));
-           muda = this.serviceMudas.buscarPorId(resultado.getInt("ID_MUDA"));
-           Relatorio relatorio = new Relatorio();
-           relatorio.setDono(cliente);
-           relatorio.setId(resultado.getInt("ID-RELATORIO"));
-           relatorio.setAvaliacaoEspecialista(resultado.getDouble("AVALIACAO"));
-           relatorio.setAvaliador(especialista);
-           relatorio.setSugestoes(resultado.getString("SUGESTOES"));
-           relatorio.setEstadoMuda(resultado.getString("ESTADO_MUDA"));
-           relatorio.setMuda(muda);
-       }
-
-    }catch (SQLException ex){
-        System.out.println("Erro ao buscar Relatorios Erro:" + ex.getMessage());
-        throw new BancoDeDadosException(ex.getMessage());
-    }finally {
-        try {
-            fecharConexao(conn);
-        } catch (SQLException erro) {
-            System.out.println("ERRO: Não foi possível encerrar corretamente a conexão com o banco de dados.");
-            erro.printStackTrace();
-        }
-    }
-return listaRelatorios;
-    }
-
-    public List<Relatorio> listar() throws BancoDeDadosException {
+    public List<Relatorio> listar() throws Exception {
         Connection conexao = null;
         List<Relatorio> listaRelatorios = new ArrayList<>();
 
@@ -238,7 +235,7 @@ return listaRelatorios;
 
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado ao listar os relatórios do banco de dados.");
-            throw new BancoDeDadosException(erro.getMessage());
+            throw new Exception(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -256,7 +253,7 @@ return listaRelatorios;
         }
     }
 
-    public Relatorio procurarPorId(Integer id) throws BancoDeDadosException {
+    public Relatorio procurarPorId(Integer id) throws Exception {
         Connection conexao = null;
         Relatorio relatorioEncontrado = null;
 
@@ -282,7 +279,7 @@ return listaRelatorios;
 
         } catch (SQLException ex) {
             System.out.println("ERRO: Algo deu errado ao buscar o relatório no banco de dados.");
-            throw new BancoDeDadosException(ex.getMessage());
+            throw new Exception(ex.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -295,7 +292,7 @@ return listaRelatorios;
         return relatorioEncontrado;
     }
 
-    public List<Relatorio> buscarRelatorioAbertos () throws BancoDeDadosException {
+    public List<Relatorio> buscarRelatorioAbertos () throws Exception {
         Connection conn = null;
         List<Relatorio> relatoriosIncompletos = new ArrayList<>();
         try {
@@ -315,7 +312,7 @@ return listaRelatorios;
 
         }catch (SQLException e){
             System.out.println("Erro ao buscar relatorios em aberto, ERRO: "+ e.getMessage());
-            throw new BancoDeDadosException(e.getMessage());
+            throw new Exception(e.getMessage());
 
         }finally {
             try {

@@ -2,7 +2,7 @@ package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
 
 
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ObjetoExistente;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.SenhaOuEmailInvalido;
@@ -22,7 +22,7 @@ public class ServiceUsuario implements IServiceUsuario {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public Usuario adicionarUsuario(Usuario usuario) throws BancoDeDadosException {
+    public Usuario adicionarUsuario(Usuario usuario) throws Exception {
         Usuario usuarioBanco = usuarioRepository.procurarPorEmail(usuario.getEmail());
 
         if (usuarioBanco != null) {
@@ -32,7 +32,7 @@ public class ServiceUsuario implements IServiceUsuario {
         return usuarioRepository.adicionar(usuario);
     }
 
-    public Usuario logar(String email, String senha) throws BancoDeDadosException {
+    public Usuario logar(String email, String senha) throws Exception {
         Usuario usuario = usuarioRepository.procurarPorEmail(email);
 
         if (usuario == null) {
@@ -47,22 +47,22 @@ public class ServiceUsuario implements IServiceUsuario {
         return usuario;
     }
 
-    public List<Usuario> listarTodos() throws BancoDeDadosException {
+    public List<Usuario> listarTodos() throws Exception {
         List<Usuario> usuarios = usuarioRepository.listar();
 
         return  usuarios;
     }
 
     @Override
-    public Usuario procurarPorEmail(String email) throws BancoDeDadosException {
+    public Usuario procurarPorEmail(String email) throws Exception {
         return usuarioRepository.procurarPorEmail(email);
     }
 
-    public void remover(int id) throws BancoDeDadosException {
+    public void remover(int id) throws Exception {
         usuarioRepository.remover(id);
     }
 
-    public boolean editar(int id, Usuario usuarioEditado) throws BancoDeDadosException {
+    public boolean editar(int id, Usuario usuarioEditado) throws Exception {
         return usuarioRepository.editar(id, usuarioEditado);
     }
 }

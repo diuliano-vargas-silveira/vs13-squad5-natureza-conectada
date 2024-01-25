@@ -1,7 +1,7 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Admin;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Especialista;
@@ -35,7 +35,7 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
     }
 
     @Override
-    public Usuario adicionar(Usuario usuario) throws BancoDeDadosException {
+    public Usuario adicionar(Usuario usuario) throws Exception {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
@@ -58,7 +58,7 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
             return usuario;
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado para adicionar o usuário ao banco de dados.");
-            throw new BancoDeDadosException(erro.getMessage());
+            throw new Exception(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -70,7 +70,7 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
     }
 
     @Override
-    public boolean remover(Integer id) throws BancoDeDadosException {
+    public boolean remover(Integer id) throws Exception {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
@@ -85,7 +85,7 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
             return resultado > 0;
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado para remover seu usuário do banco de dados.");
-            throw new BancoDeDadosException(erro.getMessage());
+            throw new Exception(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -97,7 +97,7 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
     }
 
     @Override
-    public boolean editar(Integer id, Usuario usuario) throws BancoDeDadosException {
+    public boolean editar(Integer id, Usuario usuario) throws Exception {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
@@ -120,7 +120,7 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
             System.out.println("Seu usuário foi editado! Resultado: ".concat(String.valueOf(resultado)));
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado em editar seu usuário no banco de dados.");
-            throw new BancoDeDadosException(erro.getMessage());
+            throw new Exception(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -133,7 +133,7 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
     }
 
     @Override
-    public List<Usuario> listar() throws BancoDeDadosException {
+    public List<Usuario> listar() throws Exception {
         Connection conexao = null;
         List<Usuario> listaUsuario = new ArrayList<>();
 
@@ -155,7 +155,7 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
 
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado ao listar os usuários do banco de dados.");
-            throw new BancoDeDadosException(erro.getMessage());
+            throw new Exception(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -167,7 +167,7 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
         return listaUsuario;
     }
 
-    public Usuario procurarPorEmail(String email) throws BancoDeDadosException {
+    public Usuario procurarPorEmail(String email) throws Exception {
         Connection conexao = null;
 
         Usuario usuario = null;
@@ -190,7 +190,7 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
             }
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado ao listar os usuários do banco de dados.");
-            throw new BancoDeDadosException(erro.getMessage());
+            throw new Exception(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);

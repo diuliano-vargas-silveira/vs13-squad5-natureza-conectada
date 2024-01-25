@@ -1,14 +1,13 @@
 
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Entrega;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.EntregaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ServiceEntrega {
@@ -23,7 +22,7 @@ public class ServiceEntrega {
         try{
             this.entregaRepository.adicionar(entrega, idEndereco);
             System.out.println("*** Entrega adicionada com sucesso ****");
-        }catch(BancoDeDadosException ex){
+        }catch(Exception ex){
             ex.printStackTrace();
         }
     }
@@ -32,7 +31,7 @@ public class ServiceEntrega {
     public void deletar(Integer id) {
         try {
             this.entregaRepository.remover(id);
-        }catch(BancoDeDadosException ex){
+        }catch(Exception ex){
             ex.printStackTrace();
         }
     }
@@ -40,7 +39,7 @@ public class ServiceEntrega {
     public void editar(int id, Entrega entregaAtualizada) {
         try{
             this.entregaRepository.editar(id, entregaAtualizada);
-        }catch (BancoDeDadosException e){
+        }catch (Exception e){
             e.printStackTrace();
 
         }
@@ -50,7 +49,7 @@ public class ServiceEntrega {
         List<Entrega> listaEntrega = new ArrayList<>();
         try {
             listaEntrega = this.entregaRepository.listar();
-        }catch(BancoDeDadosException e) {
+        }catch(Exception e) {
             e.printStackTrace();
         }
         if(listaEntrega.size() == 0){

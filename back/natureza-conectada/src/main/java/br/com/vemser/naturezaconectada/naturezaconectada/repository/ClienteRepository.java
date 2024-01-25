@@ -1,6 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import org.springframework.stereotype.Repository;
 
@@ -30,7 +30,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
     }
 
     @Override
-    public Cliente adicionar(Cliente cliente) throws BancoDeDadosException {
+    public Cliente adicionar(Cliente cliente) throws Exception {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
@@ -51,14 +51,14 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
 
             } catch (SQLException erro) {
                 System.out.println("ERRO: Algo deu errado para adicionar o usuário ao banco de dados.");
-                throw new BancoDeDadosException(erro.getMessage());
+                throw new Exception(erro.getMessage());
             }
 
             return cliente;
 
         } catch (SQLException erro) {
             System.out.println("ERRO: Não foi possível obter a conexão com o banco de dados.");
-            throw new BancoDeDadosException(erro.getMessage());
+            throw new Exception(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -70,7 +70,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
     }
 
     @Override
-    public boolean remover(Integer id) throws BancoDeDadosException {
+    public boolean remover(Integer id) throws Exception {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
@@ -84,11 +84,11 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
 
                 return resultado > 0;
             } catch (SQLException e) {
-                throw new BancoDeDadosException(e.getMessage());
+                throw new Exception(e.getMessage());
             }
 
         } catch (SQLException e) {
-            throw new BancoDeDadosException(e.getMessage());
+            throw new Exception(e.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -100,7 +100,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
     }
 
     @Override
-    public boolean editar(Integer id, Cliente clienteEditado) throws BancoDeDadosException {
+    public boolean editar(Integer id, Cliente clienteEditado) throws Exception {
         Connection conexao = null;
 
         try {
@@ -120,7 +120,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
             return res > 0;
 
         } catch (SQLException e) {
-            throw new BancoDeDadosException(e.getMessage());
+            throw new Exception(e.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -132,7 +132,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
     }
 
     @Override
-    public List<Cliente> listar() throws BancoDeDadosException {
+    public List<Cliente> listar() throws Exception {
         List<Cliente> clientes = new ArrayList<>();
         Connection conexao = null;
 
@@ -154,7 +154,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
             }
 
         } catch (SQLException e) {
-            throw new BancoDeDadosException(e.getMessage());
+            throw new Exception(e.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -167,7 +167,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
 
     }
 
-    public Cliente listarPorID(int id) throws BancoDeDadosException {
+    public Cliente listarPorID(int id) throws Exception {
         Cliente cliente = new Cliente();
         Connection conexao = null;
 
@@ -194,7 +194,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
             return cliente;
 
         } catch (SQLException e) {
-            throw new BancoDeDadosException(e.getMessage());
+            throw new Exception(e.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -222,7 +222,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
         }
     }
 
-    public Cliente listarPorEmail(String email) throws BancoDeDadosException {
+    public Cliente listarPorEmail(String email) throws Exception {
         Cliente cliente = null;
         Connection conexao = null;
 
@@ -249,7 +249,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
             }
 
         } catch (SQLException e) {
-            throw new BancoDeDadosException(e.getMessage());
+            throw new Exception(e.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -261,7 +261,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
         return cliente;
     }
 
-    public void InserirMudaEmCliente(Integer idCliente, Integer idMuda) throws BancoDeDadosException {
+    public void InserirMudaEmCliente(Integer idCliente, Integer idMuda) throws Exception {
         Connection connection = null;
         try {
             connection = conexaoBancoDeDados.getConnection();
@@ -275,7 +275,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
             int resultado = stm.executeUpdate();
         } catch (SQLException ex) {
             System.out.println("Erro ao Inserir Muda ao Cliente, ERRO: " + ex.getMessage());
-            throw new BancoDeDadosException(ex.getMessage());
+            throw new Exception(ex.getMessage());
 
         } finally {
             try {

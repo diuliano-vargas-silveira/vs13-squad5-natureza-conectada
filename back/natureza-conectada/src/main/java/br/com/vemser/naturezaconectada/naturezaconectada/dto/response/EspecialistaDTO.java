@@ -1,22 +1,19 @@
-package br.com.vemser.naturezaconectada.naturezaconectada.models;
+package br.com.vemser.naturezaconectada.naturezaconectada.dto.response;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.Contato;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.br.CNPJ;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Especialista extends Usuario {
+public class EspecialistaDTO  {
 
     private int idEspecialista;
 
@@ -24,7 +21,6 @@ public class Especialista extends Usuario {
 
     @NotBlank(message = "Documento não pode ser vazia!")
     @CPF(message = "Cpf inválido!")
-    @CNPJ(message = "Cnpj inválido")
     private String documento;
 
     @NotBlank(message = "Especialização não pode ser vazia!")
