@@ -1,6 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
 import br.com.vemser.naturezaconectada.naturezaconectada.interfaces.IService;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Admin;
@@ -23,7 +23,7 @@ public class ServiceAdmin implements IService<Admin> {
     }
 
     @Override
-    public void adicionar(Admin admin) throws BancoDeDadosException {
+    public void adicionar(Admin admin) throws Exception {
         Usuario usuarioCriado = serviceUsuario.adicionarUsuario(admin);
 
         admin.setId(usuarioCriado.getId());
@@ -31,7 +31,7 @@ public class ServiceAdmin implements IService<Admin> {
     }
 
     @Override
-    public void deletar(int id) throws SQLException, BancoDeDadosException {
+    public void deletar(int id) throws SQLException, Exception {
         Admin admin = procurarPorID(id);
 
         adminRepository.remover(id);
@@ -39,7 +39,7 @@ public class ServiceAdmin implements IService<Admin> {
     }
 
     @Override
-    public boolean editar(int id, Admin adminEditado) throws BancoDeDadosException {
+    public boolean editar(int id, Admin adminEditado) throws Exception {
         return serviceUsuario.editar(adminEditado.getId(), adminEditado);
     }
 
@@ -55,12 +55,12 @@ public class ServiceAdmin implements IService<Admin> {
     }
 
     @Override
-    public List<Admin> listarTodos() throws BancoDeDadosException {
+    public List<Admin> listarTodos() throws Exception {
         return adminRepository.listar();
     }
 
     @Override
-    public Admin procurar(int id) throws BancoDeDadosException {
+    public Admin procurar(int id) throws Exception {
         return adminRepository.procurarPorId(id);
     }
 }

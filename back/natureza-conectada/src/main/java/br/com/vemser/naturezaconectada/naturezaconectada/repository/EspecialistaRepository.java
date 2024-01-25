@@ -1,7 +1,7 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Especialista;
 import org.springframework.stereotype.Repository;
 
@@ -31,7 +31,7 @@ public class EspecialistaRepository implements IRepository<Integer, Especialista
     }
 
     @Override
-    public Especialista adicionar(Especialista especialista) throws BancoDeDadosException {
+    public Especialista adicionar(Especialista especialista) throws Exception {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
@@ -56,7 +56,7 @@ public class EspecialistaRepository implements IRepository<Integer, Especialista
 
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado para adicionar o especialista ao banco de dados.");
-            throw new BancoDeDadosException(erro.getMessage());
+            throw new Exception(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -68,7 +68,7 @@ public class EspecialistaRepository implements IRepository<Integer, Especialista
     }
 
     @Override
-    public boolean remover(Integer id) throws BancoDeDadosException {
+    public boolean remover(Integer id) throws Exception {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
@@ -83,7 +83,7 @@ public class EspecialistaRepository implements IRepository<Integer, Especialista
             return resultado > 0;
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado para remover o especialista do banco de dados.");
-            throw new BancoDeDadosException(erro.getMessage());
+            throw new Exception(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -95,7 +95,7 @@ public class EspecialistaRepository implements IRepository<Integer, Especialista
     }
 
     @Override
-    public boolean editar(Integer id, Especialista especialista) throws BancoDeDadosException {
+    public boolean editar(Integer id, Especialista especialista) throws Exception {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
@@ -118,7 +118,7 @@ public class EspecialistaRepository implements IRepository<Integer, Especialista
             return resultado > 0;
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado ao editar o especialista no banco de dados.");
-            throw new BancoDeDadosException(erro.getMessage());
+            throw new Exception(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -130,7 +130,7 @@ public class EspecialistaRepository implements IRepository<Integer, Especialista
     }
 
     @Override
-    public List<Especialista> listar() throws BancoDeDadosException {
+    public List<Especialista> listar() throws Exception {
         Connection conexao = null;
         List<Especialista> listaEspecialistas = new ArrayList<>();
 
@@ -159,7 +159,7 @@ public class EspecialistaRepository implements IRepository<Integer, Especialista
 
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado ao listar os especialistas do banco de dados.");
-            throw new BancoDeDadosException(erro.getMessage());
+            throw new Exception(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -177,7 +177,7 @@ public class EspecialistaRepository implements IRepository<Integer, Especialista
         }
     }
 
-    public Especialista procurarPorId(int id) throws BancoDeDadosException {
+    public Especialista procurarPorId(int id) throws Exception {
         Especialista especialista = null;
         Connection connection = null;
 
@@ -209,7 +209,7 @@ public class EspecialistaRepository implements IRepository<Integer, Especialista
 
         } catch (SQLException e) {
             System.out.println("ERRO: Algo deu errado ao procurar o especialista no banco de dados.");
-            throw new BancoDeDadosException(e.getMessage());
+            throw new Exception(e.getMessage());
         } finally {
             try {
                 fecharConexao(connection);

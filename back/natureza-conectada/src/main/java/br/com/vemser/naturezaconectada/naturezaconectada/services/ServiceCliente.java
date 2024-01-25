@@ -1,6 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
 import br.com.vemser.naturezaconectada.naturezaconectada.interfaces.IService;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
@@ -8,8 +8,6 @@ import br.com.vemser.naturezaconectada.naturezaconectada.models.Usuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.ClienteRepository;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,13 +22,13 @@ public class ServiceCliente implements IService<Cliente> {
     }
 
     @Override
-    public void adicionar(Cliente cliente) throws Exception {
+    public void adicionar(Cliente cliente) throws java.lang.Exception {
 
         Usuario usuarioCriado = serviceUsuario.adicionarUsuario(cliente);
         cliente.setId(usuarioCriado.getId());
 
         if (cliente.getCpf().length() != 11) {
-            throw new Exception("CPF Invalido!");
+            throw new java.lang.Exception("CPF Invalido!");
         }
 
         clienteRepository.adicionar(cliente);
@@ -39,7 +37,7 @@ public class ServiceCliente implements IService<Cliente> {
     }
 
     @Override
-    public void deletar(int id) throws BancoDeDadosException {
+    public void deletar(int id) throws Exception {
         Cliente cliente = procurarPorID(id);
 
         clienteRepository.remover(id);
@@ -47,7 +45,7 @@ public class ServiceCliente implements IService<Cliente> {
     }
 
     @Override
-    public boolean editar(int id, Cliente clienteEditado) throws BancoDeDadosException {
+    public boolean editar(int id, Cliente clienteEditado) throws Exception {
         serviceUsuario.editar(clienteEditado.getId(), clienteEditado);
         return clienteRepository.editar(id, clienteEditado);
     }
@@ -55,14 +53,14 @@ public class ServiceCliente implements IService<Cliente> {
 
 
     @Override
-    public List<Cliente> listarTodos() throws  BancoDeDadosException {
+    public List<Cliente> listarTodos() throws Exception {
         return clienteRepository.listar();
     }
 
 
 
     @Override
-    public Cliente procurarPorID(int id) throws BancoDeDadosException {
+    public Cliente procurarPorID(int id) throws Exception {
         Cliente cliente = clienteRepository.listarPorID(id);
 
         if(cliente == null){
@@ -72,7 +70,7 @@ public class ServiceCliente implements IService<Cliente> {
         return cliente;
     }
     @Override
-    public Cliente procurar(int id) throws BancoDeDadosException {
+    public Cliente procurar(int id) throws Exception {
         return clienteRepository.listarPorID(id);
     }
 
@@ -80,7 +78,7 @@ public class ServiceCliente implements IService<Cliente> {
         try {
             this.clienteRepository.InserirMudaEmCliente(idCliente,idMuda);
 
-        }catch (BancoDeDadosException ex){
+        }catch (Exception ex){
             System.out.println("erro ao Anexar as mudas Entregar, Erro: " + ex.getMessage());
         }
 

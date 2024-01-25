@@ -2,8 +2,11 @@ package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TamanhoMuda;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoMuda;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -11,13 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
+@Slf4j
 public class MudaRepository implements IRepository<Integer, Muda> {
 
     private final ConexaoBancoDeDados conexaoBancoDeDados;
 
-    public MudaRepository(ConexaoBancoDeDados conexaoBancoDeDados) {
-        this.conexaoBancoDeDados = conexaoBancoDeDados;
-    }
+
 
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
@@ -31,14 +34,14 @@ public class MudaRepository implements IRepository<Integer, Muda> {
     }
 
     @Override
-    public Muda adicionar(Muda muda) throws BancoDeDadosException {
+    public Muda adicionar(Muda muda) throws Exception {
         Connection conexao = null;
         try{
             conexao = conexaoBancoDeDados.getConnection();
             Integer proximoId = this.getProximoId(conexao);
             muda.setId(proximoId.intValue());
 
-            String sql = "INSERT INTO VS_13_EQUIPE_5.MUDA\n" +
+            String sql = "INSERT INTO MUDA\n" +
              "(ID_MUDA,QUANTIDADE, NOME, NOME_CIENTIFICO, PORTE, AMBIENTE_IDEAL, DESCRICAO, TIPO_MUDA)\n" +
               "VALUES( ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -59,7 +62,7 @@ public class MudaRepository implements IRepository<Integer, Muda> {
 
         }catch(SQLException erro){
             System.out.println("ERRO: Algo deu errado para adicionar á muda ao banco de dados.");
-            throw new BancoDeDadosException(erro.getMessage());
+            throw new Exception(erro.getMessage());
         } finally {
             try{
                 fecharConexao(conexao);
@@ -71,14 +74,16 @@ public class MudaRepository implements IRepository<Integer, Muda> {
     }
 
     @Override
-    public boolean remover(Integer id) throws BancoDeDadosException {
+    public boolean remover(Integer id) throws Exception {
         Connection conexao = null;
         try{
             conexao = conexaoBancoDeDados.getConnection();
-            String sql = "DELETE FROM VS_13_EQUIPE_5.MUDA WHERE ID_MUDA = ?";
+            String sql = "UPDATE MUDA SET " +
+                    "QUANTIDADE = 0 " +
+                    "WHERE ID_MUDA = ?";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setInt(1, id.intValue());
+            stmt.setInt(1, id);
 
             int resultado = stmt.executeUpdate();
             System.out.println("A muda foi removida! Resultado: ".concat(String.valueOf(resultado)));
@@ -86,7 +91,7 @@ public class MudaRepository implements IRepository<Integer, Muda> {
             return resultado > 0;
         }catch(SQLException erro){
             System.out.println("ERRO: Algo deu errado para remover á muda do banco de dados.");
-            throw new BancoDeDadosException(erro.getMessage());
+            throw new Exception(erro.getMessage());
         } finally {
             try{
                 fecharConexao(conexao);
@@ -98,9 +103,10 @@ public class MudaRepository implements IRepository<Integer, Muda> {
     }
 
     @Override
-    public boolean editar(Integer id, Muda muda) throws BancoDeDadosException {
+    public boolean editar(Integer id, Muda muda) throws Exception {
         Connection conexao = null;
         try{
+            this.buscarPorId(id);
             conexao = conexaoBancoDeDados.getConnection();
 
             StringBuilder sql = new StringBuilder();
@@ -110,7 +116,8 @@ public class MudaRepository implements IRepository<Integer, Muda> {
             sql.append(" PORTE = ?,");
             sql.append(" AMBIENTE_IDEAL = ?,");
             sql.append(" DESCRICAO = ?,");
-            sql.append(" TIPO_MUDA = ?");
+            sql.append(" TIPO_MUDA = ?,");
+            sql.append("QUANTIDADE = ?");
             sql.append(" WHERE ID_MUDA = ?");
 
             PreparedStatement stmt = conexao.prepareStatement(sql.toString());
@@ -122,20 +129,22 @@ public class MudaRepository implements IRepository<Integer, Muda> {
             stmt.setString(4, muda.getAmbienteIdeal());
             stmt.setString(5, muda.getDescricao());
             stmt.setString(6, String.valueOf(muda.getTipo()));
-            stmt.setInt(7, id.intValue());
+            stmt.setInt(7,muda.getQuantidade());
+            stmt.setInt(8, id);
 
 
             int resultado = stmt.executeUpdate();
 
-            System.out.println("A muda foi atualizada! Resultado: ".concat(String.valueOf(resultado)));
+
+            log.info("A muda foi atualizada! Resultado: ".concat(String.valueOf(resultado)));
         }catch(SQLException erro){
-            System.out.println("ERRO: Algo deu errado em editar á muda no banco de dados.");
-            throw new BancoDeDadosException(erro.getMessage());
+            log.error("ERRO: Algo deu errado em editar á muda no banco de dados.");
+            throw new Exception(erro.getMessage());
         } finally {
             try{
                 fecharConexao(conexao);
             }catch(SQLException erro){
-                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
+                log.error("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
                 erro.printStackTrace();
             }
         }
@@ -143,7 +152,7 @@ public class MudaRepository implements IRepository<Integer, Muda> {
     }
 
     @Override
-    public List<Muda> listar() throws BancoDeDadosException {
+    public List<Muda> listar() throws Exception {
         Connection conexao = null;
         List<Muda> listaMuda = new ArrayList<>();
 
@@ -151,24 +160,29 @@ public class MudaRepository implements IRepository<Integer, Muda> {
             conexao = conexaoBancoDeDados.getConnection();
             Statement statment = conexao.createStatement();
 
-            String sqlEntrega = "SELECT * FROM VS_13_EQUIPE_5.MUDA";
+            String sqlEntrega = "SELECT * FROM MUDA WHERE ID_MUDA > 0";
 
             ResultSet mudaTabela = statment.executeQuery(sqlEntrega);
 
-            while(mudaTabela.next()){
-                Muda mudaAtual = new Muda();
-                mudaAtual.setId(mudaTabela.getInt("ID_MUDA"));
-                mudaAtual.setAmbienteIdeal(mudaTabela.getString("AMBIENTE_IDEAL"));
-                mudaAtual.setDescricao(mudaTabela.getString("DESCRICAO"));
-                mudaAtual.setNome(mudaTabela.getString("NOME"));
-                mudaAtual.setTipo(TipoMuda.valueOf(mudaTabela.getString("TIPO_MUDA")));
-                listaMuda.add(mudaAtual);
+               while (mudaTabela.next()) {
+                   Muda mudaAtual = new Muda();
+                   mudaAtual.setId(mudaTabela.getInt("ID_MUDA"));
+                   mudaAtual.setAmbienteIdeal(mudaTabela.getString("AMBIENTE_IDEAL"));
+                   mudaAtual.setDescricao(mudaTabela.getString("DESCRICAO"));
+                   mudaAtual.setNomeCientifico(mudaTabela.getString("NOME_CIENTIFICO"));
+                   mudaAtual.setNome(mudaTabela.getString("NOME"));
+                   mudaAtual.setTipo(TipoMuda.valueOf(mudaTabela.getString("TIPO_MUDA")));
+                   mudaAtual.setQuantidade(mudaTabela.getInt("QUANTIDADE"));
+                   mudaAtual.setPorte(TamanhoMuda.valueOf(mudaTabela.getString("PORTE")));
+                   listaMuda.add(mudaAtual);
+               }
+            if(listaMuda.isEmpty()){
+                throw new Exception("Não existe nenhuma muda no banco de dados");
             }
-
 
         }catch(SQLException erro){
             System.out.println("ERRO: Algo deu errado ao listar as mudas do banco de dados.");
-            throw new BancoDeDadosException(erro.getMessage());
+            throw new InformacaoNaoEncontrada(erro.getMessage());
         }finally {
             try{
                 fecharConexao(conexao);
@@ -185,9 +199,9 @@ public class MudaRepository implements IRepository<Integer, Muda> {
         }
     }
 
-    public Muda buscarPorId(Integer idMuda) throws BancoDeDadosException {
+    public Muda buscarPorId(Integer idMuda) throws Exception {
         Connection conn = null;
-        Muda muda = new Muda();
+        Muda muda = null;
         try {
             conn = conexaoBancoDeDados.getConnection();
             String sql = "SELECT * FROM MUDA WHERE ID_MUDA = ? ";
@@ -195,26 +209,39 @@ public class MudaRepository implements IRepository<Integer, Muda> {
 
             stm.setInt(1,idMuda);
             ResultSet resultado = stm.executeQuery();
+
+
+
             while (resultado.next()){
+                muda = new Muda();
                 muda.setId(resultado.getInt("ID_MUDA"));
                 muda.setNome(resultado.getString("NOME"));
                 muda.setPorte(TamanhoMuda.valueOf(resultado.getString("PORTE")));
+                muda.setTipo(TipoMuda.valueOf(resultado.getString("TIPO_MUDA")));
                 muda.setAmbienteIdeal(resultado.getString("AMBIENTE_IDEAL"));
+                muda.setNomeCientifico(resultado.getString("NOME_CIENTIFICO"));
                 muda.setDescricao(resultado.getString("DESCRICAO"));
                 muda.setQuantidade(resultado.getInt("QUANTIDADE"));
             }
+            if(muda == null){
+                throw new Exception("Não existe muda com este ID");
+            }
         return muda;
 
+
         }catch (SQLException ex) {
-            System.out.println("Erro ao buscar por id, ERRO :"+ ex.getMessage());
-            throw new BancoDeDadosException(ex.getMessage());
+            log.error("Erro ao fazer a consulta no anco "+ ex.getMessage());
+            throw new InformacaoNaoEncontrada(ex.getMessage());
+
         }finally {
             try {
                 if(conn != null){
                     conn.close();
                 }
             }catch (SQLException e){
-                System.out.println("Erro ao fechar conexao do banco de dados, ERRO: " + e.getMessage());
+
+                log.error("Erro ao fechar conexao do banco de dados, ERRO: " + e.getMessage());
+                throw new Exception(e.getMessage());
             }
         }
 

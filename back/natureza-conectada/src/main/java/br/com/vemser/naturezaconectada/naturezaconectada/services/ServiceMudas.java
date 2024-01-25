@@ -2,87 +2,65 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
 
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.MudaCreateDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.MudaDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.MudaRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ServiceMudas {
     private final MudaRepository mudaRepository;
-    private final ServiceCliente serviceCliente;
+    private final ObjectMapper objectMapper;
 
-    public ServiceMudas(MudaRepository mudaRepository, ServiceCliente serviceCliente) {
-        this.mudaRepository = mudaRepository;
-        this.serviceCliente = serviceCliente;
+
+    public MudaCreateDTO adicionar(MudaCreateDTO mudadto) throws Exception {
+        Muda muda = objectMapper.convertValue(mudadto,Muda.class);
+
+        Muda mudaCriada = this.mudaRepository.adicionar(muda);
+
+        MudaCreateDTO retorno = objectMapper.convertValue(mudaCriada, MudaCreateDTO.class);
+
+        return retorno;
     }
 
-    public void adicionar(Muda muda) {
-        try {
-            this.mudaRepository.adicionar(muda);
-            System.out.println("*** Muda adicionada com sucesso ****");
-        } catch (BancoDeDadosException ex) {
-            System.out.println("Erro ao adicionar a muda, Erro: " + ex.getCause());
-            ex.printStackTrace();
-            ex.getMessage();
-        }
-
-    }
-
-    public void remover(Integer idMuda) {
-        try {
-
-            this.mudaRepository.remover(idMuda);
-            System.out.println("***** muda Removida *****");
-
-        } catch (BancoDeDadosException ex) {
-            System.out.println("Erro ao adicionar ao remover a Muda, Erro: " + ex.getCause());
-            ex.printStackTrace();
-            ex.getMessage();
-        }
+    public void remover(Integer idMuda) throws Exception {
+        this.mudaRepository.remover(idMuda);
 
     }
 
-    public void editarmuda(Integer idMuda, Muda muda) {
-        try {
-            this.mudaRepository.editar(idMuda, muda);
-            System.out.println("***** Mudada Editada ********");
-        } catch (BancoDeDadosException e) {
-            System.out.println("Erro ao editar Muda ERRO: " + e.getMessage());
-            e.printStackTrace();
-
-        }
+    public MudaCreateDTO editarmuda(Integer idMuda, MudaCreateDTO muda) throws Exception {
+        Muda mudaEditada = objectMapper.convertValue(muda,Muda.class);
+        this.mudaRepository.editar(idMuda, mudaEditada);
+        mudaEditada.setId(idMuda);
+        MudaCreateDTO mudaRetorno = objectMapper.convertValue(mudaEditada, MudaCreateDTO.class);
+        return mudaRetorno;
     }
 
-    public List<Muda> listarMudas() {
-        List<Muda> listaDeMudas = new ArrayList<>();
-        try {
-            listaDeMudas = this.mudaRepository.listar();
-        } catch (BancoDeDadosException e) {
-            System.out.println("Ocorreu um erro ao LISTAR as mudas, ERRO: " + e.getMessage());
+    public List<MudaDTO> listarMudas() throws Exception {
+        List<MudaDTO> listaDeMudas = new ArrayList<>();
 
-        }
-        if (listaDeMudas.size() == 0) {
-            System.out.println("Não existe mudas cadastradas.");
-        } else {
-            for (Muda muda : listaDeMudas) {
-                System.out.println(muda.toString());
-            }
-        }
+        this.mudaRepository.listar().forEach(muda -> listaDeMudas.add(this.objectMapper.convertValue(muda,MudaDTO.class)));
+
         return listaDeMudas;
     }
 
-    public Muda buscarPorId(Integer idMuda) {
-        try {
-            Muda muda = this.mudaRepository.buscarPorId(idMuda);
-            return muda;
-        } catch (BancoDeDadosException e) {
-            System.out.println("Erro ao buscar no Banco de dados");
-            e.printStackTrace();
-        }
-        return null;
+    public MudaDTO buscarPorId(Integer idMuda) throws Exception {
+        Muda muda = this.mudaRepository.buscarPorId(idMuda);
+
+            return this.objectMapper.convertValue(muda, MudaDTO.class);
+
+    }
+
+    public MudaCreateDTO novaMuda(MudaCreateDTO mudaDto) throws Exception {
+        Muda novaMuda = this.objectMapper.convertValue(mudaDto,Muda.class);
+        return this.objectMapper.convertValue(this.mudaRepository.adicionar(novaMuda), MudaCreateDTO.class);
     }
 }

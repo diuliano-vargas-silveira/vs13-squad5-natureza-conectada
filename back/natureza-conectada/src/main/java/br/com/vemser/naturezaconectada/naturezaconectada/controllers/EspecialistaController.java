@@ -1,6 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.controllers;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Especialista;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceEspecialista;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,7 @@ public class EspecialistaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Especialista>> getAll() throws BancoDeDadosException {
+    public ResponseEntity<List<Especialista>> getAll() throws Exception {
         return new ResponseEntity<>(serviceEspecialista.listarTodos(), HttpStatus.OK);
     }
 }

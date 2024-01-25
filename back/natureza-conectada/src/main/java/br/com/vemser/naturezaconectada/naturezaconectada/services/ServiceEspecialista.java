@@ -1,7 +1,7 @@
 
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.BancoDeDadosException;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
 import br.com.vemser.naturezaconectada.naturezaconectada.interfaces.IService;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Especialista;
@@ -23,7 +23,7 @@ public class ServiceEspecialista implements IService<Especialista> {
         this.serviceUsuario = serviceUsuario;
     }
 
-    public void adicionar(Especialista especialista) throws BancoDeDadosException {
+    public void adicionar(Especialista especialista) throws Exception {
         Usuario usuarioCriado = serviceUsuario.adicionarUsuario(especialista);
 
         especialista.setId(usuarioCriado.getId());
@@ -39,7 +39,7 @@ public class ServiceEspecialista implements IService<Especialista> {
     }
 
     @Override
-    public boolean editar(int id, Especialista especialistaEditado) throws BancoDeDadosException {
+    public boolean editar(int id, Especialista especialistaEditado) throws Exception {
         serviceUsuario.editar(especialistaEditado.getId(), especialistaEditado);
         return especialistaRepository.editar(id, especialistaEditado);
     }
@@ -56,7 +56,7 @@ public class ServiceEspecialista implements IService<Especialista> {
     }
 
     @Override
-    public List<Especialista> listarTodos() throws BancoDeDadosException {
+    public List<Especialista> listarTodos() throws Exception {
         return especialistaRepository.listar();
     }
 
