@@ -1,6 +1,7 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Admin;
 import org.springframework.stereotype.Repository;
 
@@ -147,9 +148,7 @@ public class AdminRepository implements IRepository<Integer, Admin> {
 
             while (res.next()) {
                 Admin admin = new Admin();
-                admin.setId(res.getInt("ID_ADMIN"));
-                admin.setNome(res.getString("NOME"));
-                admin.setEmail(res.getString("EMAIL"));
+                admin.setIdAdmin(res.getInt("ID_ADMIN"));
                 admins.add(admin);
             }
         } catch (SQLException e) {
@@ -177,23 +176,21 @@ public class AdminRepository implements IRepository<Integer, Admin> {
 
         try {
             conexao = conexaoBancoDeDados.getConnection();
-            String sql = "SELECT ad.ID_ADMIN, u.NOME, u.EMAIL\n" +
-                    "FROM\n" +
-                    "\tUSUARIO u \n" +
-                    "INNER JOIN \n" +
-                    "\tADMIN ad ON (u.ID_USUARIO = ad.ID_ADMIN)\n" +
-                    "WHERE \n" +
-                    "\tad.ID_ADMIN = ? ";
+            String sql = "SELECT * FROM ADMIN WHERE ID_ADMIN = ?";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setInt(1, id);
 
-            ResultSet resposta = stmt.executeQuery();
-
-            if (resposta.next()) {
-                admin.setIdAdmin(resposta.getInt("ID_ADMIN"));
-                admin.setNome(resposta.getString("NOME"));
-                admin.setEmail(resposta.getString("EMAIL"));
+            try (ResultSet resposta = stmt.executeQuery()) {
+                if (resposta.next()) {
+                    admin = new Admin();
+                    admin.setIdAdmin(resposta.getInt("ID_ADMIN"));
+                    admin.setId(resposta.getInt("ID_USUARIO"));
+                } else {
+                    throw new RegraDeNegocioException("Nenhum admin encontrado para o Id: " + id);
+                }
+            } catch (RegraDeNegocioException e) {
+                throw new RuntimeException(e);
             }
 
 
