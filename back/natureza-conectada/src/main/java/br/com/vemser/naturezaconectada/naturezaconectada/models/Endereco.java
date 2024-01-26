@@ -1,6 +1,5 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.models;
 
-
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Tipo;
 import lombok.AllArgsConstructor;
@@ -16,8 +15,7 @@ import javax.validation.constraints.NotNull;
 public class Endereco {
 
     private static final String PAIS = "Brasil";
-
-    private int id;
+    private int idEndereco;
 
     @NotBlank(message = "Cep não pode estar vazio!")
     private String cep;
@@ -36,8 +34,8 @@ public class Endereco {
     @NotNull(message = "Estado não pode vir nulo!")
     private Estados estado;
 
-    @NotNull(message = "Usuário não pode ser nulo!")
-    private Usuario usuario;
+    @NotNull(message = "Cliente não pode ser nulo!")
+    private Integer idCliente;
 
     @NotNull(message = "Endereço não pode ser nulo!")
     private Tipo tipo;
