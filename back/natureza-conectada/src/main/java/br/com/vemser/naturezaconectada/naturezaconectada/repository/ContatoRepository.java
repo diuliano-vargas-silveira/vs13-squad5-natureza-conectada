@@ -1,7 +1,7 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Tipo;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Contato;
 import org.springframework.stereotype.Repository;
 
@@ -29,7 +29,7 @@ public class ContatoRepository {
         return null;
     }
 
-    public Contato novoContato(Contato contato, Integer idUsuario) throws Exception {
+    public Contato novoContato(Contato contato, Integer idUsuario) throws ErroNoBancoDeDados {
         String sql = "INSERT INTO contato (ID_CONTATO,descricao, numero, tipo_contato,ID_USUARIO) VALUES (?,?, ?, ?,?)";
         Connection connection = null;
 
@@ -46,7 +46,7 @@ public class ContatoRepository {
             System.out.println("Adicionado " + res + " contato");
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado para adicionar o Contato ao banco de dados.");
-            throw new Exception(erro.getMessage());
+            throw new ErroNoBancoDeDados(erro.getMessage());
         } finally {
             try {
                 connection.close();
@@ -58,7 +58,7 @@ public class ContatoRepository {
         return contato;
     }
 
-    public boolean editar(Integer id, Contato contato) throws Exception {
+    public boolean editar(Integer id, Contato contato) throws ErroNoBancoDeDados {
         Connection connection = null;
 
         try {
@@ -82,7 +82,7 @@ public class ContatoRepository {
 
         } catch (SQLException e) {
             System.out.println("ERRO: Algo deu errado ao editar o Contato no banco de dados.");
-            throw new Exception(e.getMessage());
+            throw new ErroNoBancoDeDados(e.getMessage());
         } finally {
             try {
                 if (connection != null) {
@@ -118,7 +118,7 @@ public class ContatoRepository {
         return contatos;
     }
 
-    public List<Contato> contatosPorCliente(Integer idCliente) throws Exception {
+    public List<Contato> contatosPorCliente(Integer idCliente) throws ErroNoBancoDeDados {
         Connection connection = null;
         List<Contato> contatosDosClientes = new ArrayList<>();
 
@@ -139,11 +139,11 @@ public class ContatoRepository {
 
             }
             if (contatosDosClientes.isEmpty()) {
-                throw new Exception("Este usuario não tem contatos");
+                throw new ErroNoBancoDeDados("Este usuario não tem contatos");
             }
         } catch (SQLException ex) {
             System.out.println("ERRO: Este cliente não tem contatos no banco de dados.");
-            throw new Exception(ex.getMessage());
+            throw new ErroNoBancoDeDados(ex.getMessage());
         } finally {
             try {
                 if (connection != null) {
@@ -156,7 +156,7 @@ public class ContatoRepository {
         return contatosDosClientes;
     }
 
-    public void excluirContato(Integer idContato) throws Exception {
+    public void excluirContato(Integer idContato) throws ErroNoBancoDeDados {
         Connection connection = null;
 
         try {
@@ -170,7 +170,7 @@ public class ContatoRepository {
             int res = stm.executeUpdate();
         } catch (SQLException ex) {
             System.out.println("ERRO AO EXCLUIR O CONTATO : " + ex.getMessage());
-            throw new Exception(ex.getMessage());
+            throw new ErroNoBancoDeDados(ex.getMessage());
 
         } finally {
             try {

@@ -1,4 +1,4 @@
-package br.com.vemser.naturezaconectada.naturezaconectada.repository;
+package br.com.vemser.naturezaconectada.naturezaconectada.repository.interfaces;
 
 import java.sql.Connection;
 import java.sql.SQLException;

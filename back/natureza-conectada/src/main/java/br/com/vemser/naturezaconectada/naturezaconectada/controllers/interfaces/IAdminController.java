@@ -2,7 +2,6 @@ package br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces
 
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.AdminRequestDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.AdminResponseDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

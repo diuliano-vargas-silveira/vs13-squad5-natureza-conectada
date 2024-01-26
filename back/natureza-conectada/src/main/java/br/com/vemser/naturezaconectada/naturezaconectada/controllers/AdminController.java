@@ -3,7 +3,6 @@ package br.com.vemser.naturezaconectada.naturezaconectada.controllers;
 import br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces.IAdminController;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.AdminRequestDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.AdminResponseDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceAdmin;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -42,7 +42,7 @@ public enum Estados {
         return nome;
     }
 
-    public static Estados ofTipo(Integer tipo) {
+    public static Estados ofTipo(Integer tipo) throws EnumNaoExistente {
         return switch (tipo) {
             case 1 -> Estados.AC;
             case 2 -> Estados.AL;
