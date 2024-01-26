@@ -1,73 +1,82 @@
  package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
 
+ import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ContatoCreateDTO;
+ import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ContatoDTO;
  import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
+ import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
  import br.com.vemser.naturezaconectada.naturezaconectada.models.Contato;
- import br.com.vemser.naturezaconectada.naturezaconectada.repository.ClienteRepository;
  import br.com.vemser.naturezaconectada.naturezaconectada.repository.ContatoRepository;
+ import com.fasterxml.jackson.databind.ObjectMapper;
+ import lombok.RequiredArgsConstructor;
+ import lombok.extern.slf4j.Slf4j;
  import org.springframework.stereotype.Service;
 
+ import java.sql.SQLException;
  import java.util.ArrayList;
  import java.util.List;
+ import java.util.stream.Collectors;
 
+ @RequiredArgsConstructor
  @Service
+ @Slf4j
  public class ServiceContato  {
 
-    private ContatoRepository contatoRepository;
-    private ClienteRepository clienteRepository;
+    private final ContatoRepository contatoRepository;
+    private final ObjectMapper objectMapper;
 
-     public ServiceContato(ContatoRepository contatoRepository, ClienteRepository clienteRepository) {
-         this.contatoRepository = contatoRepository;
-         this.clienteRepository = clienteRepository;
+
+     public ContatoDTO adicionar(ContatoCreateDTO contatoCreateDTO, Integer idUsuario) throws Exception {
+         var contato = objectMapper.convertValue(contatoCreateDTO, Contato.class);
+
+        contato = contatoRepository.adicionar(contato, idUsuario);
+
+        return objectMapper.convertValue(contato, ContatoDTO.class);
+    }
+
+     public ContatoDTO editar(Integer idContato, ContatoCreateDTO contatoEditado) throws Exception {
+         var contatoEncontrado = objectMapper.convertValue(contatoEditado, Contato.class);
+
+         contatoRepository.editar(idContato, contatoEncontrado);
+
+         contatoEncontrado.setId(idContato);
+         contatoEncontrado.setIdCliente(contatoEncontrado.getIdCliente());
+
+         return objectMapper.convertValue(contatoEncontrado, ContatoDTO.class);
      }
 
-     public void adicionarContato(Contato contato, Integer idUsuario)  {
-
-        try{
-            this.contatoRepository.novoContato(contato,idUsuario);
-            System.out.println("Contato adicionado com sucesso");
-
-        }catch (Exception ex){
-            ex.printStackTrace();
-
-        }
-
-
-    }
-     public List<Contato> listaDeContatoPorCliente(Integer idCliente)  {
-        List<Contato> listaDeContatos = new ArrayList<>();
-        try {
-            listaDeContatos = this.contatoRepository.contatosPorCliente(idCliente);
-        }catch (Exception ex){
-            System.out.println("Erro ao buscar contatos do cliente " + ex.getMessage());
-            ex.printStackTrace();
-        }catch (java.lang.Exception erro){
-            System.out.println("Erro: "+ erro.getMessage());
-            erro.printStackTrace();
-        }
-       return listaDeContatos;
+     public void remover(Integer idContato) throws SQLException {
+         var contatoEncontrado = procurarPorIdContato(idContato);
+         var contato = objectMapper.convertValue(contatoEncontrado, Contato.class);
+         contatoRepository.excluir(contato.getId());
      }
-    public void EditarContato(Integer idContato, Contato contato){
-        try{
-            this.contatoRepository.editar(idContato,contato);
 
-        }catch (Exception be){
-            System.out.println("Erro: "+ be.getMessage());
-            be.printStackTrace();
-        }
+     public List<ContatoDTO> listarTodos() throws SQLException {
+         var contatos = contatoRepository.listarTodos();
 
+         if (contatos == null)
+             return null;
 
-    }
+         return contatos.stream()
+                 .map(contato -> objectMapper.convertValue(contato, ContatoDTO.class))
+                 .collect(Collectors.toList());
+     }
 
-    public void remover(Integer idContato){
-        try {
-            this.contatoRepository.excluirContato(idContato);
-            System.out.println("contato " + idContato + " excluido com sucesso");
-        }catch (Exception e){
-            System.out.println("Erro ao excluir contato : " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
+     public List<ContatoDTO> procurarPorIdCliente(Integer idCliente) throws Exception {
+         var contatos = contatoRepository.procurarContatoPorIdCliente(idCliente);
 
+         if (contatos == null)
+             return null;
+
+         return contatos.stream()
+                 .map(contato -> objectMapper.convertValue(contato, ContatoDTO.class))
+                 .collect(Collectors.toList());
+     }
+
+     private ContatoDTO procurarPorIdContato(Integer idContato) throws SQLException {
+         return listarTodos().stream()
+                 .filter(contato -> contato.getId().equals(idContato))
+                 .findFirst().orElseThrow(() -> new RegraDeNegocioException("Contato não encontrado."));
+     }
 }
 
