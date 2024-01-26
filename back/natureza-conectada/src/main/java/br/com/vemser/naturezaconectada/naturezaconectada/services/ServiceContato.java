@@ -3,7 +3,6 @@
 
  import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ContatoCreateDTO;
  import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ContatoDTO;
- import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
  import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
  import br.com.vemser.naturezaconectada.naturezaconectada.models.Contato;
  import br.com.vemser.naturezaconectada.naturezaconectada.repository.ContatoRepository;
@@ -45,7 +44,7 @@
          return objectMapper.convertValue(contatoEncontrado, ContatoDTO.class);
      }
 
-     public void remover(Integer idContato) throws SQLException {
+     public void remover(Integer idContato) throws Exception {
          var contatoEncontrado = procurarPorIdContato(idContato);
          var contato = objectMapper.convertValue(contatoEncontrado, Contato.class);
          contatoRepository.excluir(contato.getId());
@@ -73,7 +72,7 @@
                  .collect(Collectors.toList());
      }
 
-     private ContatoDTO procurarPorIdContato(Integer idContato) throws SQLException {
+     private ContatoDTO procurarPorIdContato(Integer idContato) throws SQLException, RegraDeNegocioException {
          return listarTodos().stream()
                  .filter(contato -> contato.getId().equals(idContato))
                  .findFirst().orElseThrow(() -> new RegraDeNegocioException("Contato não encontrado."));

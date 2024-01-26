@@ -4,7 +4,6 @@ import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.AdminReques
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.AdminResponseDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.UsuarioResponseDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Admin;

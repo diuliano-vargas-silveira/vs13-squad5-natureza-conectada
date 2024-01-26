@@ -1,8 +1,10 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Especialista;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -11,7 +13,8 @@ import java.util.List;
 
 
 @Repository
-public class EspecialistaRepository implements IRepository<Integer, Especialista> {
+@Slf4j
+public class EspecialistaRepository  {
 
     private final ConexaoBancoDeDados conexaoBancoDeDados;
 
@@ -19,7 +22,7 @@ public class EspecialistaRepository implements IRepository<Integer, Especialista
         this.conexaoBancoDeDados = conexaoBancoDeDados;
     }
 
-    @Override
+
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_ESPECIALISTA.NEXTVAL mysequence FROM DUAL";
         Statement stmt = connection.createStatement();
@@ -30,7 +33,7 @@ public class EspecialistaRepository implements IRepository<Integer, Especialista
         return null;
     }
 
-    @Override
+
     public Especialista adicionar(Especialista especialista) throws Exception {
         Connection conexao = null;
         try {
@@ -55,20 +58,21 @@ public class EspecialistaRepository implements IRepository<Integer, Especialista
             return especialista;
 
         } catch (SQLException erro) {
-            System.out.println("ERRO: Algo deu errado para adicionar o especialista ao banco de dados.");
-            throw new Exception(erro.getMessage());
+           log.error(erro.getMessage());
+            throw new ErroNoBancoDeDados("Erro ao adicionar Especialista no banco de dados");
         } finally {
             try {
                 fecharConexao(conexao);
-            } catch (SQLException erro) {
-                System.out.println("ERRO: Não foi possível encerrar corretamente a conexão com o banco de dados.");
-                erro.printStackTrace();
+            } catch (Exception erro) {
+                log.error(erro.getMessage());
+                throw new ErroNoBancoDeDados("Erro ao fechar a conexão com o banco de dados");
+
             }
         }
     }
 
-    @Override
-    public boolean remover(Integer id) throws Exception {
+
+    public void remover(Integer id) throws Exception {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
@@ -80,23 +84,25 @@ public class EspecialistaRepository implements IRepository<Integer, Especialista
             int resultado = stmt.executeUpdate();
             System.out.println("O especialista foi removido! Resultado: " + resultado);
 
-            return resultado > 0;
+
         } catch (SQLException erro) {
-            System.out.println("ERRO: Algo deu errado para remover o especialista do banco de dados.");
-            throw new Exception(erro.getMessage());
+            log.error(erro.getMessage());
+            throw new ErroNoBancoDeDados("Erro ao remover especialista do banco de dados");
         } finally {
             try {
                 fecharConexao(conexao);
-            } catch (SQLException erro) {
-                System.out.println("ERRO: Não foi possível encerrar corretamente a conexão com o banco de dados.");
+            } catch (Exception erro) {
+                log.error(erro.getMessage());
                 erro.printStackTrace();
+                throw new ErroNoBancoDeDados("Erro ao fechar a conexão");
             }
         }
     }
 
-    @Override
-    public boolean editar(Integer id, Especialista especialista) throws Exception {
+
+    public Especialista editar(Integer id, Especialista especialista) throws Exception {
         Connection conexao = null;
+
         try {
             conexao = conexaoBancoDeDados.getConnection();
 
@@ -114,22 +120,23 @@ public class EspecialistaRepository implements IRepository<Integer, Especialista
 
             int resultado = stmt.executeUpdate();
 
-            System.out.println("O especialista foi atualizado! Resultado: " + resultado);
-            return resultado > 0;
+            log.info("O especialista foi atualizado! Resultado: " + resultado);
+            return especialista;
+
         } catch (SQLException erro) {
-            System.out.println("ERRO: Algo deu errado ao editar o especialista no banco de dados.");
-            throw new Exception(erro.getMessage());
+            log.error("ERRO: Algo deu errado ao editar o especialista no banco de dados." + erro.getMessage());
+            throw new ErroNoBancoDeDados("erro ao adicionar usuario no Banco de dados");
         } finally {
             try {
                 fecharConexao(conexao);
-            } catch (SQLException erro) {
-                System.out.println("ERRO: Não foi possível encerrar corretamente a conexão com o banco de dados.");
+            } catch (Exception erro) {
+               log.error("ERRO: Não foi possível encerrar corretamente a conexão com o banco de dados."+erro.getMessage());
                 erro.printStackTrace();
             }
         }
     }
 
-    @Override
+
     public List<Especialista> listar() throws Exception {
         Connection conexao = null;
         List<Especialista> listaEspecialistas = new ArrayList<>();
@@ -146,7 +153,8 @@ public class EspecialistaRepository implements IRepository<Integer, Especialista
 
             while (especialistaTabela.next()) {
                 Especialista especialistaAtual = new Especialista();
-                especialistaAtual.setId(especialistaTabela.getInt("ID_ESPECIALISTA"));
+                especialistaAtual.setId(especialistaTabela.getInt("ID_USUARIO"));
+                especialistaAtual.setIdEspecialista(especialistaTabela.getInt("ID_ESPECIALISTA"));
                 especialistaAtual.setNome(especialistaTabela.getString("NOME"));
                 especialistaAtual.setEmail(especialistaTabela.getString("EMAIL"));
                 especialistaAtual.setSenha(especialistaTabela.getString("SENHA"));
@@ -158,13 +166,13 @@ public class EspecialistaRepository implements IRepository<Integer, Especialista
             }
 
         } catch (SQLException erro) {
-            System.out.println("ERRO: Algo deu errado ao listar os especialistas do banco de dados.");
-            throw new Exception(erro.getMessage());
+           log.error("ERRO: Algo deu errado ao listar os especialistas do banco de dados." + erro.getMessage());
+            throw new ErroNoBancoDeDados(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
-            } catch (SQLException erro) {
-                System.out.println("ERRO: Não foi possível encerrar corretamente a conexão com o banco de dados.");
+            } catch (Exception erro) {
+               log.error("ERRO: Não foi possível encerrar corretamente a conexão com o banco de dados." + erro.getMessage());
                 erro.printStackTrace();
             }
         }
@@ -199,6 +207,8 @@ public class EspecialistaRepository implements IRepository<Integer, Especialista
                 especialista = new Especialista();
 
                 especialista.setIdEspecialista(id);
+                especialista.setEspecializacao((resultSet.getString("ESPECIALIZACAO")));
+                especialista.setTipoUsuario(TipoUsuario.ESPECIALISTA);
                 especialista.setId(resultSet.getInt("ID_USUARIO"));
                 especialista.setNome(resultSet.getString("NOME"));
                 especialista.setEmail(resultSet.getString("EMAIL"));
@@ -208,14 +218,15 @@ public class EspecialistaRepository implements IRepository<Integer, Especialista
             }
 
         } catch (SQLException e) {
-            System.out.println("ERRO: Algo deu errado ao procurar o especialista no banco de dados.");
-            throw new Exception(e.getMessage());
+           log.error("ERRO: Algo deu errado ao procurar o especialista no banco de dados." + e.getMessage());
+            throw new ErroNoBancoDeDados("Erro ao buscar no banco de dados");
         } finally {
             try {
                 fecharConexao(connection);
-            } catch (SQLException erro) {
-                System.out.println("ERRO: Não foi possível encerrar corretamente a conexão com o banco de dados.");
+            } catch (Exception erro) {
+                log.error("ERRO: Algo deu errado ao fechar a conexa com o banco de dados." + erro.getMessage());
                 erro.printStackTrace();
+                throw new ErroNoBancoDeDados(" Algo deu errado ao fechar a conexa com o banco de dados.");
             }
         }
 

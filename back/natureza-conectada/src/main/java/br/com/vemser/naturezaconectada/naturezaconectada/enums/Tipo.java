@@ -8,7 +8,7 @@ public enum Tipo {
     RESIDENCIAL,
     COMERCIAL;
 
-    public static Tipo ofTipo(Integer tipo) {
+    public static Tipo ofTipo(Integer tipo) throws EnumNaoExistente {
         return switch (tipo) {
             case 1 -> Tipo.RESIDENCIAL;
             case 2 -> Tipo.COMERCIAL;

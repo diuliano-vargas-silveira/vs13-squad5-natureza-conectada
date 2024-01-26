@@ -2,9 +2,10 @@ package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TamanhoMuda;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoMuda;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
+import br.com.vemser.naturezaconectada.naturezaconectada.repository.interfaces.IRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -62,7 +63,7 @@ public class MudaRepository implements IRepository<Integer, Muda> {
 
         }catch(SQLException erro){
             System.out.println("ERRO: Algo deu errado para adicionar á muda ao banco de dados.");
-            throw new Exception(erro.getMessage());
+            throw new ErroNoBancoDeDados(erro.getMessage());
         } finally {
             try{
                 fecharConexao(conexao);
@@ -91,7 +92,7 @@ public class MudaRepository implements IRepository<Integer, Muda> {
             return resultado > 0;
         }catch(SQLException erro){
             System.out.println("ERRO: Algo deu errado para remover á muda do banco de dados.");
-            throw new Exception(erro.getMessage());
+            throw new ErroNoBancoDeDados(erro.getMessage());
         } finally {
             try{
                 fecharConexao(conexao);
@@ -139,7 +140,7 @@ public class MudaRepository implements IRepository<Integer, Muda> {
             log.info("A muda foi atualizada! Resultado: ".concat(String.valueOf(resultado)));
         }catch(SQLException erro){
             log.error("ERRO: Algo deu errado em editar á muda no banco de dados.");
-            throw new Exception(erro.getMessage());
+            throw new ErroNoBancoDeDados(erro.getMessage());
         } finally {
             try{
                 fecharConexao(conexao);
@@ -177,7 +178,7 @@ public class MudaRepository implements IRepository<Integer, Muda> {
                    listaMuda.add(mudaAtual);
                }
             if(listaMuda.isEmpty()){
-                throw new Exception("Não existe nenhuma muda no banco de dados");
+                throw new ErroNoBancoDeDados("Não existe nenhuma muda no banco de dados");
             }
 
         }catch(SQLException erro){
@@ -193,7 +194,7 @@ public class MudaRepository implements IRepository<Integer, Muda> {
         }
         return listaMuda;
     }
-    private void fecharConexao(Connection conexao) throws SQLException {
+    private void fecharConexao(Connection conexao) throws Exception {
         if (conexao != null) {
             conexao.close();
         }
@@ -224,7 +225,7 @@ public class MudaRepository implements IRepository<Integer, Muda> {
                 muda.setQuantidade(resultado.getInt("QUANTIDADE"));
             }
             if(muda == null){
-                throw new Exception("Não existe muda com este ID");
+                throw new ErroNoBancoDeDados("Não existe muda com este ID");
             }
         return muda;
 
@@ -241,7 +242,7 @@ public class MudaRepository implements IRepository<Integer, Muda> {
             }catch (SQLException e){
 
                 log.error("Erro ao fechar conexao do banco de dados, ERRO: " + e.getMessage());
-                throw new Exception(e.getMessage());
+                throw new ErroNoBancoDeDados(e.getMessage());
             }
         }
 

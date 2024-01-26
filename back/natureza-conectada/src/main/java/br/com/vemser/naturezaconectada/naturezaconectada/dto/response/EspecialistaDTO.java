@@ -17,16 +17,13 @@ public class EspecialistaDTO  {
 
     private int idEspecialista;
 
-    private Contato contato;
+    private int id;
 
-    @NotBlank(message = "Documento não pode ser vazia!")
-    @CPF(message = "Cpf inválido!")
-    private String documento;
+    private String nome;
 
-    @NotBlank(message = "Especialização não pode ser vazia!")
     private String especializacao;
 
-    @NotNull(message = "Região não pode ser nula!")
+
     private Estados regiaoResponsavel;
 
 }

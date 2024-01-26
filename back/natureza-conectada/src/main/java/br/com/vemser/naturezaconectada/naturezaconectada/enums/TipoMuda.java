@@ -9,7 +9,7 @@ public enum TipoMuda {
 
 
 
-        public static TipoMuda ofTipo(Integer tipo) {
+        public static TipoMuda ofTipo(Integer tipo) throws EnumNaoExistente {
             return switch (tipo) {
                 case 1 -> TipoMuda.PLANTA;
                 case 2 -> TipoMuda.ARVORE;
