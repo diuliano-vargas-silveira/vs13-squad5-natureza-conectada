@@ -1,6 +1,7 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Especialista;
 import lombok.extern.slf4j.Slf4j;
@@ -206,6 +207,8 @@ public class EspecialistaRepository  {
                 especialista = new Especialista();
 
                 especialista.setIdEspecialista(id);
+                especialista.setEspecializacao((resultSet.getString("ESPECIALIZACAO")));
+                especialista.setTipoUsuario(TipoUsuario.ESPECIALISTA);
                 especialista.setId(resultSet.getInt("ID_USUARIO"));
                 especialista.setNome(resultSet.getString("NOME"));
                 especialista.setEmail(resultSet.getString("EMAIL"));

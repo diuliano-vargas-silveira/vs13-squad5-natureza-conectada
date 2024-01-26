@@ -1,76 +1,89 @@
-
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EnderecoCreateDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EnderecoDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Endereco;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.EnderecoRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
+@Slf4j
 public class ServiceEndereco {
 
-    EnderecoRepository enderecoRepository;
+    private final EnderecoRepository enderecoRepository;
+    private final ObjectMapper objectMapper;
 
-    public ServiceEndereco(EnderecoRepository enderecoRepository) {
-        this.enderecoRepository = enderecoRepository;
+    public EnderecoDTO adicionar(EnderecoCreateDTO enderecoCreateDTO, Integer idCliente) throws Exception {
+
+        Endereco endereco = objectMapper.convertValue(enderecoCreateDTO, Endereco.class);
+        endereco = enderecoRepository.adicionar(endereco, idCliente);
+
+        return objectMapper.convertValue(endereco, EnderecoDTO.class);
     }
 
-    public void adicionar(Endereco endereco, Integer idCliente) throws ErroNoBancoDeDados {
-        try{
-            this.enderecoRepository.adicionar(endereco,idCliente);
-            System.out.println("Endereço adicionado com sucesso");
+    public void deletar(Integer idEndereco) throws Exception {
+        EnderecoDTO endereco = procurarPorIdEndereco(idEndereco);
 
-        }catch (Exception ex){
-            ex.printStackTrace();
-
-        }
+        enderecoRepository.remover(endereco.getIdEndereco());
     }
 
-    public void deletar(int id) {
-        Endereco endereco = procurarPorID(id);
+    public EnderecoDTO editar(Integer idEndereco, EnderecoCreateDTO enderecoEditado) throws Exception {
+        var enderecoEncontrado = objectMapper.convertValue(enderecoEditado, Endereco.class);
 
-//        BancoDeDados.enderecos.remove(endereco);
+
+        enderecoRepository.editar(idEndereco, enderecoEncontrado);
+
+        enderecoEncontrado.setIdEndereco(idEndereco);
+        enderecoEncontrado.setIdCliente(enderecoEncontrado.getIdCliente());
+
+        var endereco = objectMapper.convertValue(enderecoEncontrado, EnderecoDTO.class);
+
+
+        return endereco;
+    }
+
+    public EnderecoDTO procurarPorIdEndereco(int idEndereco) throws Exception {
+        Endereco enderecoEncontrado = enderecoRepository.procurarPorIdEndereco(idEndereco);
+
+        if (enderecoEncontrado == null)
+            return null;
+
+        EnderecoDTO enderecoDTO = objectMapper.convertValue(enderecoEncontrado, EnderecoDTO.class);
+        return enderecoDTO;
+    }
+
+    public List<EnderecoDTO> listarTodos() throws Exception {
+        var enderecos = enderecoRepository.listar();
+
+        if (enderecos == null)
+            return null;
+
+        var enderecosDTO = enderecos.stream()
+                .map(endereco -> objectMapper.convertValue(endereco, EnderecoDTO.class))
+                .collect(Collectors.toList());
+
+        return enderecosDTO;
     }
 
 
-    public boolean editar(int id, Endereco enderecoEditado) {
-//        Endereco endereco = procurarPorID(id);
-//
-//        int indexContato = BancoDeDados.enderecos.indexOf(endereco);
-//        endereco.setCidade(endereco.getCidade());
-//        endereco.setCep(endereco.getCep());
-//        endereco.setComplemento(endereco.getComplemento());
-//        endereco.setEstado(endereco.getEstado());
-//        endereco.setLogradouro(endereco.getLogradouro());
-//        endereco.setTipo(endereco.getTipo().ordinal());
-//
-//        BancoDeDados.enderecos.set(indexContato, enderecoEditado);
+    public List<EnderecoDTO> procurarEnderecoPorIdCliente(Integer idCliente) throws Exception {
+        var enderecos = enderecoRepository.procurarEnderecoPorCliente(idCliente);
 
-        return true;
+        if (enderecos == null)
+            return null;
+
+        var enderecosDTO = enderecos.stream()
+                .map(endereco -> objectMapper.convertValue(endereco, EnderecoDTO.class))
+                .collect(Collectors.toList());
+
+        return enderecosDTO;
     }
-
-    public Endereco procurarPorID(int id) {
-//        Optional<Endereco> endereco = procurar(id);
-//
-//        if (endereco.isEmpty()) {
-//            throw new InformacaoNaoEncontrada("Não existe nenhum endereço com este ID!");
-//        }
-
-        return new Endereco();
-    }
-
-    public List<Endereco> listarTodos() {
-        return new ArrayList<>();
-    }
-
-    public Endereco procurar(int id) {
-        return new Endereco();
-    }
-
-//    public List<Endereco> buscarEnderecoPorCliente(int id){
-  //TODO:TERMNAR
-//    }
 }

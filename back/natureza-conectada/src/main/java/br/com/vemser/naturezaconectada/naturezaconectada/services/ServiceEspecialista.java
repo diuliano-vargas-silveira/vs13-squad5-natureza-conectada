@@ -4,16 +4,14 @@ package br.com.vemser.naturezaconectada.naturezaconectada.services;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EspecialistaCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EspecialistaDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.UsuarioResponseDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
-import br.com.vemser.naturezaconectada.naturezaconectada.interfaces.IService;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Especialista;
-import br.com.vemser.naturezaconectada.naturezaconectada.models.Usuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.EspecialistaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @Service
@@ -28,6 +26,7 @@ public class ServiceEspecialista  {
 
 
     public EspecialistaCreateDTO adicionar(EspecialistaCreateDTO especialista) throws Exception {
+        especialista.setTipoUsuario(TipoUsuario.ESPECIALISTA);
         UsuarioResponseDTO usuarioCriado = serviceUsuario.adicionarUsuario(especialista);
 
         especialista.setId(usuarioCriado.getId());
@@ -84,6 +83,8 @@ public class ServiceEspecialista  {
            this.serviceUsuario.editar(especEncontrado.getId(),dto);
 
            Especialista especEditado = this.especialistaRepository.editar(especEncontrado.getIdEspecialista(),this.objectMapper.convertValue(dto,Especialista.class));
+           especEditado.setIdEspecialista(especEncontrado.getIdEspecialista());
+           especEditado.setId(especEncontrado.getId());
 
            return this.objectMapper.convertValue(especEditado,EspecialistaCreateDTO.class);
 

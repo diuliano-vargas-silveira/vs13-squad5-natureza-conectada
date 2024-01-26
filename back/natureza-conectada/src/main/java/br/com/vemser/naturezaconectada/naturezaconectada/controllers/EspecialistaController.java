@@ -1,5 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.controllers;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces.IEspecialistaController;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EspecialistaCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EspecialistaDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
@@ -16,12 +17,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/especialista")
 @RequiredArgsConstructor
-public class EspecialistaController {
+public class EspecialistaController implements IEspecialistaController {
 
     private final ServiceEspecialista serviceEspecialista;
 
     @GetMapping
-    public ResponseEntity<List<EspecialistaDTO>> getAll() throws Exception {
+    public ResponseEntity<List<EspecialistaDTO>> listarTodos() throws Exception {
         return new ResponseEntity<>(serviceEspecialista.listarTodos(), HttpStatus.OK);
     }
     @GetMapping("/{id}")

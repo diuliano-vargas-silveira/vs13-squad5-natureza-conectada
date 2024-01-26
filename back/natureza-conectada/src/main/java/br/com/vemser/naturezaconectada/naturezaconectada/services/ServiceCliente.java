@@ -2,16 +2,14 @@ package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
-import br.com.vemser.naturezaconectada.naturezaconectada.interfaces.IService;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
-import br.com.vemser.naturezaconectada.naturezaconectada.models.Usuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.ClienteRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ServiceCliente implements IService<Cliente> {
+public class ServiceCliente  {
 
     private final ServiceUsuario serviceUsuario;
     private final ClienteRepository clienteRepository;
@@ -21,7 +19,7 @@ public class ServiceCliente implements IService<Cliente> {
         this.clienteRepository = clienteRepository;
     }
 
-    @Override
+
     public void adicionar(Cliente cliente) throws Exception {
 
 //        Usuario usuarioCriado = serviceUsuario.adicionarUsuario(cliente);
@@ -36,26 +34,26 @@ public class ServiceCliente implements IService<Cliente> {
 
     }
 
-    @Override
+
     public void deletar(int id) throws ErroNoBancoDeDados {
 
     }
 
-    @Override
+
     public boolean editar(int id, Cliente clienteEditado) throws ErroNoBancoDeDados {
       return false;
     }
 
 
 
-    @Override
+
     public List<Cliente> listarTodos() throws ErroNoBancoDeDados {
         return clienteRepository.listar();
     }
 
 
 
-    @Override
+
     public Cliente procurarPorID(int id) throws ErroNoBancoDeDados {
         Cliente cliente = clienteRepository.listarPorID(id);
 
@@ -65,7 +63,7 @@ public class ServiceCliente implements IService<Cliente> {
 
         return cliente;
     }
-    @Override
+
     public Cliente procurar(int id) throws ErroNoBancoDeDados {
         return clienteRepository.listarPorID(id);
     }

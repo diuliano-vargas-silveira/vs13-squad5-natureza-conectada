@@ -5,6 +5,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoMuda;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
+import br.com.vemser.naturezaconectada.naturezaconectada.repository.interfaces.IRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;

@@ -7,6 +7,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.models.Admin;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Especialista;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Usuario;
+import br.com.vemser.naturezaconectada.naturezaconectada.repository.interfaces.IRepository;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
