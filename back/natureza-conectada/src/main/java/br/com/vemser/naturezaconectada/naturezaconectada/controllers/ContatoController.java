@@ -3,7 +3,6 @@ package br.com.vemser.naturezaconectada.naturezaconectada.controllers;
 import br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces.IContatoController;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ContatoCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ContatoDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceContato;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -44,7 +43,7 @@ public class ContatoController implements IContatoController {
     }
 
     @DeleteMapping("/{idContato}")
-    public ResponseEntity<Void> remover(@PathVariable("idContato") Integer idContato) throws SQLException {
+    public ResponseEntity<Void> remover(@PathVariable("idContato") Integer idContato) throws Exception {
         serviceContato.remover(idContato);
         log.debug("Contato excluído");
         return ResponseEntity.ok().build();

@@ -2,7 +2,6 @@ package br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces
 
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ContatoCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ContatoDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -46,7 +45,7 @@ public interface IContatoController {
             }
     )
     @DeleteMapping("/{idContato}")
-    public ResponseEntity<Void> remover(@PathVariable("idContato") Integer idContato) throws SQLException;
+    public ResponseEntity<Void> remover(@PathVariable("idContato") Integer idContato) throws Exception;
 
     @Operation(summary = "Listar contatos", description = "Lista todos os contatos do banco")
     @ApiResponses(
