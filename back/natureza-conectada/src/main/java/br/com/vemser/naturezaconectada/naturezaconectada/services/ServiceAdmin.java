@@ -1,14 +1,11 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
-
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
 import br.com.vemser.naturezaconectada.naturezaconectada.interfaces.IService;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Admin;
-import br.com.vemser.naturezaconectada.naturezaconectada.models.Usuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.AdminRepository;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @Service
@@ -23,15 +20,15 @@ public class ServiceAdmin implements IService<Admin> {
     }
 
     @Override
-    public void adicionar(Admin admin) throws Exception {
-        Usuario usuarioCriado = serviceUsuario.adicionarUsuario(admin);
-
-        admin.setId(usuarioCriado.getId());
-        adminRepository.adicionar(admin);
+    public void adicionar(Admin admin) throws ErroNoBancoDeDados {
+//        Usuario usuarioCriado = serviceUsuario.adicionarUsuario(admin);
+//
+//        admin.setId(usuarioCriado.getId());
+//        adminRepository.adicionar(admin);
     }
 
     @Override
-    public void deletar(int id) throws SQLException, Exception {
+    public void deletar(int id) throws Exception {
         Admin admin = procurarPorID(id);
 
         adminRepository.remover(id);
@@ -39,12 +36,13 @@ public class ServiceAdmin implements IService<Admin> {
     }
 
     @Override
-    public boolean editar(int id, Admin adminEditado) throws Exception {
-        return serviceUsuario.editar(adminEditado.getId(), adminEditado);
+    public boolean editar(int id, Admin adminEditado) {
+//        return serviceUsuario.editar(adminEditado.getId(), adminEditado);
+        return false;
     }
 
     @Override
-    public Admin procurarPorID(int id) throws SQLException {
+    public Admin procurarPorID(int id) throws ErroNoBancoDeDados {
         Admin admin = procurar(id);
 
         if (admin == null) {
@@ -55,12 +53,12 @@ public class ServiceAdmin implements IService<Admin> {
     }
 
     @Override
-    public List<Admin> listarTodos() throws Exception {
+    public List<Admin> listarTodos() throws ErroNoBancoDeDados {
         return adminRepository.listar();
     }
 
     @Override
-    public Admin procurar(int id) throws Exception {
+    public Admin procurar(int id) throws ErroNoBancoDeDados {
         return adminRepository.procurarPorId(id);
     }
 }

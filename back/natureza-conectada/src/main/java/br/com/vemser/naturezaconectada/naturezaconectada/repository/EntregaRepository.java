@@ -4,7 +4,7 @@ package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.StatusEntrega;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TamanhoMuda;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoMuda;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Entrega;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
@@ -36,7 +36,7 @@ public class EntregaRepository {
     }
 
 
-    public Entrega adicionar(Entrega entrega, Integer idEndereco) throws Exception {
+    public Entrega adicionar(Entrega entrega, Integer idEndereco) throws ErroNoBancoDeDados {
         Connection conexao = null;
 
         try {
@@ -88,7 +88,7 @@ public class EntregaRepository {
 
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado para adicionar á entrega ao banco de dados.");
-            throw new Exception(erro.getMessage());
+            throw new ErroNoBancoDeDados(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -99,7 +99,7 @@ public class EntregaRepository {
         }
     }
 
-    public boolean remover(Integer id) throws Exception {
+    public boolean remover(Integer id) throws ErroNoBancoDeDados {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
@@ -121,7 +121,7 @@ public class EntregaRepository {
             return resultado > 0;
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado para remover á entrega do banco de dados.");
-            throw new Exception(erro.getMessage());
+            throw new ErroNoBancoDeDados(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -134,43 +134,59 @@ public class EntregaRepository {
 
 
     public boolean editar(Integer id, Entrega entrega) throws Exception {
-        Connection conexao = null;
-        try {
-            conexao = conexaoBancoDeDados.getConnection();
-
-            String sql = "UPDATE VS_13_EQUIPE_5.ENTREGA SET STATUS = ? WHERE ID_ENTREGA = ?";
-
-            if (String.valueOf(entrega.getStatus()).equals("ENTREGUE")) {
-                List<Muda> novaLista = entrega.getMudas();
-                int idCliente = entrega.getCliente().getIdCliente();
-
-                novaLista.stream().forEach(muda -> serviceCliente.inserirMudasEntregues(idCliente, muda.getId()));
-
-            }
-
-            PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setString(1, String.valueOf(entrega.getStatus()));
-            stmt.setInt(2, id);
-
-            int resultado = stmt.executeUpdate();
-
-            System.out.println("A entrega foi atualizada! Resultado: ".concat(String.valueOf(resultado)));
-        } catch (SQLException erro) {
-            System.out.println("ERRO: Algo deu errado em editar á entrega no banco de dados.");
-            throw new Exception(erro.getMessage());
-        } finally {
-            try {
-                fecharConexao(conexao);
-            } catch (SQLException erro) {
-                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
-                erro.printStackTrace();
-            }
-        }
+//        Connection conexao = null;
+//        try {
+//            conexao = conexaoBancoDeDados.getConnection();
+//
+//            String sql = "UPDATE VS_13_EQUIPE_5.ENTREGA SET STATUS = ? WHERE ID_ENTREGA = ?";
+//
+//            if (String.valueOf(entrega.getStatus()).equals("ENTREGUE")) {
+//                List<Muda> novaLista = entrega.getMudas();
+//                int idCliente = entrega.getCliente().getIdCliente();
+//
+//                novaLista.stream().forEach(muda -> {
+//                    try {
+//                        serviceCliente.inserirMudasEntregues(idCliente, muda.getId());
+//                    } catch (Exception e) {
+//                        throw new RuntimeException(e.getCause());
+//                    }finally {
+//                        try {
+//                            if(conexao !=null){
+//                                conexao.close();
+//                            }
+//                            ;
+//                        } catch (SQLException erro) {
+//                            System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
+//                            erro.printStackTrace();
+//                        }
+//                    }
+//                });
+//
+//            }
+//
+//            PreparedStatement stmt = conexao.prepareStatement(sql);
+//            stmt.setString(1, String.valueOf(entrega.getStatus()));
+//            stmt.setInt(2, id);
+//
+//            int resultado = stmt.executeUpdate();
+//
+//            System.out.println("A entrega foi atualizada! Resultado: ".concat(String.valueOf(resultado)));
+//        } catch (SQLException erro) {
+//            System.out.println("ERRO: Algo deu errado em editar á entrega no banco de dados.");
+//            throw new ErroNoBancoDeDados(erro.getMessage());
+//        } finally {
+//            try {
+//                fecharConexao(conexao);
+//            } catch (SQLException erro) {
+//                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
+//                erro.printStackTrace();
+//            }
+//        }
         return true;
     }
 
 
-    public List<Entrega> listar() throws Exception {
+    public List<Entrega> listar() throws ErroNoBancoDeDados {
         Connection conexao = null;
         List<Entrega> listaEntrega = new ArrayList<>();
 
@@ -251,7 +267,7 @@ public class EntregaRepository {
 
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado ao listar as entregas do banco de dados.");
-            throw new Exception(erro.getMessage());
+            throw new ErroNoBancoDeDados(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);

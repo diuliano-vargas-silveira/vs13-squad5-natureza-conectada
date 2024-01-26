@@ -1,7 +1,7 @@
 
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Endereco;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.EnderecoRepository;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ public class ServiceEndereco {
         this.enderecoRepository = enderecoRepository;
     }
 
-    public void adicionar(Endereco endereco, Integer idCliente) throws Exception {
+    public void adicionar(Endereco endereco, Integer idCliente) throws ErroNoBancoDeDados {
         try{
             this.enderecoRepository.adicionar(endereco,idCliente);
             System.out.println("Endereço adicionado com sucesso");

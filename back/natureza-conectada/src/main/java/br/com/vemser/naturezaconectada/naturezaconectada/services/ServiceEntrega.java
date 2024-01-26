@@ -1,7 +1,7 @@
 
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Entrega;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.EntregaRepository;
 import org.springframework.stereotype.Service;
@@ -23,6 +23,7 @@ public class ServiceEntrega {
             this.entregaRepository.adicionar(entrega, idEndereco);
             System.out.println("*** Entrega adicionada com sucesso ****");
         }catch(Exception ex){
+
             ex.printStackTrace();
         }
     }

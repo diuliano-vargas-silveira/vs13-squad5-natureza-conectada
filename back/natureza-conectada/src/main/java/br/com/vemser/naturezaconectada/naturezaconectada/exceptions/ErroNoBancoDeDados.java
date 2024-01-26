@@ -2,9 +2,9 @@ package br.com.vemser.naturezaconectada.naturezaconectada.exceptions;
 
 import java.sql.SQLException;
 
-public class Exception extends SQLException {
+public class ErroNoBancoDeDados extends SQLException {
 
-    public Exception(String erro) {
+    public ErroNoBancoDeDados(String erro) {
         super(erro);
     }
 }

@@ -1,52 +1,60 @@
 
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EspecialistaCreateDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EspecialistaDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.UsuarioResponseDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
 import br.com.vemser.naturezaconectada.naturezaconectada.interfaces.IService;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Especialista;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Usuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.EspecialistaRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
 
 @Service
-public class ServiceEspecialista implements IService<Especialista> {
+@RequiredArgsConstructor
+public class ServiceEspecialista  {
 
     private final EspecialistaRepository especialistaRepository;
     private final ServiceUsuario serviceUsuario;
 
-    public ServiceEspecialista(EspecialistaRepository especialistaRepository, ServiceUsuario serviceUsuario) {
-        this.especialistaRepository = especialistaRepository;
-        this.serviceUsuario = serviceUsuario;
-    }
+    private final ObjectMapper objectMapper;
 
-    public void adicionar(Especialista especialista) throws Exception {
-        Usuario usuarioCriado = serviceUsuario.adicionarUsuario(especialista);
+
+
+    public EspecialistaCreateDTO adicionar(EspecialistaCreateDTO especialista) throws Exception {
+        UsuarioResponseDTO usuarioCriado = serviceUsuario.adicionarUsuario(especialista);
 
         especialista.setId(usuarioCriado.getId());
-        especialistaRepository.adicionar(especialista);
+       Especialista especialistaAdicionado =  especialistaRepository.adicionar(this.objectMapper.convertValue(especialista,Especialista.class));
+        especialista.setIdEspecialista(especialistaAdicionado.getIdEspecialista());
+        return especialista;
     }
 
-    @Override
-    public void deletar(int id) throws SQLException {
+
+    public void deletar(int id) throws Exception {
         Especialista especialista = procurarPorID(id);
 
         especialistaRepository.remover(id);
+
         serviceUsuario.remover(especialista.getId());
+
     }
 
-    @Override
-    public boolean editar(int id, Especialista especialistaEditado) throws Exception {
-        serviceUsuario.editar(especialistaEditado.getId(), especialistaEditado);
-        return especialistaRepository.editar(id, especialistaEditado);
-    }
 
-    @Override
-    public Especialista procurarPorID(int id) throws SQLException {
-        Especialista especialista = procurar(id);
+//    public boolean editar(int id, Especialista especialistaEditado) throws Exception {
+//        serviceUsuario.editar(especialistaEditado.getId(), especialistaEditado);
+//        return especialistaRepository.editar(id, especialistaEditado);
+//    }
+
+
+    private Especialista procurarPorID(int id) throws Exception {
+        Especialista especialista = this.especialistaRepository.procurarPorId(id);
 
         if (especialista == null) {
             throw new InformacaoNaoEncontrada("Não existe nenhum especialista com este ID!");
@@ -55,14 +63,30 @@ public class ServiceEspecialista implements IService<Especialista> {
         return especialista;
     }
 
-    @Override
-    public List<Especialista> listarTodos() throws Exception {
-        return especialistaRepository.listar();
+
+    public List<EspecialistaDTO> listarTodos() throws Exception {
+        return especialistaRepository.listar().stream().map(especialista -> this.objectMapper.convertValue(especialista,EspecialistaDTO.class)).toList();
     }
 
-    @Override
-    public Especialista procurar(int id) throws SQLException {
-        return especialistaRepository.procurarPorId(id);
+
+    public EspecialistaCreateDTO procurar(int id) throws Exception {
+        EspecialistaCreateDTO especialista = this.objectMapper.convertValue(especialistaRepository.procurarPorId(id),EspecialistaCreateDTO.class);
+        if (especialista == null) {
+            throw new InformacaoNaoEncontrada("Não existe nenhum especialista com este ID!");
+        }else {
+            return especialista;
+        }
+    }
+
+    public EspecialistaCreateDTO editar(Integer idEspecialista, EspecialistaCreateDTO dto) throws Exception {
+           EspecialistaCreateDTO especEncontrado = this.procurar(idEspecialista);
+
+           this.serviceUsuario.editar(especEncontrado.getId(),dto);
+
+           Especialista especEditado = this.especialistaRepository.editar(especEncontrado.getIdEspecialista(),this.objectMapper.convertValue(dto,Especialista.class));
+
+           return this.objectMapper.convertValue(especEditado,EspecialistaCreateDTO.class);
+
     }
 
 //    public List<Relatorio> procurarRelatorioPorEmail(String email) {

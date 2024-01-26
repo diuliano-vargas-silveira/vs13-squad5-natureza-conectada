@@ -1,6 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Admin;
 import org.springframework.stereotype.Repository;
 
@@ -31,7 +31,7 @@ public class AdminRepository implements IRepository<Integer, Admin> {
     }
 
     @Override
-    public Admin adicionar(Admin admin) throws Exception {
+    public Admin adicionar(Admin admin) throws ErroNoBancoDeDados {
         Connection conexao = null;
         try {
 
@@ -52,7 +52,7 @@ public class AdminRepository implements IRepository<Integer, Admin> {
             System.out.println("O administrador foi adicionado! Resultado: " + resultado);
         } catch (SQLException erro) {
             System.out.println("ERRO: Não foi possível obter a conexão com o banco de dados.");
-            throw new Exception(erro.getMessage());
+            throw new ErroNoBancoDeDados(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -66,7 +66,7 @@ public class AdminRepository implements IRepository<Integer, Admin> {
     }
 
     @Override
-    public boolean remover(Integer id) throws Exception {
+    public boolean remover(Integer id) throws ErroNoBancoDeDados {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
@@ -80,11 +80,11 @@ public class AdminRepository implements IRepository<Integer, Admin> {
 
                 return resultado > 0;
             } catch (SQLException e) {
-                throw new Exception(e.getMessage());
+                throw new ErroNoBancoDeDados(e.getMessage());
             }
 
         } catch (SQLException e) {
-            throw new Exception(e.getMessage());
+            throw new ErroNoBancoDeDados(e.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -96,7 +96,7 @@ public class AdminRepository implements IRepository<Integer, Admin> {
     }
 
     @Override
-    public boolean editar(Integer id, Admin adminEditado) throws Exception {
+    public boolean editar(Integer id, Admin adminEditado) throws ErroNoBancoDeDados {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
@@ -117,11 +117,11 @@ public class AdminRepository implements IRepository<Integer, Admin> {
 
                 return res > 0;
             } catch (SQLException e) {
-                throw new Exception(e.getMessage());
+                throw new ErroNoBancoDeDados(e.getMessage());
             }
 
         } catch (SQLException e) {
-            throw new Exception(e.getMessage());
+            throw new ErroNoBancoDeDados(e.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -133,7 +133,7 @@ public class AdminRepository implements IRepository<Integer, Admin> {
     }
 
     @Override
-    public List<Admin> listar() throws Exception {
+    public List<Admin> listar() throws ErroNoBancoDeDados {
         List<Admin> admins = new ArrayList<>();
         Connection conexao = null;
         try {
@@ -153,7 +153,7 @@ public class AdminRepository implements IRepository<Integer, Admin> {
                 admins.add(admin);
             }
         } catch (SQLException e) {
-            throw new Exception(e.getMessage());
+            throw new ErroNoBancoDeDados(e.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -171,7 +171,7 @@ public class AdminRepository implements IRepository<Integer, Admin> {
         }
     }
 
-    public Admin procurarPorId(int id) throws Exception {
+    public Admin procurarPorId(int id) throws ErroNoBancoDeDados {
         Admin admin = null;
         Connection conexao = null;
 
@@ -198,7 +198,7 @@ public class AdminRepository implements IRepository<Integer, Admin> {
 
 
         } catch (SQLException e) {
-            throw new Exception(e.getMessage());
+            throw new ErroNoBancoDeDados(e.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);

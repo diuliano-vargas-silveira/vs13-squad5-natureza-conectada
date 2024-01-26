@@ -1,4 +1,4 @@
-package br.com.vemser.naturezaconectada.naturezaconectada.dto.response;
+package br.com.vemser.naturezaconectada.naturezaconectada.dto.request;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Contato;
@@ -13,14 +13,17 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class EspecialistaDTO  {
+public class EspecialistaCreateDTO extends UsuarioRequestDTO{
 
     private int idEspecialista;
 
-    private int id;
+    private Contato contato;
 
-    private String nome;
+    @NotBlank(message = "Documento não pode ser vazia!")
+    @CPF(message = "Cpf inválido!")
+    private String documento;
 
+    @NotBlank(message = "Especialização não pode ser vazia!")
     private String especializacao;
 
 

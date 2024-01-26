@@ -1,7 +1,7 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.Exception;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Endereco;
 import org.springframework.stereotype.Repository;
 
@@ -28,7 +28,7 @@ public class EnderecoRepository {
         return null;
     }
 
-    public Endereco adicionar(Endereco endereco, Integer idUsuario) throws Exception {
+    public Endereco adicionar(Endereco endereco, Integer idUsuario) throws ErroNoBancoDeDados {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
@@ -57,7 +57,7 @@ public class EnderecoRepository {
 
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado para adicionar o endereço ao banco de dados.");
-            throw new Exception(erro.getMessage());
+            throw new ErroNoBancoDeDados(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -68,7 +68,7 @@ public class EnderecoRepository {
         }
     }
 
-    public boolean remover(Integer id) throws Exception {
+    public boolean remover(Integer id) throws ErroNoBancoDeDados {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
@@ -83,7 +83,7 @@ public class EnderecoRepository {
             return resultado > 0;
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado ao remover o endreço do banco de dados.");
-            throw new Exception(erro.getMessage());
+            throw new ErroNoBancoDeDados(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -94,7 +94,7 @@ public class EnderecoRepository {
         }
     }
 
-    public boolean editar(Integer id, Endereco endereco) throws Exception {
+    public boolean editar(Integer id, Endereco endereco) throws ErroNoBancoDeDados {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
@@ -115,7 +115,7 @@ public class EnderecoRepository {
             System.out.println("O endereço foi atualizado! Resultado: ".concat(String.valueOf(resultado)));
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado em editar o endereço no banco de dados.");
-            throw new Exception(erro.getMessage());
+            throw new ErroNoBancoDeDados(erro.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
@@ -127,7 +127,7 @@ public class EnderecoRepository {
         return true;
     }
 
-    public List<Endereco> listar() throws Exception {
+    public List<Endereco> listar() throws ErroNoBancoDeDados {
         List<Endereco> listaEndereco = new ArrayList<>();
         Connection conexao = null;
 
@@ -156,7 +156,7 @@ public class EnderecoRepository {
             }
         } catch (SQLException e) {
             System.out.println("Não foi possível listar os endereços.");
-            throw new Exception(e.getMessage());
+            throw new ErroNoBancoDeDados(e.getMessage());
         } finally {
             try {
                 fecharConexao(conexao);
