@@ -243,7 +243,8 @@ public class EnderecoRepository {
                 enderecoEncontrado.setEstado(Estados.values()[resultado.getInt("ID_ESTADO") - 1]);
                 enderecoEncontrado.setCep(resultado.getString("CEP"));
                 enderecoEncontrado.setLogradouro(resultado.getString("LOGRADOURO"));
-                enderecoEncontrado.setNumero(resultado.getString("COMPLEMENTO"));
+                enderecoEncontrado.setNumero(resultado.getString("NUMERO"));
+                enderecoEncontrado.setComplemento(resultado.getString("COMPLEMENTO"));
                 enderecoEncontrado.setCidade(resultado.getString("CIDADE"));
                 enderecoEncontrado.setTipo(Tipo.valueOf(resultado.getString("TIPO")));
                 enderecoEncontrado.setEcossistema(Ecossistema.valueOf(resultado.getString("ECOSSISTEMA")));
