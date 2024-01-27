@@ -1,15 +1,15 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TamanhoMuda;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoMuda;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
-import br.com.vemser.naturezaconectada.naturezaconectada.repository.interfaces.IRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,13 +17,13 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 @Slf4j
-public class MudaRepository implements IRepository<Integer, Muda> {
+public class MudaRepository  {
 
     private final ConexaoBancoDeDados conexaoBancoDeDados;
 
 
 
-    @Override
+
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_MUDA.NEXTVAL mysequence FROM DUAL";
         Statement stmt = connection.createStatement();
@@ -34,7 +34,7 @@ public class MudaRepository implements IRepository<Integer, Muda> {
         return null;
     }
 
-    @Override
+
     public Muda adicionar(Muda muda) throws Exception {
         Connection conexao = null;
         try{
@@ -43,7 +43,7 @@ public class MudaRepository implements IRepository<Integer, Muda> {
             muda.setId(proximoId.intValue());
 
             String sql = "INSERT INTO MUDA\n" +
-             "(ID_MUDA,QUANTIDADE, NOME, NOME_CIENTIFICO, PORTE, AMBIENTE_IDEAL, DESCRICAO, TIPO_MUDA)\n" +
+             "(ID_MUDA,QUANTIDADE, NOME, NOME_CIENTIFICO, PORTE, ECOSSISTEMA, DESCRICAO, TIPO_MUDA)\n" +
               "VALUES( ?, ?, ?, ?, ?, ?, ?, ?)";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
@@ -52,7 +52,7 @@ public class MudaRepository implements IRepository<Integer, Muda> {
             stmt.setString(3, muda.getNome());
             stmt.setString(4, muda.getNomeCientifico());
             stmt.setString(5, String.valueOf(muda.getPorte()));
-            stmt.setString(6, muda.getAmbienteIdeal());
+            stmt.setString(6, String.valueOf(muda.getEcossistema()));
             stmt.setString(7, muda.getDescricao());
             stmt.setString(8, String.valueOf(muda.getTipo()));
 
@@ -74,17 +74,18 @@ public class MudaRepository implements IRepository<Integer, Muda> {
         }
     }
 
-    @Override
-    public boolean remover(Integer id) throws Exception {
+
+    public boolean mudarAtivoMuda(Integer id,Ativo ativo) throws Exception {
         Connection conexao = null;
         try{
             conexao = conexaoBancoDeDados.getConnection();
             String sql = "UPDATE MUDA SET " +
-                    "QUANTIDADE = 0 " +
+                    "ATIVO = D " +
                     "WHERE ID_MUDA = ?";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setInt(1, id);
+            stmt.setString(1,String.valueOf(ativo));
+            stmt.setInt(2, id);
 
             int resultado = stmt.executeUpdate();
             System.out.println("A muda foi removida! Resultado: ".concat(String.valueOf(resultado)));
@@ -103,7 +104,9 @@ public class MudaRepository implements IRepository<Integer, Muda> {
         }
     }
 
-    @Override
+
+
+
     public boolean editar(Integer id, Muda muda) throws Exception {
         Connection conexao = null;
         try{
@@ -115,7 +118,7 @@ public class MudaRepository implements IRepository<Integer, Muda> {
             sql.append(" NOME = ?,");
             sql.append(" NOME_CIENTIFICO = ?,");
             sql.append(" PORTE = ?,");
-            sql.append(" AMBIENTE_IDEAL = ?,");
+            sql.append(" ECOSSISTEMA = ?,");
             sql.append(" DESCRICAO = ?,");
             sql.append(" TIPO_MUDA = ?,");
             sql.append("QUANTIDADE = ?");
@@ -127,7 +130,7 @@ public class MudaRepository implements IRepository<Integer, Muda> {
             stmt.setString(1, muda.getNome());
             stmt.setString(2, muda.getNomeCientifico());
             stmt.setString(3, String.valueOf(muda.getPorte()));
-            stmt.setString(4, muda.getAmbienteIdeal());
+            stmt.setString(4, String.valueOf(muda.getEcossistema()));
             stmt.setString(5, muda.getDescricao());
             stmt.setString(6, String.valueOf(muda.getTipo()));
             stmt.setInt(7,muda.getQuantidade());
@@ -152,7 +155,49 @@ public class MudaRepository implements IRepository<Integer, Muda> {
         return true;
     }
 
-    @Override
+    public List<Muda> listarMudasAtivas() throws Exception {
+        Connection conexao = null;
+        List<Muda> listaMuda = new ArrayList<>();
+
+        try{
+            conexao = conexaoBancoDeDados.getConnection();
+            Statement statment = conexao.createStatement();
+
+            String sqlEntrega = "SELECT * FROM MUDA WHERE QUANTIDADE > 0 AND  ATIVO = 'A'";
+
+            ResultSet mudaTabela = statment.executeQuery(sqlEntrega);
+
+            while (mudaTabela.next()) {
+                Muda mudaAtual = new Muda();
+                mudaAtual.setId(mudaTabela.getInt("ID_MUDA"));
+                mudaAtual.setEcossistema(Ecossistema.valueOf(mudaTabela.getString("ECOSSISTEMA")));
+                mudaAtual.setDescricao(mudaTabela.getString("DESCRICAO"));
+                mudaAtual.setNomeCientifico(mudaTabela.getString("NOME_CIENTIFICO"));
+                mudaAtual.setNome(mudaTabela.getString("NOME"));
+                mudaAtual.setTipo(TipoMuda.valueOf(mudaTabela.getString("TIPO_MUDA")));
+                mudaAtual.setQuantidade(mudaTabela.getInt("QUANTIDADE"));
+                mudaAtual.setPorte(TamanhoMuda.valueOf(mudaTabela.getString("PORTE")));
+                mudaAtual.setAtivo(Ativo.valueOf(mudaTabela.getString("ATIVO")));
+                listaMuda.add(mudaAtual);
+            }
+            if(listaMuda.isEmpty()){
+                throw new ErroNoBancoDeDados("Não existe nenhuma muda no banco de dados");
+            }
+
+        }catch(SQLException erro){
+            System.out.println("ERRO: Algo deu errado ao listar as mudas do banco de dados.");
+            throw new InformacaoNaoEncontrada(erro.getMessage());
+        }finally {
+            try{
+                fecharConexao(conexao);
+            }catch(SQLException erro){
+                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
+                erro.printStackTrace();
+            }
+        }
+        return listaMuda;
+    }
+
     public List<Muda> listar() throws Exception {
         Connection conexao = null;
         List<Muda> listaMuda = new ArrayList<>();
@@ -168,13 +213,14 @@ public class MudaRepository implements IRepository<Integer, Muda> {
                while (mudaTabela.next()) {
                    Muda mudaAtual = new Muda();
                    mudaAtual.setId(mudaTabela.getInt("ID_MUDA"));
-                   mudaAtual.setAmbienteIdeal(mudaTabela.getString("AMBIENTE_IDEAL"));
+                   mudaAtual.setEcossistema(Ecossistema.valueOf(mudaTabela.getString("ECOSSISTEMA")));
                    mudaAtual.setDescricao(mudaTabela.getString("DESCRICAO"));
                    mudaAtual.setNomeCientifico(mudaTabela.getString("NOME_CIENTIFICO"));
                    mudaAtual.setNome(mudaTabela.getString("NOME"));
                    mudaAtual.setTipo(TipoMuda.valueOf(mudaTabela.getString("TIPO_MUDA")));
                    mudaAtual.setQuantidade(mudaTabela.getInt("QUANTIDADE"));
                    mudaAtual.setPorte(TamanhoMuda.valueOf(mudaTabela.getString("PORTE")));
+                   mudaAtual.setAtivo(Ativo.valueOf(mudaTabela.getString("ATIVO")));
                    listaMuda.add(mudaAtual);
                }
             if(listaMuda.isEmpty()){
@@ -219,7 +265,7 @@ public class MudaRepository implements IRepository<Integer, Muda> {
                 muda.setNome(resultado.getString("NOME"));
                 muda.setPorte(TamanhoMuda.valueOf(resultado.getString("PORTE")));
                 muda.setTipo(TipoMuda.valueOf(resultado.getString("TIPO_MUDA")));
-                muda.setAmbienteIdeal(resultado.getString("AMBIENTE_IDEAL"));
+                muda.setEcossistema(Ecossistema.valueOf(resultado.getString("ECOSSISTEMA")));
                 muda.setNomeCientifico(resultado.getString("NOME_CIENTIFICO"));
                 muda.setDescricao(resultado.getString("DESCRICAO"));
                 muda.setQuantidade(resultado.getInt("QUANTIDADE"));
@@ -232,6 +278,53 @@ public class MudaRepository implements IRepository<Integer, Muda> {
 
         }catch (SQLException ex) {
             log.error("Erro ao fazer a consulta no anco "+ ex.getMessage());
+            throw new InformacaoNaoEncontrada(ex.getMessage());
+
+        }finally {
+            try {
+                if(conn != null){
+                    conn.close();
+                }
+            }catch (SQLException e){
+
+                log.error("Erro ao fechar conexao do banco de dados, ERRO: " + e.getMessage());
+                throw new ErroNoBancoDeDados(e.getMessage());
+            }
+        }
+
+    }
+    public Muda buscarPorEco(Ecossistema ecossistema) throws Exception {
+        Connection conn = null;
+        Muda muda = null;
+        try {
+            conn = conexaoBancoDeDados.getConnection();
+            String sql = "SELECT * FROM MUDA WHERE ECOSSISTEMA = ? ";
+            PreparedStatement stm = conn.prepareStatement(sql);
+
+            stm.setString(1,String.valueOf(ecossistema));
+            ResultSet resultado = stm.executeQuery();
+
+
+
+            while (resultado.next()){
+                muda = new Muda();
+                muda.setId(resultado.getInt("ID_MUDA"));
+                muda.setNome(resultado.getString("NOME"));
+                muda.setPorte(TamanhoMuda.valueOf(resultado.getString("PORTE")));
+                muda.setTipo(TipoMuda.valueOf(resultado.getString("TIPO_MUDA")));
+                muda.setEcossistema(Ecossistema.valueOf(resultado.getString("ECOSSISTEMA")));
+                muda.setNomeCientifico(resultado.getString("NOME_CIENTIFICO"));
+                muda.setDescricao(resultado.getString("DESCRICAO"));
+                muda.setQuantidade(resultado.getInt("QUANTIDADE"));
+            }
+            if(muda == null){
+                throw new ErroNoBancoDeDados("Não existe muda com este Ecossistema");
+            }
+            return muda;
+
+
+        }catch (SQLException ex) {
+            log.error("Erro ao fazer a consulta no banco "+ ex.getMessage());
             throw new InformacaoNaoEncontrada(ex.getMessage());
 
         }finally {

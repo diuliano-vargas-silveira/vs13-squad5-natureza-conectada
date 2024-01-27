@@ -2,6 +2,7 @@ package br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces
 
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.MudaCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.MudaDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -61,7 +62,7 @@ public interface IMudaController {
     @PutMapping("/{idMuda}")
     public ResponseEntity<MudaCreateDTO> atualizarMuda(@PathVariable Integer idMuda, @RequestBody MudaCreateDTO dto) throws Exception;
 
-    @Operation(summary = " Deleta uma muda ", description = "Busca uma muda por ID e Deleta ")
+    @Operation(summary = " Ativa e Desativa uma muda ", description = " Recebe o RequestParam ativo = ('D' -> desativado, 'A' -> Ativado ")
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "Vazio"),
@@ -71,5 +72,5 @@ public interface IMudaController {
             }
     )
     @DeleteMapping("/{idMuda}")
-    public ResponseEntity<Void> deletarMuda(@PathVariable Integer idMuda) throws Exception;
+    public ResponseEntity<Void> mudarAtivoMuda(@PathVariable Integer idMuda, @RequestParam Ativo ativo) throws Exception;
 }

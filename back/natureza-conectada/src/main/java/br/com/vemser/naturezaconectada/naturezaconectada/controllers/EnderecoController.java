@@ -2,6 +2,7 @@ package br.com.vemser.naturezaconectada.naturezaconectada.controllers;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EnderecoCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EnderecoDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceEndereco;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -94,5 +95,17 @@ public class EnderecoController {
             return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
         return new ResponseEntity<>(enderecos, HttpStatus.OK);
+    }
+    @PutMapping("/ativar/{idEndereco}")
+    public ResponseEntity<EnderecoDTO> ativarEndereco(@PathVariable("idEndereco") Integer idEndereco, @RequestParam String eco) throws Exception {
+        log.debug("Atualizando endereço");
+
+        EnderecoDTO enderecoAtualizado = serviceEndereco.ativarEndereco(idEndereco,eco);
+
+        log.debug("Endereço atualizado");
+
+        // email pro cliente
+
+        return new ResponseEntity<>(enderecoAtualizado, HttpStatus.OK);
     }
 }

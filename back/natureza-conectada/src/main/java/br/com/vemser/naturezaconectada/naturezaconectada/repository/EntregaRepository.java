@@ -224,7 +224,7 @@ public class EntregaRepository {
                     mudaAtual.setTipo(TipoMuda.valueOf(filtroMuda.getString("TIPO_MUDA")));
                     mudaAtual.setNome(filtroMuda.getString("NOME"));
                     mudaAtual.setNomeCientifico(filtroMuda.getString("NOME_CIENTIFICO"));
-                    mudaAtual.setAmbienteIdeal(filtroMuda.getString("AMBIENTE_IDEAL"));
+//                    mudaAtual.setEcossistema(filtroMuda.getString("AMBIENTE_IDEAL"));
                     mudaAtual.setQuantidade(filtroMuda.getInt("QUANTIDADE"));
                     mudaAtual.setDescricao(filtroMuda.getString("DESCRICAO"));
 

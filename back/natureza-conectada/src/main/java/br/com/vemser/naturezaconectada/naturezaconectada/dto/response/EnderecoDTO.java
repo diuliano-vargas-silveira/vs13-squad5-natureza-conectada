@@ -1,5 +1,7 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.dto.response;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Tipo;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,10 +19,10 @@ public class EnderecoDTO {
 
     private static final String PAIS = "Brasil";
 
-    @NotNull
+
     private int idEndereco;
 
-    @NotNull
+
     private Integer idCliente;
 
     @NotEmpty
@@ -56,5 +58,9 @@ public class EnderecoDTO {
     @NotNull
     @Schema(description = "Tipo de Endereço", required = true)
     private Tipo tipo;
+
+    private Ecossistema ecossistema;
+
+    private Ativo ativo;
 
 }
