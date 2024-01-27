@@ -1,56 +1,81 @@
  package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
 
- import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
+ import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ContatoCreateDTO;
+ import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ContatoDTO;
+ import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
  import br.com.vemser.naturezaconectada.naturezaconectada.models.Contato;
- import br.com.vemser.naturezaconectada.naturezaconectada.repository.ClienteRepository;
  import br.com.vemser.naturezaconectada.naturezaconectada.repository.ContatoRepository;
+ import com.fasterxml.jackson.databind.ObjectMapper;
+ import lombok.RequiredArgsConstructor;
+ import lombok.extern.slf4j.Slf4j;
  import org.springframework.stereotype.Service;
 
+ import java.sql.SQLException;
  import java.util.ArrayList;
  import java.util.List;
+ import java.util.stream.Collectors;
 
+ @RequiredArgsConstructor
  @Service
+ @Slf4j
  public class ServiceContato  {
 
-    private ContatoRepository contatoRepository;
-    private ClienteRepository clienteRepository;
+    private final ContatoRepository contatoRepository;
+    private final ObjectMapper objectMapper;
 
-     public ServiceContato(ContatoRepository contatoRepository, ClienteRepository clienteRepository) {
-         this.contatoRepository = contatoRepository;
-         this.clienteRepository = clienteRepository;
+
+     public ContatoDTO adicionar(ContatoCreateDTO contatoCreateDTO, Integer idUsuario) throws Exception {
+         var contato = objectMapper.convertValue(contatoCreateDTO, Contato.class);
+
+        contato = contatoRepository.adicionar(contato, idUsuario);
+
+        return objectMapper.convertValue(contato, ContatoDTO.class);
+    }
+
+     public ContatoDTO editar(Integer idContato, ContatoCreateDTO contatoEditado) throws Exception {
+         var contatoEncontrado = objectMapper.convertValue(contatoEditado, Contato.class);
+
+         contatoRepository.editar(idContato, contatoEncontrado);
+
+         contatoEncontrado.setId(idContato);
+         contatoEncontrado.setIdCliente(contatoEncontrado.getIdCliente());
+
+         return objectMapper.convertValue(contatoEncontrado, ContatoDTO.class);
      }
 
-     public void adicionarContato(Contato contato, Integer idUsuario) throws ErroNoBancoDeDados {
-
-
-            this.contatoRepository.novoContato(contato,idUsuario);
-            System.out.println("Contato adicionado com sucesso");
-
-
-
-
-    }
-     public List<Contato> listaDeContatoPorCliente(Integer idCliente) throws ErroNoBancoDeDados {
-        List<Contato> listaDeContatos = new ArrayList<>();
-
-            listaDeContatos = this.contatoRepository.contatosPorCliente(idCliente);
-
-       return listaDeContatos;
+     public void remover(Integer idContato) throws Exception {
+         var contatoEncontrado = procurarPorIdContato(idContato);
+         var contato = objectMapper.convertValue(contatoEncontrado, Contato.class);
+         contatoRepository.excluir(contato.getId());
      }
-    public void EditarContato(Integer idContato, Contato contato) throws ErroNoBancoDeDados {
 
-            this.contatoRepository.editar(idContato,contato);
+     public List<ContatoDTO> listarTodos() throws SQLException {
+         var contatos = contatoRepository.listarTodos();
 
+         if (contatos == null)
+             return null;
 
+         return contatos.stream()
+                 .map(contato -> objectMapper.convertValue(contato, ContatoDTO.class))
+                 .collect(Collectors.toList());
+     }
 
-    }
+     public List<ContatoDTO> procurarPorIdCliente(Integer idCliente) throws Exception {
+         var contatos = contatoRepository.procurarContatoPorIdCliente(idCliente);
 
-    public void remover(Integer idContato) throws ErroNoBancoDeDados {
+         if (contatos == null)
+             return null;
 
-            this.contatoRepository.excluirContato(idContato);
+         return contatos.stream()
+                 .map(contato -> objectMapper.convertValue(contato, ContatoDTO.class))
+                 .collect(Collectors.toList());
+     }
 
-    }
-
+     private ContatoDTO procurarPorIdContato(Integer idContato) throws SQLException, RegraDeNegocioException {
+         return listarTodos().stream()
+                 .filter(contato -> contato.getId().equals(idContato))
+                 .findFirst().orElseThrow(() -> new RegraDeNegocioException("Contato não encontrado."));
+     }
 }
 

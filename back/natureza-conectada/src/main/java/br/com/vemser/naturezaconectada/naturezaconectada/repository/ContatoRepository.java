@@ -1,7 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Tipo;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Contato;
 import org.springframework.stereotype.Repository;
 
@@ -29,24 +28,32 @@ public class ContatoRepository {
         return null;
     }
 
-    public Contato novoContato(Contato contato, Integer idUsuario) throws ErroNoBancoDeDados {
-        String sql = "INSERT INTO contato (ID_CONTATO,descricao, numero, tipo_contato,ID_USUARIO) VALUES (?,?, ?, ?,?)";
+    public Contato adicionar(Contato contato, Integer idUsuario) throws Exception {
+
         Connection connection = null;
 
         try {
             connection = conexaoBancoDeDados.getConnection();
-            int proximoId = getProximoId(connection);
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, proximoId);
-            preparedStatement.setString(2, contato.getDescricao());
-            preparedStatement.setString(3, contato.getNumero());
-            preparedStatement.setString(4, contato.getTipo().toString());
-            preparedStatement.setInt(5, idUsuario);
-            int res = preparedStatement.executeUpdate();
+            Integer proximoId = getProximoId(connection);
+            contato.setId(proximoId.intValue());
+
+            String sql = "INSERT INTO CONTATO " +
+                    "(ID_CONTATO, ID_USUARIO, DESCRICAO, NUMERO, TIPO_CONTATO) " +
+                    "VALUES (?, ?, ?, ?, ?)";
+
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, proximoId);
+            statement.setInt(2, contato.getIdCliente());
+            statement.setString(3, contato.getDescricao());
+            statement.setString(4, contato.getNumero());
+            statement.setString(5, String.valueOf(contato.getTipo()));
+
+            int res = statement.executeUpdate();
             System.out.println("Adicionado " + res + " contato");
+
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado para adicionar o Contato ao banco de dados.");
-            throw new ErroNoBancoDeDados(erro.getMessage());
+            throw new Exception(erro.getMessage());
         } finally {
             try {
                 connection.close();
@@ -58,7 +65,7 @@ public class ContatoRepository {
         return contato;
     }
 
-    public boolean editar(Integer id, Contato contato) throws ErroNoBancoDeDados {
+    public Contato editar(Integer id, Contato contato) throws Exception {
         Connection connection = null;
 
         try {
@@ -77,12 +84,12 @@ public class ContatoRepository {
             int res = stm.executeUpdate();
             System.out.println("contatos editados :" + res);
 
-            return res > 0;
+            return contato;
 
 
         } catch (SQLException e) {
             System.out.println("ERRO: Algo deu errado ao editar o Contato no banco de dados.");
-            throw new ErroNoBancoDeDados(e.getMessage());
+            throw new Exception(e.getMessage());
         } finally {
             try {
                 if (connection != null) {
@@ -95,20 +102,26 @@ public class ContatoRepository {
         }
     }
 
-
-    public List<Contato> listar() throws SQLException {
-        Connection connection = null;
+    public List<Contato> listarTodos() throws SQLException {
         List<Contato> contatos = new ArrayList<>();
-        String sql = "SELECT * FROM contatos";
+        Connection conexao = null;
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
+
+        try {
+            conexao = conexaoBancoDeDados.getConnection();
+            Statement statement = conexao.createStatement();
+
+            String sql = "SELECT * FROM CONTATO";
+
+            ResultSet resultSet = statement.executeQuery(sql);
+
             while (resultSet.next()) {
+
                 Contato contato = new Contato();
-                contato.setId(resultSet.getInt("id"));
-                contato.setDescricao(resultSet.getString("descricao"));
-                contato.setNumero(resultSet.getString("numero"));
-                int tipoCodigo = resultSet.getInt("tipo");
+                contato.setId(resultSet.getInt("ID_CONTATO"));
+                contato.setIdCliente(resultSet.getInt("ID_USUARIO"));
+                contato.setDescricao(resultSet.getString("DESCRICAO"));
+                contato.setNumero(resultSet.getString("NUMERO"));
                 contato.setTipo(Tipo.valueOf(resultSet.getString("TIPO_CONTATO")));
                 contatos.add(contato);
             }
@@ -118,32 +131,36 @@ public class ContatoRepository {
         return contatos;
     }
 
-    public List<Contato> contatosPorCliente(Integer idCliente) throws ErroNoBancoDeDados {
+    public List<Contato> procurarContatoPorIdCliente(Integer idCliente) throws Exception {
         Connection connection = null;
         List<Contato> contatosDosClientes = new ArrayList<>();
 
         try {
-            String sql = "SELECT * FROM CONTATO C RIGHT JOIN USUARIO U ON C.ID_USUARIO = U.ID_USUARIO where C.ID_USUARIO = ? ";
             connection = conexaoBancoDeDados.getConnection();
-            PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setInt(1, idCliente);
-            ResultSet res = stm.executeQuery();
 
-            while (res.next()) {
+            String sql = "SELECT * FROM CONTATO WHERE ID_USUARIO = ? ";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, idCliente);
+
+            ResultSet resultado = statement.executeQuery();
+
+            while (resultado.next()) {
                 Contato contato = new Contato();
-                contato.setTipo(Tipo.valueOf(res.getString("TIPO_CONTATO")));
-                contato.setNumero(res.getString("NUMERO"));
-                contato.setDescricao(res.getString("DESCRICAO"));
-                contato.setId(res.getInt("ID_CONTATO"));
+                contato.setId(resultado.getInt("ID_CONTATO"));
+                contato.setIdCliente(resultado.getInt("ID_USUARIO"));
+                contato.setDescricao(resultado.getString("DESCRICAO"));
+                contato.setNumero(resultado.getString("NUMERO"));
+                contato.setTipo(Tipo.valueOf(resultado.getString("TIPO_CONTATO")));
+
                 contatosDosClientes.add(contato);
 
             }
             if (contatosDosClientes.isEmpty()) {
-                throw new ErroNoBancoDeDados("Este usuario não tem contatos");
+                throw new Exception("Este usuario não tem contatos");
             }
         } catch (SQLException ex) {
             System.out.println("ERRO: Este cliente não tem contatos no banco de dados.");
-            throw new ErroNoBancoDeDados(ex.getMessage());
+            throw new Exception(ex.getMessage());
         } finally {
             try {
                 if (connection != null) {
@@ -156,7 +173,7 @@ public class ContatoRepository {
         return contatosDosClientes;
     }
 
-    public void excluirContato(Integer idContato) throws ErroNoBancoDeDados {
+    public void excluir(Integer idContato) throws Exception {
         Connection connection = null;
 
         try {
@@ -170,7 +187,7 @@ public class ContatoRepository {
             int res = stm.executeUpdate();
         } catch (SQLException ex) {
             System.out.println("ERRO AO EXCLUIR O CONTATO : " + ex.getMessage());
-            throw new ErroNoBancoDeDados(ex.getMessage());
+            throw new Exception(ex.getMessage());
 
         } finally {
             try {

@@ -1,5 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.controllers;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces.IEnderecoController;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EnderecoCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EnderecoDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceEndereco;
@@ -18,12 +19,12 @@ import java.util.List;
 @RequestMapping("/endereco")
 @Validated
 @Slf4j
-public class EnderecoController {
+public class EnderecoController implements IEnderecoController {
 
     private final ServiceEndereco serviceEndereco;
 
     @PostMapping("/{idCliente}")
-    public ResponseEntity<EnderecoDTO> create(@PathVariable("idCliente") Integer idCliente, @Valid @RequestBody EnderecoCreateDTO endereco) throws Exception {
+    public ResponseEntity<EnderecoDTO> adicionar(@PathVariable("idCliente") Integer idCliente, @Valid @RequestBody EnderecoCreateDTO endereco) throws Exception {
         log.debug("Criando endereço");
 
         var enderecoCriado = serviceEndereco.adicionar(endereco, idCliente);
@@ -35,7 +36,7 @@ public class EnderecoController {
     }
 
     @PutMapping("/{idEndereco}")
-    public ResponseEntity<EnderecoDTO> update(@PathVariable("idEndereco") Integer idEndereco, @Valid @RequestBody EnderecoCreateDTO endereco) throws Exception {
+    public ResponseEntity<EnderecoDTO> atualizar(@PathVariable("idEndereco") Integer idEndereco, @Valid @RequestBody EnderecoCreateDTO endereco) throws Exception {
         log.debug("Atualizando endereço");
 
         var enderecoAtualizado = serviceEndereco.editar(idEndereco, endereco);
@@ -48,7 +49,7 @@ public class EnderecoController {
     }
 
     @DeleteMapping("/{idEndereco}")
-    public ResponseEntity<Void> delete(@PathVariable("idEndereco") Integer idEndereco) throws Exception {
+    public ResponseEntity<Void> remover(@PathVariable("idEndereco") Integer idEndereco) throws Exception {
         log.debug("Excluindo endereço");
 
         var enderecoEncontrado = serviceEndereco.procurarPorIdEndereco(idEndereco);
@@ -64,7 +65,7 @@ public class EnderecoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EnderecoDTO>> getAll() throws Exception {
+    public ResponseEntity<List<EnderecoDTO>> listarTodos() throws Exception {
         var enderecos = serviceEndereco.listarTodos();
 
         if (enderecos == null)
@@ -74,7 +75,7 @@ public class EnderecoController {
     }
 
     @GetMapping("/{idEndereco}")
-    public ResponseEntity<EnderecoDTO> getByIdEndereco(@PathVariable("idEndereco") Integer idEndereco) throws Exception {
+    public ResponseEntity<EnderecoDTO> procurarPorIdEndereco(@PathVariable("idEndereco") Integer idEndereco) throws Exception {
         var endereco = serviceEndereco.procurarPorIdEndereco(idEndereco);
 
         if (endereco == null)
@@ -86,7 +87,7 @@ public class EnderecoController {
     }
 
     @GetMapping("/{idCliente}/cliente")
-    public ResponseEntity<List<EnderecoDTO>> getByIdCliente(@PathVariable("idCliente") Integer idCliente) throws Exception {
+    public ResponseEntity<List<EnderecoDTO>> procurarPorIdCliente(@PathVariable("idCliente") Integer idCliente) throws Exception {
         var enderecos = serviceEndereco.procurarEnderecoPorIdCliente(idCliente);
 
 
