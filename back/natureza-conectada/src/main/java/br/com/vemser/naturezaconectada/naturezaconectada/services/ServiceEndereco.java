@@ -2,6 +2,8 @@ package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EnderecoCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EnderecoDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Endereco;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.EnderecoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -77,5 +79,18 @@ public class ServiceEndereco {
         return enderecos.stream()
                 .map(endereco -> objectMapper.convertValue(endereco, EnderecoDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    public EnderecoDTO ativarEndereco(Integer id, String eco) throws Exception {
+        EnderecoDTO endereco = this.procurarPorIdEndereco(id);
+        this.enderecoRepository.ativarEndereco(endereco.getIdEndereco(),eco);
+        endereco.setEcossistema(Ecossistema.valueOf(eco));
+        endereco.setAtivo(Ativo.A);
+        return endereco;
+
+
+
+
+
     }
 }

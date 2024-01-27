@@ -1,5 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.dto.response;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TamanhoMuda;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoMuda;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Hidden
+@Schema(description = "Retorno de muda ")
 public class MudaDTO {
 
     private int id;
@@ -24,7 +25,7 @@ public class MudaDTO {
 
     private TamanhoMuda porte;
 
-    private String ambienteIdeal;
+    private Ecossistema ecossistema;
 
     private String descricao;
 }
