@@ -34,14 +34,14 @@
     }
 
      public ContatoDTO editar(Integer idContato, ContatoCreateDTO contatoEditado) throws Exception {
-         var contatoEncontrado = objectMapper.convertValue(contatoEditado, Contato.class);
+         var contato = objectMapper.convertValue(contatoEditado, Contato.class);
 
-         contatoRepository.editar(idContato, contatoEncontrado);
+         contatoRepository.editar(idContato, contato);
 
-         contatoEncontrado.setId(idContato);
-         contatoEncontrado.setIdCliente(contatoEncontrado.getIdCliente());
+         contato.setId(idContato);
+         contato.setIdCliente(contato.getIdCliente());
 
-         return objectMapper.convertValue(contatoEncontrado, ContatoDTO.class);
+         return objectMapper.convertValue(contato, ContatoDTO.class);
      }
 
      public void remover(Integer idContato) throws Exception {

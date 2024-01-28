@@ -76,7 +76,7 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
-            String sql = "DELETE FROM USUARIO WHERE ID_USUARIO = ?";
+            String sql = "UPDATE USUARIO SET ATIVO = 'D' WHERE ID_USUARIO = ?";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setInt(1, id);
@@ -207,7 +207,6 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
     }
 
 
-
     public Usuario procurarPorId(int id) throws Exception {
         Usuario usuario = null;
         Connection con = null;
@@ -233,6 +232,42 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
                 }
             }
             return usuario;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new Exception("ERRO: Algo deu errado ao buscar o usuário do banco de dados.");
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public List<Usuario> procurarUsuariosAtivos() throws Exception {
+        Usuario usuario = null;
+        Connection con = null;
+        List<Usuario> listaUsuario = new ArrayList<>();
+
+        try {
+            Statement statment = con.createStatement();
+            con = conexaoBancoDeDados.getConnection();
+            String sql = "SELECT * FROM USUARIO WHERE ATIVO = 'A'";
+
+            ResultSet usuarioTabela = statment.executeQuery(sql);
+
+            while (usuarioTabela.next()) {
+                TipoUsuario tipoUsuario = TipoUsuario.valueOf(usuarioTabela.getString("TIPO_USUARIO"));
+
+                usuario = getUsuario(usuarioTabela, tipoUsuario);
+
+                listaUsuario.add(usuario);
+            }
+
+            return listaUsuario;
 
         } catch (SQLException e) {
             e.printStackTrace();

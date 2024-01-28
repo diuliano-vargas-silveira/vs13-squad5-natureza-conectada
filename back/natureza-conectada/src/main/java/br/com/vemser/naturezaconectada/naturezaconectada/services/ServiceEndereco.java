@@ -88,9 +88,5 @@ public class ServiceEndereco {
         endereco.setAtivo(Ativo.A);
         return endereco;
 
-
-
-
-
     }
 }
