@@ -88,7 +88,11 @@ public class ServiceEndereco {
         endereco.setAtivo(Ativo.A);
         return endereco;
 
+    }
+    public List<EnderecoDTO> listarEnderecosPorAtivo(String ativo) throws Exception {
+        List<Endereco> listaPorAtivo = this.enderecoRepository.listarEnderecosPorAtivo(ativo);
 
+        return listaPorAtivo.stream().map(endereco -> this.objectMapper.convertValue(endereco,EnderecoDTO.class)).toList();
 
 
 

@@ -174,7 +174,7 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
         Connection con = null;
         try {
             con = conexaoBancoDeDados.getConnection();
-            String sql = "SELECT * FROM USUARIO WHERE EMAIL = ?";
+            String sql = "SELECT * FROM USUARIO WHERE EMAIL = ? AND ATIVO = 'A'";
 
             try (PreparedStatement pstmt = con.prepareStatement(sql)) {
                 pstmt.setString(1, email);

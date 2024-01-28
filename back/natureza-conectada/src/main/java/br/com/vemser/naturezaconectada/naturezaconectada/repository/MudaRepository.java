@@ -80,7 +80,7 @@ public class MudaRepository  {
         try{
             conexao = conexaoBancoDeDados.getConnection();
             String sql = "UPDATE MUDA SET " +
-                    "ATIVO = D " +
+                    "ATIVO = ? " +
                     "WHERE ID_MUDA = ?";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
