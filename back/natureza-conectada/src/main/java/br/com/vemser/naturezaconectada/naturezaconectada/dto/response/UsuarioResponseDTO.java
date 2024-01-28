@@ -1,5 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.dto.response;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -19,4 +20,6 @@ public class UsuarioResponseDTO {
     private String email;
     @Schema(description = "Tipo do usuário", example = "ADMIN")
     private TipoUsuario tipoUsuario;
+    @Schema(description = "Ativo", example = "A")
+    private Ativo ativo;
 }
