@@ -1,8 +1,10 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.*;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
-import br.com.vemser.naturezaconectada.naturezaconectada.repository.interfaces.IRepository;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.Contato;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.Endereco;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -10,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class ClienteRepository implements IRepository<Integer, Cliente> {
+public class ClienteRepository {
 
     private final ConexaoBancoDeDados conexaoBancoDeDados;
 
@@ -18,7 +20,6 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
         this.conexaoBancoDeDados = conexaoBancoDeDados;
     }
 
-    @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT seq_cliente.nextval mysequence from DUAL";
         Statement stmt = connection.createStatement();
@@ -30,8 +31,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
         return null;
     }
 
-    @Override
-    public Cliente adicionar(Cliente cliente) throws ErroNoBancoDeDados {
+    public Cliente adicionar(Cliente cliente) throws Exception {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
@@ -70,8 +70,38 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
         }
     }
 
-    @Override
-    public boolean remover(Integer id) throws ErroNoBancoDeDados {
+    public Cliente editar(Integer id, Cliente clienteEditado) throws Exception {
+        Connection conexao = null;
+
+        try {
+            conexao = conexaoBancoDeDados.getConnection();
+
+            String sql_cliente = "UPDATE CLIENTE SET\n" +
+                    " CPF = ? \n" +
+                    " WHERE ID_CLIENTE = ? ";
+
+            PreparedStatement stmt = conexao.prepareStatement(sql_cliente);
+            stmt.setString(1, clienteEditado.getCpf());
+            stmt.setInt(2, id);
+
+            int res = stmt.executeUpdate();
+            System.out.println("editarPessoa.res=" + res);
+
+            return clienteEditado;
+
+        } catch (SQLException e) {
+            throw new ErroNoBancoDeDados(e.getMessage());
+        } finally {
+            try {
+                fecharConexao(conexao);
+            } catch (SQLException erro) {
+                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
+                erro.printStackTrace();
+            }
+        }
+    }
+
+    public void remover(Integer id) throws Exception {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
@@ -83,7 +113,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
                 int resultado = stmt.executeUpdate();
                 System.out.println("O cliente foi removido! Resultado: " + resultado);
 
-                return resultado > 0;
+
             } catch (SQLException e) {
                 throw new ErroNoBancoDeDados(e.getMessage());
             }
@@ -100,40 +130,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
         }
     }
 
-    @Override
-    public boolean editar(Integer id, Cliente clienteEditado) throws ErroNoBancoDeDados {
-        Connection conexao = null;
-
-        try {
-            conexao = conexaoBancoDeDados.getConnection();
-
-            String sql_cliente = "UPDATE CLIENTE SET\n" +
-                    " CPF = ? \n" +
-                    " WHERE id_cliente = ? ";
-
-            PreparedStatement stmt = conexao.prepareStatement(sql_cliente);
-            stmt.setString(1, clienteEditado.getCpf());
-            stmt.setInt(2, id);
-
-            int res = stmt.executeUpdate();
-            System.out.println("editarPessoa.res=" + res);
-
-            return res > 0;
-
-        } catch (SQLException e) {
-            throw new ErroNoBancoDeDados(e.getMessage());
-        } finally {
-            try {
-                fecharConexao(conexao);
-            } catch (SQLException erro) {
-                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
-                erro.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    public List<Cliente> listar() throws ErroNoBancoDeDados {
+    public List<Cliente> listarTodos() throws Exception {
         List<Cliente> clientes = new ArrayList<>();
         Connection conexao = null;
 
@@ -141,9 +138,10 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
             conexao = conexaoBancoDeDados.getConnection();
 
             Statement stmt = conexao.createStatement();
-            ResultSet res = stmt.executeQuery("SELECT c.ID_CLIENTE, c.CPF, u.NOME, u.EMAIL\n" +
-                    "FROM VS_13_EQUIPE_5.CLIENTE c\n" +
-                    "INNER JOIN VS_13_EQUIPE_5.USUARIO u ON (c.ID_USUARIO = u.ID_USUARIO )");
+            ResultSet res = stmt.executeQuery(
+                    "SELECT c.ID_CLIENTE, c.CPF, u.NOME, u.EMAIL, u.ATIVO, u.TIPO_USUARIO " +
+                            "FROM VS_13_EQUIPE_5.CLIENTE c " +
+                            "INNER JOIN VS_13_EQUIPE_5.USUARIO u ON (c.ID_USUARIO = u.ID_USUARIO )");
 
             while (res.next()) {
                 Cliente cliente = new Cliente();
@@ -151,6 +149,13 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
                 cliente.setNome(res.getString("NOME"));
                 cliente.setEmail(res.getString("EMAIL"));
                 cliente.setCpf(res.getString("CPF"));
+                cliente.setAtivo(Ativo.valueOf(res.getString("ATIVO")));
+                cliente.setTipoUsuario(TipoUsuario.CLIENTE);
+
+                cliente.setEnderecos(buscarEnderecosPorIdCliente(conexao, cliente.getId()));
+
+                cliente.setContatos(buscarContatosPorIdCliente(conexao, cliente.getId()));
+
                 clientes.add(cliente);
             }
 
@@ -160,38 +165,123 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
             try {
                 fecharConexao(conexao);
             } catch (SQLException erro) {
-                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
+                System.out.println("ERRO: Não foi possível encerrar corretamente a conexão com o banco de dados.");
                 erro.printStackTrace();
             }
         }
         return clientes;
-
     }
 
-    public Cliente listarPorID(int id) throws ErroNoBancoDeDados {
+    private List<Contato> buscarContatosPorIdCliente(Connection conexao, Integer idCliente) throws SQLException {
+        String sqlContato = "SELECT ID_CONTATO, DESCRICAO, NUMERO, TIPO_CONTATO FROM CONTATO WHERE ID_USUARIO = ?";
+
+        PreparedStatement statementContato = conexao.prepareStatement(sqlContato);
+        statementContato.setInt(1, idCliente);
+
+        ResultSet resultadoContato = statementContato.executeQuery();
+        List<Contato> contatos = new ArrayList<>();
+
+        while (resultadoContato.next()) {
+            Contato contato = new Contato();
+            contato.setId(resultadoContato.getInt("ID_CONTATO"));
+            contato.setDescricao(resultadoContato.getString("DESCRICAO"));
+            contato.setNumero(resultadoContato.getString("NUMERO"));
+            contato.setTipo(Tipo.valueOf(resultadoContato.getString("TIPO_CONTATO")));
+
+            contatos.add(contato);
+        }
+
+        return contatos;
+    }
+
+    private List<Endereco> buscarEnderecosPorIdCliente(Connection conexao, Integer idCliente) throws SQLException {
+        String sqlEndereco = "SELECT e.ID_ENDERECO, e.CEP, e.LOGRADOURO, e.NUMERO, e.COMPLEMENTO, e.CIDADE, e.ID_ESTADO, e.TIPO, e.ECOSSISTEMA, e.ATIVO " +
+                "FROM VS_13_EQUIPE_5.ENDERECO e " +
+                "WHERE e.ID_USUARIO = ?";
+
+        PreparedStatement statementEndereco = conexao.prepareStatement(sqlEndereco);
+        statementEndereco.setInt(1, idCliente);
+
+        ResultSet resultadoEndereco = statementEndereco.executeQuery();
+        List<Endereco> enderecos = new ArrayList<>();
+
+        while (resultadoEndereco.next()) {
+            Endereco endereco = new Endereco();
+            endereco.setIdEndereco(resultadoEndereco.getInt("ID_ENDERECO"));
+            endereco.setCep(resultadoEndereco.getString("CEP"));
+            endereco.setLogradouro(resultadoEndereco.getString("LOGRADOURO"));
+            endereco.setNumero(resultadoEndereco.getString("NUMERO"));
+            endereco.setComplemento(resultadoEndereco.getString("COMPLEMENTO"));
+            endereco.setCidade(resultadoEndereco.getString("CIDADE"));
+            endereco.setEstado(Estados.values()[resultadoEndereco.getInt("ID_ESTADO") - 1]);
+            endereco.setTipo(Tipo.valueOf(resultadoEndereco.getString("TIPO")));
+            endereco.setEcossistema(Ecossistema.valueOf(resultadoEndereco.getString("ECOSSISTEMA")));
+            endereco.setAtivo(Ativo.valueOf(resultadoEndereco.getString("ATIVO")));
+
+            enderecos.add(endereco);
+        }
+
+        return enderecos;
+    }
+
+    public Cliente procurarPorIdCliente(Integer idCliente) throws Exception {
         Cliente cliente = new Cliente();
         Connection conexao = null;
 
         try {
             conexao = conexaoBancoDeDados.getConnection();
-            String sql = "SELECT * FROM CLIENTE WHERE ID_CLIENTE = " + id;
+            String sqlCliente = "SELECT c.ID_CLIENTE, c.CPF, u.NOME, u.EMAIL, u.ATIVO, u.TIPO_USUARIO " +
+                    "FROM VS_13_EQUIPE_5.CLIENTE c " +
+                    "INNER JOIN VS_13_EQUIPE_5.USUARIO u ON (c.ID_USUARIO = u.ID_USUARIO) " +
+                    "WHERE c.ID_CLIENTE = ?";
 
-            Statement stmt = conexao.createStatement();
-            ResultSet resposta = stmt.executeQuery(sql);
+            PreparedStatement statementCliente = conexao.prepareStatement(sqlCliente);
+            statementCliente.setInt(1, idCliente);
 
-            Statement stmt2 = conexao.createStatement();
+            ResultSet resultadoCliente = statementCliente.executeQuery();
 
-
-            while (resposta.next()) {
-                cliente.setCpf(resposta.getString("CPF"));
-                String sql2 = "SELECT * FROM USUARIO WHERE ID_USUARIO = " + resposta.getInt("ID_USUARIO");
-                ResultSet resposta2 = stmt2.executeQuery(sql2);
-                while (resposta2.next()) {
-                    cliente.setNome(resposta2.getString("NOME"));
-                    cliente.setEmail(resposta2.getString("EMAIL"));
-                    cliente.setId(resposta.getInt("ID_CLIENTE"));
-                }
+            while (resultadoCliente.next()) {
+                // Preenche os dados do cliente
+                cliente.setId(resultadoCliente.getInt("ID_CLIENTE"));
+                cliente.setCpf(resultadoCliente.getString("CPF"));
+                cliente.setNome(resultadoCliente.getString("NOME"));
+                cliente.setEmail(resultadoCliente.getString("EMAIL"));
+                cliente.setAtivo(Ativo.valueOf(resultadoCliente.getString("ATIVO")));
+                cliente.setTipoUsuario(TipoUsuario.CLIENTE);
             }
+
+            if (cliente.getId() != 0) {
+                // Cliente encontrado, então busca os endereços associados
+                String sqlEndereco = "SELECT e.ID_ENDERECO, e.ID_USUARIO, e.CEP, e.LOGRADOURO, e.NUMERO, e.COMPLEMENTO, e.CIDADE, e.ID_ESTADO, e.TIPO, e.ECOSSISTEMA, e.ATIVO " +
+                        "FROM VS_13_EQUIPE_5.ENDERECO e " +
+                        "WHERE e.ID_USUARIO = ?";
+
+                PreparedStatement statementEndereco = conexao.prepareStatement(sqlEndereco);
+                statementEndereco.setInt(1, cliente.getId());
+
+                ResultSet resultadoEndereco = statementEndereco.executeQuery();
+                List<Endereco> enderecos = new ArrayList<>();
+
+                while (resultadoEndereco.next()) {
+                    Endereco endereco = new Endereco();
+                    endereco.setIdEndereco(resultadoEndereco.getInt("ID_ENDERECO"));
+                    endereco.setCep(resultadoEndereco.getString("CEP"));
+                    endereco.setLogradouro(resultadoEndereco.getString("LOGRADOURO"));
+                    endereco.setNumero(resultadoEndereco.getString("NUMERO"));
+                    endereco.setComplemento(resultadoEndereco.getString("COMPLEMENTO"));
+                    endereco.setCidade(resultadoEndereco.getString("CIDADE"));
+                    endereco.setEstado(Estados.values()[resultadoEndereco.getInt("ID_ESTADO") - 1]);
+                    endereco.setTipo(Tipo.valueOf(resultadoEndereco.getString("TIPO")));
+                    endereco.setEcossistema(Ecossistema.valueOf(resultadoEndereco.getString("ECOSSISTEMA")));
+                    endereco.setAtivo(Ativo.valueOf(resultadoEndereco.getString("ATIVO")));
+
+                    cliente.getEnderecos().add(endereco);
+                }
+
+                // Busca os contatos associados
+                cliente.setContatos(buscarContatosPorIdCliente(conexao, cliente.getId()));
+            }
+
             return cliente;
 
         } catch (SQLException e) {
@@ -200,7 +290,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
             try {
                 fecharConexao(conexao);
             } catch (SQLException erro) {
-                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
+                System.out.println("ERRO: Não foi possível encerrar corretamente a conexão com o banco de dados.");
                 erro.printStackTrace();
             }
         }
@@ -223,7 +313,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
         }
     }
 
-    public Cliente listarPorEmail(String email) throws ErroNoBancoDeDados {
+    public Cliente listarPorEmail(String email) throws Exception {
         Cliente cliente = null;
         Connection conexao = null;
 
@@ -262,7 +352,7 @@ public class ClienteRepository implements IRepository<Integer, Cliente> {
         return cliente;
     }
 
-    public void InserirMudaEmCliente(Integer idCliente, Integer idMuda) throws ErroNoBancoDeDados {
+    public void InserirMudaEmCliente(Integer idCliente, Integer idMuda) throws Exception {
         Connection connection = null;
         try {
             connection = conexaoBancoDeDados.getConnection();

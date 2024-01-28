@@ -56,6 +56,7 @@ public class EmailService {
     public String geContentFromTemplate(UsuarioRequestDTO dto,TipoEmail tipoEmail) throws IOException, TemplateException {
         Map<String, Object> dados = new HashMap<>();
         dados.put("nome", dto.getNome());
+        dados.put("email",dto.getEmail());
         dados.put("mensagem", tipoEmail.getMensagem());
 
         Template template = fmConfiguration.getTemplate("email-usuario-template.ftl");

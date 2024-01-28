@@ -4,6 +4,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Tipo;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,22 +23,14 @@ public class EnderecoDTO {
 
     private int idEndereco;
 
-
     private Integer idCliente;
 
-    @NotEmpty
-    @NotNull
-    @Size(min = 8, max = 8)
     @Schema(description = "CEP do Endereço (8 caracteres)", required = true, example = "12345678")
     private String cep;
 
-    @NotEmpty
-    @Size(min = 1, max = 100)
     @Schema(description = "Logradouro", required = true, example = "Rua ABC")
     private String logradouro;
 
-    @NotNull
-    @Positive
     @Schema(description = "Número do Endereço", required = true, example = "123")
     private String numero;
 
@@ -45,17 +38,12 @@ public class EnderecoDTO {
     @Schema(description = "Complemento do Endereço", example = "Apto 717")
     private String complemento;
 
-    @NotEmpty
-    @NotNull
-    @Size(min = 1, max = 250)
     @Schema(description = "Cidade", required = true, example = "Porto Alegre")
     private String cidade;
 
-    @NotNull
     @Schema(description = "Estado", required = true, example = "RS")
     private Estados estado;
 
-    @NotNull
     @Schema(description = "Tipo de Endereço", required = true)
     private Tipo tipo;
 

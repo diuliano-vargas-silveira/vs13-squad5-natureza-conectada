@@ -1,5 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.dto.request;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,9 @@ public class UsuarioRequestDTO {
 
     @Schema(description = "Identificador do usuário", required = false, hidden = true, example = "1")
     private int id;
+
+    @Schema(description = "Ativo", example = "A")
+    private Ativo ativo;
 
     @Schema(description = "Nome do usuário", required = true, example = "Lucas Alves")
     @NotBlank(message = "Nome não pode estar vazio!")

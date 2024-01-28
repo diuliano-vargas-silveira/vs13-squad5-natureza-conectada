@@ -8,6 +8,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Especialista;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Usuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.interfaces.IRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@Slf4j
 public class UsuarioRepository implements IRepository<Integer, Usuario> {
 
     private final ConexaoBancoDeDados conexaoBancoDeDados;
@@ -54,10 +56,12 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
             stmt.setString(3, usuario.getEmail());
             stmt.setString(4, usuario.getSenha());
             stmt.setString(5, usuario.getTipoUsuario().toString());
+            log.debug("Passou no rep");
 
             int resultado = stmt.executeUpdate();
             System.out.println("Usuário criado! Resultado: ".concat(String.valueOf(resultado)));
             return usuario;
+
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado para adicionar o usuário ao banco de dados.");
             throw new Exception(erro.getMessage());
@@ -76,7 +80,7 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
-            String sql = "DELETE FROM USUARIO WHERE ID_USUARIO = ?";
+            String sql = "UPDATE USUARIO SET ATIVO = 'D' WHERE ID_USUARIO = ?";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setInt(1, id);
@@ -207,7 +211,6 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
     }
 
 
-
     public Usuario procurarPorId(int id) throws Exception {
         Usuario usuario = null;
         Connection con = null;
@@ -233,6 +236,42 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
                 }
             }
             return usuario;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new Exception("ERRO: Algo deu errado ao buscar o usuário do banco de dados.");
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public List<Usuario> procurarUsuariosAtivos() throws Exception {
+        Usuario usuario = null;
+        Connection con = null;
+        List<Usuario> listaUsuario = new ArrayList<>();
+
+        try {
+            Statement statment = con.createStatement();
+            con = conexaoBancoDeDados.getConnection();
+            String sql = "SELECT * FROM USUARIO WHERE ATIVO = 'A'";
+
+            ResultSet usuarioTabela = statment.executeQuery(sql);
+
+            while (usuarioTabela.next()) {
+                TipoUsuario tipoUsuario = TipoUsuario.valueOf(usuarioTabela.getString("TIPO_USUARIO"));
+
+                usuario = getUsuario(usuarioTabela, tipoUsuario);
+
+                listaUsuario.add(usuario);
+            }
+
+            return listaUsuario;
 
         } catch (SQLException e) {
             e.printStackTrace();

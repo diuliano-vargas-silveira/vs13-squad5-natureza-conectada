@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.Exception;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -58,6 +59,16 @@ public class ServiceUsuario implements IServiceUsuario {
 
         return usuarioResponseDTO;
     }
+
+    public List<UsuarioResponseDTO> procurarUsuariosAtivos() throws Exception {
+        List<Usuario> usuarios = usuarioRepository.procurarUsuariosAtivos();
+        var usuariosResponseDTO = usuarios.stream()
+                .map(usuarioDTO -> objectMapper.convertValue(usuarioDTO, UsuarioResponseDTO.class))
+                .collect(Collectors.toList());
+
+        return usuariosResponseDTO;
+    }
+
 
     @Override
     public UsuarioResponseDTO procurarPorEmail(String email) throws Exception {

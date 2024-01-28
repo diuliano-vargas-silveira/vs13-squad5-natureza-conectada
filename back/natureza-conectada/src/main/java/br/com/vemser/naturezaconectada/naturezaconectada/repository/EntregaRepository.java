@@ -1,10 +1,8 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
-
-import br.com.vemser.naturezaconectada.naturezaconectada.enums.StatusEntrega;
-import br.com.vemser.naturezaconectada.naturezaconectada.enums.TamanhoMuda;
-import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoMuda;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.*;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Entrega;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
@@ -37,152 +35,142 @@ public class EntregaRepository {
 
 
     public Entrega adicionar(Entrega entrega, Integer idEndereco) throws ErroNoBancoDeDados {
-        Connection conexao = null;
+        try (Connection conexao = conexaoBancoDeDados.getConnection()) {
+            entrega.setId(getProximoId(conexao));
 
-        try {
-            conexao = conexaoBancoDeDados.getConnection();
-            Integer proximoId = this.getProximoId(conexao);
-            entrega.setId(proximoId.intValue());
+            String sqlEntrega = "INSERT INTO VS_13_EQUIPE_5.ENTREGA (ID_ENTREGA, ID_CLIENTE, ID_ENDERECO, STATUS) VALUES (?, ?, ?, ?)";
 
-            String sql = "INSERT INTO VS_13_EQUIPE_5.ENTREGA\n" +
-                    "(ID_ENTREGA, ID_CLIENTE, ID_ENDERECO, STATUS)\n" +
-                    "VALUES(?, ?, ?, ?)\n";
+            try (PreparedStatement statementEntrega = conexao.prepareStatement(sqlEntrega)) {
+                statementEntrega.setInt(1, entrega.getId());
+                statementEntrega.setInt(2, entrega.getCliente().getId());
+                statementEntrega.setInt(3, idEndereco);
+                statementEntrega.setString(4, String.valueOf(entrega.getStatus()));
+                int resultadoEntrega = statementEntrega.executeUpdate();
 
+                adicionarMudas(conexao, entrega.getId(), entrega.getMudas());
 
-            PreparedStatement statementUm = conexao.prepareStatement(sql);
-            statementUm.setInt(1, entrega.getId());
-            statementUm.setInt(2, entrega.getCliente().getId());
-            statementUm.setInt(3, idEndereco);
-            statementUm.setString(4, String.valueOf(entrega.getStatus()));
+                entrega.setMudas(obterMudasDaEntrega(conexao, entrega.getId()));
+                entrega.setCliente(obterClienteDaEntrega(conexao, entrega.getId()));
 
-            int resultadoUm = statementUm.executeUpdate();
+                System.out.println("A entrega foi adicionada! Resultado: " + resultadoEntrega);
 
-
-            int quantidade = entrega.getMudas().size();
-            int contador = 0;
-            while (contador < quantidade) {
-                String sqlQueryEntregaMuda = "INSERT INTO VS_13_EQUIPE_5.ENTREGA_MUDA (ID_ENTREGA_MUDA, ID_MUDA, ID_ENTREGA, QUANTIDADE)\n "
-                        + "VALUES (?, ?, ?, ?)";
-                PreparedStatement statementDois = conexao.prepareStatement(sqlQueryEntregaMuda);
-                Statement statementTres = conexao.createStatement();
-                String sqlNextValSeqEntregaMuda = "SELECT SEQ_ENTREGA_MUDA.NEXTVAL mysequence FROM DUAL";
-
-                ResultSet resultadoQueryEntregaMuda = statementTres.executeQuery(sqlNextValSeqEntregaMuda);
-                int proximoIdEntregaMuda = 1;
-                while (resultadoQueryEntregaMuda.next()) {
-                    proximoIdEntregaMuda = resultadoQueryEntregaMuda.getInt("mysequence");
-                }
-                statementDois.setInt(1, proximoIdEntregaMuda);
-                statementDois.setInt(2, entrega.getMudas().get(contador).getId());
-                statementDois.setInt(3, proximoId);
-                statementDois.setInt(4, entrega.getMudas().get(contador).getQuantidade());
-                int resultadoDois = statementDois.executeUpdate();
-                statementDois.close();
-                statementTres.close();
-                contador++;
+                return entrega;
             }
-
-            System.out.println("A entrega foi adicionada! Resultado: ".concat(String.valueOf(resultadoUm)));
-
-            return entrega;
-
         } catch (SQLException erro) {
-            System.out.println("ERRO: Algo deu errado para adicionar á entrega ao banco de dados.");
+            System.out.println("ERRO: Algo deu errado ao adicionar a entrega ao banco de dados.");
             throw new ErroNoBancoDeDados(erro.getMessage());
-        } finally {
-            try {
-                fecharConexao(conexao);
-            } catch (SQLException erro) {
-                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
-                erro.printStackTrace();
+        }
+    }
+
+    private void adicionarMudas(Connection conexao, int idEntrega, List<Muda> mudas) throws SQLException {
+        String sqlMuda = "INSERT INTO VS_13_EQUIPE_5.ENTREGA_MUDA (ID_ENTREGA_MUDA, ID_MUDA, ID_ENTREGA, QUANTIDADE) VALUES (?, ?, ?, ?)";
+
+        try (PreparedStatement statementMuda = conexao.prepareStatement(sqlMuda)) {
+            for (Muda muda : mudas) {
+                int proximoIdEntregaMuda = obterProximoIdEntregaMuda(conexao);
+                statementMuda.setInt(1, proximoIdEntregaMuda);
+                statementMuda.setInt(2, muda.getId());
+                statementMuda.setInt(3, idEntrega);
+                statementMuda.setInt(4, muda.getQuantidade());
+                statementMuda.executeUpdate();
+
             }
         }
     }
 
-    public boolean remover(Integer id) throws ErroNoBancoDeDados {
+    private int obterProximoIdEntregaMuda(Connection conexao) throws SQLException {
+        String sqlNextValSeqEntregaMuda = "SELECT SEQ_ENTREGA_MUDA.NEXTVAL mysequence FROM DUAL";
+        try (Statement statement = conexao.createStatement()) {
+            ResultSet resultadoQueryEntregaMuda = statement.executeQuery(sqlNextValSeqEntregaMuda);
+            return resultadoQueryEntregaMuda.next() ? resultadoQueryEntregaMuda.getInt("mysequence") : 0;
+        }
+    }
+
+
+    public boolean remover(Integer id) throws SQLException {
         Connection conexao = null;
+
         try {
             conexao = conexaoBancoDeDados.getConnection();
-            String sql = "DELETE FROM VS_13_EQUIPE_5.ENTREGA WHERE ID_ENTREGA = ?";
-
-            PreparedStatement statementUm = conexao.prepareStatement(sql);
-            statementUm.setInt(1, id.intValue());
-
-            int resultado = statementUm.executeUpdate();
+            conexao.setAutoCommit(false);
 
             String sqlEntregaMuda = "DELETE FROM VS_13_EQUIPE_5.ENTREGA_MUDA WHERE ID_ENTREGA = ?";
+            try (PreparedStatement statementDois = conexao.prepareStatement(sqlEntregaMuda)) {
+                statementDois.setInt(1, id);
+                int resultadoDois = statementDois.executeUpdate();
 
-            PreparedStatement statementDois = conexao.prepareStatement(sqlEntregaMuda);
-            statementDois.setInt(1, id.intValue());
+                if (resultadoDois == 0) {
+                    conexao.rollback();
+                    throw new InformacaoNaoEncontrada("Não existe nenhuma entrega com o ID: " + id);
+                }
+            }
 
-            int resultadoDois = statementDois.executeUpdate();
-            System.out.println("A entrega foi removida! Resultado: ".concat(String.valueOf(resultado)));
+            String sql = "DELETE FROM VS_13_EQUIPE_5.ENTREGA WHERE ID_ENTREGA = ?";
+            try (PreparedStatement statementUm = conexao.prepareStatement(sql)) {
+                statementUm.setInt(1, id);
+                int resultadoUm = statementUm.executeUpdate();
 
-            return resultado > 0;
+                if (resultadoUm == 0) {
+                    conexao.rollback();
+                    throw new InformacaoNaoEncontrada("Não existe nenhuma entrega com o ID: " + id);
+                }
+
+                conexao.commit();
+                return true;
+            }
         } catch (SQLException erro) {
-            System.out.println("ERRO: Algo deu errado para remover á entrega do banco de dados.");
-            throw new ErroNoBancoDeDados(erro.getMessage());
+            conexao.rollback();
+            throw new ErroNoBancoDeDados("Erro ao remover a entrega do banco de dados.");
         } finally {
             try {
+                conexao.setAutoCommit(true);
                 fecharConexao(conexao);
             } catch (SQLException erro) {
-                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
-                erro.printStackTrace();
+                throw new ErroNoBancoDeDados("Não foi possível encerrar corretamente a conexão com o banco de dados.");
             }
         }
     }
 
+    public Entrega editar(int idEntrega, Entrega entrega) throws ErroNoBancoDeDados {
+        try (Connection conexao = conexaoBancoDeDados.getConnection()) {
+            String sqlEntrega = "UPDATE VS_13_EQUIPE_5.ENTREGA SET STATUS = ? WHERE ID_ENTREGA = ?";
 
-    public boolean editar(Integer id, Entrega entrega) throws Exception {
-//        Connection conexao = null;
-//        try {
-//            conexao = conexaoBancoDeDados.getConnection();
-//
-//            String sql = "UPDATE VS_13_EQUIPE_5.ENTREGA SET STATUS = ? WHERE ID_ENTREGA = ?";
-//
-//            if (String.valueOf(entrega.getStatus()).equals("ENTREGUE")) {
-//                List<Muda> novaLista = entrega.getMudas();
-//                int idCliente = entrega.getCliente().getIdCliente();
-//
-//                novaLista.stream().forEach(muda -> {
-//                    try {
-//                        serviceCliente.inserirMudasEntregues(idCliente, muda.getId());
-//                    } catch (Exception e) {
-//                        throw new RuntimeException(e.getCause());
-//                    }finally {
-//                        try {
-//                            if(conexao !=null){
-//                                conexao.close();
-//                            }
-//                            ;
-//                        } catch (SQLException erro) {
-//                            System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
-//                            erro.printStackTrace();
-//                        }
-//                    }
-//                });
-//
-//            }
-//
-//            PreparedStatement stmt = conexao.prepareStatement(sql);
-//            stmt.setString(1, String.valueOf(entrega.getStatus()));
-//            stmt.setInt(2, id);
-//
-//            int resultado = stmt.executeUpdate();
-//
-//            System.out.println("A entrega foi atualizada! Resultado: ".concat(String.valueOf(resultado)));
-//        } catch (SQLException erro) {
-//            System.out.println("ERRO: Algo deu errado em editar á entrega no banco de dados.");
-//            throw new ErroNoBancoDeDados(erro.getMessage());
-//        } finally {
-//            try {
-//                fecharConexao(conexao);
-//            } catch (SQLException erro) {
-//                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
-//                erro.printStackTrace();
-//            }
-//        }
-        return true;
+            try (PreparedStatement statementEntrega = conexao.prepareStatement(sqlEntrega)) {
+                statementEntrega.setString(1, String.valueOf(entrega.getStatus()));
+                statementEntrega.setInt(2, idEntrega);
+                int resultadoEntrega = statementEntrega.executeUpdate();
+
+                atualizarMudas(conexao, idEntrega, entrega.getMudas());
+
+                System.out.println("A entrega foi atualizada! Resultado: " + resultadoEntrega);
+
+                return entrega;
+            }
+        } catch (SQLException erro) {
+            System.out.println("ERRO: Algo deu errado ao atualizar a entrega no banco de dados.");
+            throw new ErroNoBancoDeDados(erro.getMessage());
+        }
+    }
+
+
+    private void atualizarMudas(Connection conexao, int idEntrega, List<Muda> mudas) throws SQLException {
+        String sqlDeleteMudas = "DELETE FROM VS_13_EQUIPE_5.ENTREGA_MUDA WHERE ID_ENTREGA = ?";
+        try (PreparedStatement statementDeleteMudas = conexao.prepareStatement(sqlDeleteMudas)) {
+            statementDeleteMudas.setInt(1, idEntrega);
+            statementDeleteMudas.executeUpdate();
+        }
+
+        String sqlMuda = "INSERT INTO VS_13_EQUIPE_5.ENTREGA_MUDA (ID_ENTREGA_MUDA, ID_MUDA, ID_ENTREGA, QUANTIDADE) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement statementMuda = conexao.prepareStatement(sqlMuda)) {
+            for (Muda muda : mudas) {
+                int proximoIdEntregaMuda = obterProximoIdEntregaMuda(conexao);
+                statementMuda.setInt(1, proximoIdEntregaMuda);
+                statementMuda.setInt(2, muda.getId());
+                statementMuda.setInt(3, idEntrega);
+                statementMuda.setInt(4, muda.getQuantidade());
+                statementMuda.executeUpdate();
+            }
+        }
     }
 
 
@@ -193,75 +181,21 @@ public class EntregaRepository {
         try {
             conexao = conexaoBancoDeDados.getConnection();
             Statement statement = conexao.createStatement();
-            Statement statementDois = conexao.createStatement();
-            Statement statementTres = conexao.createStatement();
-            Statement statementQuatro = conexao.createStatement();
-            Statement statementCinco = conexao.createStatement();
             String sqlEntrega = "SELECT * FROM VS_13_EQUIPE_5.ENTREGA";
 
             ResultSet entregaTabela = statement.executeQuery(sqlEntrega);
-
 
             while (entregaTabela.next()) {
                 Entrega entregaAtual = new Entrega();
                 entregaAtual.setId(entregaTabela.getInt("ID_ENTREGA"));
                 entregaAtual.setStatus(StatusEntrega.valueOf(entregaTabela.getString("STATUS")));
 
+                List<Muda> mudas = obterMudasDaEntrega(conexao, entregaAtual.getId());
+                entregaAtual.setMudas(mudas);
 
-                // buscar e filtrar mudas no banco de dados:
-                // tabela com todos os id_muda que tem relacao com a entrega atual:
-                int idEntrega = entregaTabela.getInt("ID_ENTREGA");
-                int idCliente = entregaTabela.getInt("ID_CLIENTE");
-                String sqlFullJoinResultado = "SELECT * FROM (SELECT * FROM VS_13_EQUIPE_5.ENTREGA_MUDA em WHERE (em.ID_ENTREGA = " + idEntrega
-                        + ")) RESULTADO_ENTREGA_MUDA FULL OUTER JOIN VS_13_EQUIPE_5.MUDA m ON (RESULTADO_ENTREGA_MUDA.ID_MUDA = m.ID_MUDA)";
+                Cliente clienteAtual = obterClienteDaEntrega(conexao, entregaAtual.getId());
+                entregaAtual.setCliente(clienteAtual);
 
-                ResultSet filtroMuda = statementDois.executeQuery(sqlFullJoinResultado);
-                while (filtroMuda.next()) {
-
-                    Muda mudaAtual = new Muda();
-                    mudaAtual.setId(filtroMuda.getInt("ID_MUDA"));
-                    mudaAtual.setPorte(TamanhoMuda.valueOf(filtroMuda.getString("PORTE")));
-                    mudaAtual.setTipo(TipoMuda.valueOf(filtroMuda.getString("TIPO_MUDA")));
-                    mudaAtual.setNome(filtroMuda.getString("NOME"));
-                    mudaAtual.setNomeCientifico(filtroMuda.getString("NOME_CIENTIFICO"));
-//                    mudaAtual.setEcossistema(filtroMuda.getString("AMBIENTE_IDEAL"));
-                    mudaAtual.setQuantidade(filtroMuda.getInt("QUANTIDADE"));
-                    mudaAtual.setDescricao(filtroMuda.getString("DESCRICAO"));
-
-                    entregaAtual.getMudas().add(mudaAtual);
-                }
-                // buscar cliente no banco de dados:
-
-                String sqlCliente = "SELECT * FROM VS_13_EQUIPE_5.CLIENTE c WHERE (c.ID_CLIENTE =" + idCliente + ")";
-                ResultSet clienteTabela = statementTres.executeQuery(sqlCliente);
-
-
-                Cliente clienteAtual = new Cliente();
-                while (clienteTabela.next()) {
-                    int idUsuario = clienteTabela.getInt("ID_USUARIO");
-                    clienteAtual.setCpf(clienteTabela.getString("CPF"));
-                    clienteAtual.setId(clienteTabela.getInt("ID_CLIENTE"));
-                    String sqlUsuario = "SELECT * FROM VS_13_EQUIPE_5.USUARIO WHERE ID_USUARIO = " + idUsuario;
-
-                    ResultSet queryUsuario = statementQuatro.executeQuery(sqlUsuario);
-                    while (queryUsuario.next()) {
-                        clienteAtual.setNome(queryUsuario.getString("NOME"));
-                    }
-                    String sqlEndereco = "SELECT * FROM VS_13_EQUIPE_5.ENDERECO e WHERE e.ID_USUARIO = " + idUsuario;
-                    ResultSet queryEndereco = statementCinco.executeQuery(sqlEndereco);
-                    while (queryEndereco.next()) {
-//                        entregaAtual.getCliente(new Endereco());
-//                        entregaAtual.getEnderecoDeEntrega().setCep(queryEndereco.getString("CEP"));
-//                        entregaAtual.getEnderecoDeEntrega().setLogradouro(queryEndereco.getString("LOGRADOURO"));
-//                        entregaAtual.getEnderecoDeEntrega().setId(queryEndereco.getInt("ID_ENDERECO"));
-//                        entregaAtual.getEnderecoDeEntrega().setCidade(queryEndereco.getString("CIDADE"));
-//                        entregaAtual.getEnderecoDeEntrega().setNumero(queryEndereco.getString("NUMERO"));
-//                        entregaAtual.getEnderecoDeEntrega().setComplemento(queryEndereco.getString("COMPLEMENTO"));
-//                        entregaAtual.getEnderecoDeEntrega().setEstado(Estados.ofTipo((Integer) queryEndereco.getInt("ID_ESTADO")));
-//                        entregaAtual.getEnderecoDeEntrega().setTipo(Tipo.valueOf(queryEndereco.getString("TIPO")));
-                    }
-                    entregaAtual.setCliente(clienteAtual);
-                }
                 listaEntrega.add(entregaAtual);
             }
 
@@ -272,13 +206,149 @@ public class EntregaRepository {
             try {
                 fecharConexao(conexao);
             } catch (SQLException erro) {
-                System.out.println("ERRO: Não foi possivel encerrar corretamente á conexão com o banco de dados.");
+                System.out.println("ERRO: Não foi possível encerrar corretamente a conexão com o banco de dados.");
             }
         }
         return listaEntrega;
     }
 
-    // Método(s) da classe:
+    private List<Muda> obterMudasDaEntrega(Connection conexao, int idEntrega) throws SQLException {
+        List<Muda> mudas = new ArrayList<>();
+        String sqlMudas = "SELECT em.QUANTIDADE AS QTD_ENTREGA, m.* " +
+                "FROM VS_13_EQUIPE_5.ENTREGA_MUDA em " +
+                "JOIN VS_13_EQUIPE_5.MUDA m ON em.ID_MUDA = m.ID_MUDA " +
+                "WHERE em.ID_ENTREGA = ?";
+
+        try (PreparedStatement statementMudas = conexao.prepareStatement(sqlMudas)) {
+            statementMudas.setInt(1, idEntrega);
+            ResultSet resultadoMudas = statementMudas.executeQuery();
+
+            while (resultadoMudas.next()) {
+                Muda mudaAtual = new Muda();
+                mudaAtual.setId(resultadoMudas.getInt("ID_MUDA"));
+                mudaAtual.setQuantidade(resultadoMudas.getInt("QTD_ENTREGA"));
+                mudaAtual.setPorte(TamanhoMuda.valueOf(resultadoMudas.getString("PORTE")));
+                mudaAtual.setTipo(TipoMuda.valueOf(resultadoMudas.getString("TIPO_MUDA")));
+                mudaAtual.setNome(resultadoMudas.getString("NOME"));
+                mudaAtual.setNomeCientifico(resultadoMudas.getString("NOME_CIENTIFICO"));
+                mudaAtual.setEcossistema(Ecossistema.valueOf(resultadoMudas.getString("ECOSSISTEMA")));
+                mudaAtual.setDescricao(resultadoMudas.getString("DESCRICAO"));
+                mudaAtual.setAtivo(Ativo.valueOf(resultadoMudas.getString("ATIVO")));
+                mudas.add(mudaAtual);
+            }
+        }
+        return mudas;
+    }
+
+
+
+    private Cliente obterClienteDaEntrega(Connection conexao, int idEntrega) throws SQLException {
+        Cliente clienteAtual = new Cliente();
+        String sqlCliente = "SELECT c.*, u.NOME FROM VS_13_EQUIPE_5.CLIENTE c JOIN VS_13_EQUIPE_5.USUARIO u ON c.ID_USUARIO = u.ID_USUARIO WHERE c.ID_CLIENTE = (SELECT ID_CLIENTE FROM VS_13_EQUIPE_5.ENTREGA WHERE ID_ENTREGA = ?)";
+
+        try (PreparedStatement statementCliente = conexao.prepareStatement(sqlCliente)) {
+            statementCliente.setInt(1, idEntrega);
+            ResultSet resultadoCliente = statementCliente.executeQuery();
+
+            if (resultadoCliente.next()) {
+                clienteAtual.setId(resultadoCliente.getInt("ID_CLIENTE"));
+                clienteAtual.setCpf(resultadoCliente.getString("CPF"));
+                clienteAtual.setNome(resultadoCliente.getString("NOME"));
+            }
+        }
+        return clienteAtual;
+    }
+
+
+    public Entrega procurarPorId(int idEntrega) throws ErroNoBancoDeDados {
+        Connection conexao = null;
+
+        try {
+            conexao = conexaoBancoDeDados.getConnection();
+            String sqlEntrega = "SELECT * FROM VS_13_EQUIPE_5.ENTREGA WHERE ID_ENTREGA = ?";
+            PreparedStatement statementEntrega = conexao.prepareStatement(sqlEntrega);
+            statementEntrega.setInt(1, idEntrega);
+
+            ResultSet entregaTabela = statementEntrega.executeQuery();
+
+            if (entregaTabela.next()) {
+                Entrega entregaAtual = new Entrega();
+                entregaAtual.setId(entregaTabela.getInt("ID_ENTREGA"));
+                entregaAtual.setStatus(StatusEntrega.valueOf(entregaTabela.getString("STATUS")));
+
+                int idCliente = entregaTabela.getInt("ID_CLIENTE");
+                String sqlMudas = "SELECT * FROM VS_13_EQUIPE_5.ENTREGA_MUDA em "
+                        + "LEFT JOIN VS_13_EQUIPE_5.MUDA m ON em.ID_MUDA = m.ID_MUDA "
+                        + "WHERE em.ID_ENTREGA = ?";
+                PreparedStatement statementMudas = conexao.prepareStatement(sqlMudas);
+                statementMudas.setInt(1, idEntrega);
+
+                ResultSet resultadoMudas = statementMudas.executeQuery();
+                while (resultadoMudas.next()) {
+                    Muda mudaAtual = new Muda();
+                    mudaAtual.setId(resultadoMudas.getInt("ID_MUDA"));
+                    mudaAtual.setPorte(TamanhoMuda.valueOf(resultadoMudas.getString("PORTE")));
+                    mudaAtual.setTipo(TipoMuda.valueOf(resultadoMudas.getString("TIPO_MUDA")));
+                    mudaAtual.setNome(resultadoMudas.getString("NOME"));
+                    mudaAtual.setNomeCientifico(resultadoMudas.getString("NOME_CIENTIFICO"));
+                    mudaAtual.setEcossistema(Ecossistema.valueOf(resultadoMudas.getString("ECOSSISTEMA")));
+                    mudaAtual.setQuantidade(resultadoMudas.getInt("QUANTIDADE"));
+                    mudaAtual.setDescricao(resultadoMudas.getString("DESCRICAO"));
+                    mudaAtual.setAtivo(Ativo.valueOf(resultadoMudas.getString("ATIVO")));
+
+                    entregaAtual.getMudas().add(mudaAtual);
+                }
+
+                String sqlCliente = "SELECT * FROM VS_13_EQUIPE_5.CLIENTE c WHERE c.ID_CLIENTE = ?";
+                PreparedStatement statementCliente = conexao.prepareStatement(sqlCliente);
+                statementCliente.setInt(1, idCliente);
+
+                ResultSet clienteTabela = statementCliente.executeQuery();
+
+                Cliente clienteAtual = new Cliente();
+                while (clienteTabela.next()) {
+                    int idUsuario = clienteTabela.getInt("ID_USUARIO");
+                    clienteAtual.setCpf(clienteTabela.getString("CPF"));
+                    clienteAtual.setId(clienteTabela.getInt("ID_CLIENTE"));
+
+                    String sqlUsuario = "SELECT * FROM VS_13_EQUIPE_5.USUARIO WHERE ID_USUARIO = ?";
+                    PreparedStatement statementUsuario = conexao.prepareStatement(sqlUsuario);
+                    statementUsuario.setInt(1, idUsuario);
+
+                    ResultSet queryUsuario = statementUsuario.executeQuery();
+                    while (queryUsuario.next()) {
+                        clienteAtual.setNome(queryUsuario.getString("NOME"));
+                    }
+
+                    String sqlEndereco = "SELECT * FROM VS_13_EQUIPE_5.ENDERECO e WHERE e.ID_USUARIO = ?";
+                    PreparedStatement statementEndereco = conexao.prepareStatement(sqlEndereco);
+                    statementEndereco.setInt(1, idUsuario);
+
+                    ResultSet queryEndereco = statementEndereco.executeQuery();
+                    while (queryEndereco.next()) {
+//                        entregaAtual.getEnderecoDeEntrega().setTipo(Tipo.valueOf(queryEndereco.getString("TIPO")));
+                    }
+
+                    entregaAtual.setCliente(clienteAtual);
+                }
+
+                return entregaAtual;
+            } else {
+                return null;
+            }
+
+        } catch (SQLException erro) {
+            System.out.println("ERRO: Algo deu errado ao listar a entrega do banco de dados.");
+            throw new ErroNoBancoDeDados(erro.getMessage());
+        } finally {
+            try {
+                fecharConexao(conexao);
+            } catch (SQLException erro) {
+                System.out.println("ERRO: Não foi possível encerrar corretamente a conexão com o banco de dados.");
+            }
+        }
+    }
+
     private void fecharConexao(Connection conexao) throws SQLException {
         if (conexao != null) {
             conexao.close();

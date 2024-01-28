@@ -1,78 +1,107 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ClienteCreateDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.UsuarioRequestDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ClienteDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoEmail;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.ClienteRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
+@Slf4j
 public class ServiceCliente  {
 
     private final ServiceUsuario serviceUsuario;
     private final ClienteRepository clienteRepository;
+    private final ObjectMapper objectMapper;
 
-    public ServiceCliente(ServiceUsuario serviceUsuario, ClienteRepository clienteRepository) {
-        this.serviceUsuario = serviceUsuario;
-        this.clienteRepository = clienteRepository;
-    }
-
-
-    public void adicionar(Cliente cliente) throws Exception {
-
-//        Usuario usuarioCriado = serviceUsuario.adicionarUsuario(cliente);
-//        cliente.setId(usuarioCriado.getId());
-//
-//        if (cliente.getCpf().length() != 11) {
-//            throw new java.lang.Exception("CPF Invalido!");
-//        }
-//
-//        clienteRepository.adicionar(cliente);
-//        System.out.println("Cliente adicionado com sucesso! " + cliente);
-
-    }
-
-
-    public void deletar(int id) throws ErroNoBancoDeDados {
-
-    }
-
-
-    public boolean editar(int id, Cliente clienteEditado) throws ErroNoBancoDeDados {
-      return false;
-    }
+    private final EmailService emailService;
 
 
 
+    public ClienteDTO adicionar(ClienteCreateDTO cliente) throws Exception {
 
-    public List<Cliente> listarTodos() throws ErroNoBancoDeDados {
-        return clienteRepository.listar();
-    }
-
-
-
-
-    public Cliente procurarPorID(int id) throws ErroNoBancoDeDados {
-        Cliente cliente = clienteRepository.listarPorID(id);
-
-        if(cliente == null){
-            throw new InformacaoNaoEncontrada("Não existe nenhum cliente com este ID!");
+        if (cliente.getTipoUsuario() != TipoUsuario.CLIENTE) {
+            throw new RegraDeNegocioException("Tipo de usuário deve ser Cliente");
         }
+        var usuarioCriado = objectMapper.convertValue(cliente, UsuarioRequestDTO.class);
+        var usuario = serviceUsuario.adicionarUsuario(usuarioCriado);
 
-        return cliente;
+        cliente.setId(usuario.getId());
+
+        var clienteCriado = objectMapper.convertValue(cliente, Cliente.class);
+
+        clienteRepository.adicionar(clienteCriado);
+
+        this.emailService.sendEmail(cliente, TipoEmail.CRIACAO);
+
+        return objectMapper.convertValue(clienteCriado, ClienteDTO.class);
+
     }
 
-    public Cliente procurar(int id) throws ErroNoBancoDeDados {
-        return clienteRepository.listarPorID(id);
+    public ClienteDTO editar(Integer idCliente, ClienteCreateDTO clienteEditado) throws Exception {
+        var cliente = objectMapper.convertValue(clienteEditado, Cliente.class);
+        var clienteEncontrado = clienteRepository.procurarPorIdCliente(idCliente);
+
+        var usuarioEditado = objectMapper.convertValue(cliente, UsuarioRequestDTO.class);
+
+        serviceUsuario.editar(clienteEncontrado.getId(), usuarioEditado);
+
+        clienteRepository.editar(idCliente, cliente);
+
+        this.emailService.sendEmail(clienteEditado, TipoEmail.ALTERACAO);
+
+        return objectMapper.convertValue(cliente, ClienteDTO.class);
     }
+
+    public void remover(Integer idCliente) throws Exception {
+        var clienteEncontrado = clienteRepository.procurarPorIdCliente(idCliente);
+
+        serviceUsuario.remover(clienteEncontrado.getId());
+
+        this.emailService.sendEmail( this.objectMapper.convertValue(clienteEncontrado,ClienteCreateDTO.class), TipoEmail.EXCLUSAO);
+    }
+
+    public List<ClienteDTO> listarTodos() throws Exception {
+        var clientes =  clienteRepository.listarTodos();
+
+        return clientes.stream()
+                .map(cliente -> objectMapper.convertValue(cliente, ClienteDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    public ClienteDTO procurarPorIdCliente(Integer idCliente) throws Exception {
+        Cliente cliente = clienteRepository.procurarPorIdCliente(idCliente);
+
+        var clienteEncontrado = objectMapper.convertValue(cliente, ClienteDTO.class);
+
+
+        return clienteEncontrado;
+    }
+
+    public void procurarClientesAtivos(Integer idCliente) throws Exception {
+        var cliente = clienteRepository.procurarPorIdCliente(idCliente);
+        var usuario = objectMapper.convertValue(cliente, UsuarioRequestDTO.class);
+
+        var usuariosAtivos = serviceUsuario.procurarUsuariosAtivos();
+    }
+
+//    public ClienteDTO listrPorEmail(String email) {
+//
+//    }
 
     public void inserirMudasEntregues(Integer idCliente,Integer idMuda) throws Exception {
-
-            this.clienteRepository.InserirMudaEmCliente(idCliente,idMuda);
-
-
+        clienteRepository.InserirMudaEmCliente(idCliente,idMuda);
 
     }
 }
