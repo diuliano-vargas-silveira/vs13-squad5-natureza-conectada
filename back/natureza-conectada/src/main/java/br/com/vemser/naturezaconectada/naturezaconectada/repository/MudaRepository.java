@@ -206,7 +206,7 @@ public class MudaRepository  {
             conexao = conexaoBancoDeDados.getConnection();
             Statement statment = conexao.createStatement();
 
-            String sqlEntrega = "SELECT * FROM MUDA WHERE ID_MUDA > 0";
+            String sqlEntrega = "SELECT * FROM MUDA";
 
             ResultSet mudaTabela = statment.executeQuery(sqlEntrega);
 
@@ -269,6 +269,7 @@ public class MudaRepository  {
                 muda.setNomeCientifico(resultado.getString("NOME_CIENTIFICO"));
                 muda.setDescricao(resultado.getString("DESCRICAO"));
                 muda.setQuantidade(resultado.getInt("QUANTIDADE"));
+                muda.setAtivo(Ativo.valueOf(resultado.getString("ATIVO")));
             }
             if(muda == null){
                 throw new ErroNoBancoDeDados("Não existe muda com este ID");
@@ -316,6 +317,8 @@ public class MudaRepository  {
                 muda.setNomeCientifico(resultado.getString("NOME_CIENTIFICO"));
                 muda.setDescricao(resultado.getString("DESCRICAO"));
                 muda.setQuantidade(resultado.getInt("QUANTIDADE"));
+                muda.setAtivo(Ativo.valueOf(resultado.getString("ATIVO")));
+
             }
             if(muda == null){
                 throw new ErroNoBancoDeDados("Não existe muda com este Ecossistema");
