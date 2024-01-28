@@ -1,5 +1,7 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.dto.request;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TamanhoMuda;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoMuda;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -38,11 +40,16 @@ public class MudaCreateDTO {
     @NotNull(message = "Porte da muda deve ser preenchido!")
     private TamanhoMuda porte;
 
-    @Schema(description = "Ambiente ideal da muda", required = true, example = "árido")
-    @NotBlank(message = "Ambiente ideal não pode ser vazio!")
-    private String ambienteIdeal;
+    @Schema(description = "Ecossistema ideal da muda (COSTEIRO, MATA_ATLANTICA, CAMPOS_ARAUCARIAS)", required = true, example = "COSTEIRO")
+    @NotNull(message = "Ecossistema ideal não pode ser vazio!")
+    private Ecossistema Ecossistema;
 
     @Schema(description = "Descrição da muda", example = "arvore grande com folhas pequenas")
     private String descricao;
+
+    @Hidden
+    private Ativo ativo;
+
+
 
 }

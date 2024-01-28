@@ -1,7 +1,10 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Tipo;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Endereco;
 import org.springframework.stereotype.Repository;
 
@@ -72,7 +75,9 @@ public class EnderecoRepository {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
-            String sql = "DELETE FROM VS_13_EQUIPE_5.ENDERECO WHERE ID_ENDERECO = ?";
+            String sql = "UPDATE ENDERECO SET " +
+                    "ATIVO = 'D'" +
+                    " WHERE ID_ENDERECO = ?";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setInt(1, id.intValue());
@@ -131,7 +136,7 @@ public class EnderecoRepository {
         return true;
     }
 
-    public List<Endereco> listar() throws Exception {
+    public List<Endereco> listarEnderecosAtivos() throws Exception {
         List<Endereco> listaEndereco = new ArrayList<>();
         Connection conexao = null;
 
@@ -139,7 +144,7 @@ public class EnderecoRepository {
             conexao = conexaoBancoDeDados.getConnection();
             Statement statment = conexao.createStatement();
 
-            String sqlEndereco = "SELECT * FROM VS_13_EQUIPE_5.ENDERECO";
+            String sqlEndereco = "SELECT * ENDERECO WHERE ATIVO = 'A'";
 
 
             ResultSet enderecoTabela = statment.executeQuery(sqlEndereco);
@@ -156,6 +161,8 @@ public class EnderecoRepository {
                 enderecoAtual.setComplemento(enderecoTabela.getString("COMPLEMENTO"));
                 enderecoAtual.setCidade(enderecoTabela.getString("CIDADE"));
                 enderecoAtual.setTipo(Tipo.valueOf(enderecoTabela.getString("TIPO")));
+                enderecoAtual.setEcossistema(Ecossistema.valueOf(enderecoTabela.getString("ECOSSISTEMA")));
+                enderecoAtual.setAtivo(Ativo.valueOf(enderecoTabela.getString("ATIVO")));
                 listaEndereco.add(enderecoAtual);
 
             }
@@ -173,6 +180,49 @@ public class EnderecoRepository {
         return listaEndereco;
     }
 
+    public List<Endereco> listar() throws Exception {
+        List<Endereco> listaEndereco = new ArrayList<>();
+        Connection conexao = null;
+
+        try {
+            conexao = conexaoBancoDeDados.getConnection();
+            Statement statment = conexao.createStatement();
+
+            String sqlEndereco = "SELECT * FROM ENDERECO ";
+
+
+            ResultSet enderecoTabela = statment.executeQuery(sqlEndereco);
+
+            while (enderecoTabela.next()) {
+
+                Endereco enderecoAtual = new Endereco();
+                enderecoAtual.setIdEndereco(enderecoTabela.getInt("ID_ENDERECO"));
+                enderecoAtual.setIdCliente(enderecoTabela.getInt("ID_USUARIO"));
+                enderecoAtual.setEstado(Estados.values()[enderecoTabela.getInt("ID_ESTADO") - 1]);
+                enderecoAtual.setCep(enderecoTabela.getString("CEP"));
+                enderecoAtual.setLogradouro(enderecoTabela.getString("LOGRADOURO"));
+                enderecoAtual.setNumero(enderecoTabela.getString("NUMERO"));
+                enderecoAtual.setComplemento(enderecoTabela.getString("COMPLEMENTO"));
+                enderecoAtual.setCidade(enderecoTabela.getString("CIDADE"));
+                enderecoAtual.setTipo(Tipo.valueOf(enderecoTabela.getString("TIPO")));
+                enderecoAtual.setEcossistema(Ecossistema.valueOf(enderecoTabela.getString("ECOSSISTEMA")));
+                enderecoAtual.setAtivo(Ativo.valueOf(enderecoTabela.getString("ATIVO")));
+                listaEndereco.add(enderecoAtual);
+
+            }
+        } catch (SQLException e) {
+            System.out.println("Não foi possível listar os endereços.");
+            throw new Exception(e.getMessage());
+        } finally {
+            try {
+                fecharConexao(conexao);
+            } catch (SQLException e) {
+                System.out.println("Não foi possível encerrar a conexão com o banco de dados.");
+                e.printStackTrace();
+            }
+        }
+        return listaEndereco;
+    }
     public Endereco procurarPorIdEndereco(Integer idEndereco) throws Exception {
         Endereco enderecoEncontrado = null;
         Connection conexao = null;
@@ -193,9 +243,12 @@ public class EnderecoRepository {
                 enderecoEncontrado.setEstado(Estados.values()[resultado.getInt("ID_ESTADO") - 1]);
                 enderecoEncontrado.setCep(resultado.getString("CEP"));
                 enderecoEncontrado.setLogradouro(resultado.getString("LOGRADOURO"));
-                enderecoEncontrado.setNumero(resultado.getString("COMPLEMENTO"));
+                enderecoEncontrado.setNumero(resultado.getString("NUMERO"));
+                enderecoEncontrado.setComplemento(resultado.getString("COMPLEMENTO"));
                 enderecoEncontrado.setCidade(resultado.getString("CIDADE"));
                 enderecoEncontrado.setTipo(Tipo.valueOf(resultado.getString("TIPO")));
+                enderecoEncontrado.setEcossistema(Ecossistema.valueOf(resultado.getString("ECOSSISTEMA")));
+                enderecoEncontrado.setAtivo(Ativo.valueOf(resultado.getString("ATIVO")));
             }
         } catch (SQLException e) {
             System.out.println("Erro ao procurar endereço por ID: " + e.getMessage());
@@ -219,7 +272,7 @@ public class EnderecoRepository {
         try {
             conexao = conexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT * FROM VS_13_EQUIPE_5.ENDERECO WHERE ID_USUARIO = ?";
+            String sql = "SELECT * FROM VS_13_EQUIPE_5.ENDERECO WHERE ID_USUARIO = ? AND ATIVO = 'A'";
             PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setInt(1, idCliente);
 
@@ -236,6 +289,8 @@ public class EnderecoRepository {
                 endereco.setComplemento(resultado.getString("COMPLEMENTO"));
                 endereco.setCidade(resultado.getString("CIDADE"));
                 endereco.setTipo(Tipo.valueOf(resultado.getString("TIPO")));
+                endereco.setEcossistema(Ecossistema.valueOf(resultado.getString("ECOSSISTEMA")));
+                endereco.setAtivo(Ativo.valueOf(resultado.getString("ATIVO")));
 
                 enderecosCliente.add(endereco);
             }
@@ -253,6 +308,42 @@ public class EnderecoRepository {
 
         return enderecosCliente;
     }
+    public boolean ativarEndereco(Integer id,String eco) throws Exception {
+        Connection conexao = null;
+        try {
+            conexao = conexaoBancoDeDados.getConnection();
+            String sql = "UPDATE ENDERECO SET " +
+                    "ATIVO = 'A'," +
+                    "ECOSSISTEMA = ?" +
+                    " WHERE ID_ENDERECO = ?";
+
+            PreparedStatement stmt = conexao.prepareStatement(sql);
+            try{
+                Ecossistema.valueOf(eco);
+            }catch (IllegalArgumentException ex){
+                 throw new RegraDeNegocioException("Enum digitado não Existe  ");
+            }
+
+            stmt.setString(1, eco);
+            stmt.setInt(2, id);
+
+            int resultado = stmt.executeUpdate();
+            System.out.println("O endereço foi Atualiado! Resultado: " + resultado);
+
+            return resultado > 0;
+        } catch (SQLException erro) {
+            System.out.println("ERRO: Algo deu errado ao Atualiar o endereço do banco de dados.");
+            throw new Exception(erro.getMessage());
+        } finally {
+            try {
+                fecharConexao(conexao);
+            } catch (SQLException erro) {
+                System.out.println("ERRO: Não foi possivel encerrar corretamente a conexão com o banco de dados.");
+                erro.printStackTrace();
+            }
+        }
+    }
+
 
     private void fecharConexao(Connection conexao) throws SQLException {
         if (conexao != null) {

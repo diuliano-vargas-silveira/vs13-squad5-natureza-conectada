@@ -1,5 +1,7 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.models;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Tipo;
 import lombok.AllArgsConstructor;
@@ -17,27 +19,31 @@ public class Endereco {
     private static final String PAIS = "Brasil";
     private int idEndereco;
 
-    @NotBlank(message = "Cep não pode estar vazio!")
+
     private String cep;
 
-    @NotBlank(message = "Logradouro não pode estar vazio!")
+
     private String logradouro;
 
-    @NotBlank(message = "Número não pode estar vazio!")
+
     private String numero;
 
     private String complemento;
 
-    @NotBlank(message = "Cidade não pode estar vazia!")
+
     private String cidade;
 
-    @NotNull(message = "Estado não pode vir nulo!")
+
     private Estados estado;
 
-    @NotNull(message = "Cliente não pode ser nulo!")
+
     private Integer idCliente;
 
-    @NotNull(message = "Endereço não pode ser nulo!")
+
     private Tipo tipo;
+
+    private Ecossistema ecossistema;
+
+    private Ativo ativo;
 
 }

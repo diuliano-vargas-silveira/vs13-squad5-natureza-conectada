@@ -1,4 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.models;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TamanhoMuda;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoMuda;
 import lombok.AllArgsConstructor;
@@ -23,9 +25,11 @@ public class Muda {
 
     private TamanhoMuda porte;
 
-    private String ambienteIdeal;
+    private Ecossistema ecossistema;
 
     private String descricao;
+
+    private Ativo ativo;
 
 }
 

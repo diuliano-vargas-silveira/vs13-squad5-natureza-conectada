@@ -4,7 +4,8 @@ package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.MudaCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.MudaDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.MudaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,8 +32,8 @@ public class ServiceMudas {
         return retorno;
     }
 
-    public void remover(Integer idMuda) throws Exception {
-        this.mudaRepository.remover(idMuda);
+    public void mudarAtivoMuda(Integer idMuda, Ativo ativo) throws Exception {
+        this.mudaRepository.mudarAtivoMuda(idMuda,ativo);
 
     }
 
@@ -58,9 +59,23 @@ public class ServiceMudas {
             return this.objectMapper.convertValue(muda, MudaDTO.class);
 
     }
+    public MudaDTO buscarPorEco(Ecossistema ecossistema) throws Exception {
+        Muda muda = this.mudaRepository.buscarPorEco(ecossistema);
+
+        return this.objectMapper.convertValue(muda, MudaDTO.class);
+
+    }
 
     public MudaCreateDTO novaMuda(MudaCreateDTO mudaDto) throws Exception {
         Muda novaMuda = this.objectMapper.convertValue(mudaDto,Muda.class);
         return this.objectMapper.convertValue(this.mudaRepository.adicionar(novaMuda), MudaCreateDTO.class);
+    }
+
+    public List<MudaDTO> listarMudasAtivas() throws Exception {
+        List<MudaDTO> listaDeMudasAtivas = new ArrayList<>();
+
+        this.mudaRepository.listarMudasAtivas().forEach(muda -> listaDeMudasAtivas.add(this.objectMapper.convertValue(muda,MudaDTO.class)));
+
+        return listaDeMudasAtivas;
     }
 }

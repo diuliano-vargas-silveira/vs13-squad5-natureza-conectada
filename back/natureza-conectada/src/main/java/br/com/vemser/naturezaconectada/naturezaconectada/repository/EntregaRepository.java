@@ -1,8 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.enums.StatusEntrega;
-import br.com.vemser.naturezaconectada.naturezaconectada.enums.TamanhoMuda;
-import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoMuda;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.*;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
@@ -51,6 +49,9 @@ public class EntregaRepository {
 
                 adicionarMudas(conexao, entrega.getId(), entrega.getMudas());
 
+                entrega.setMudas(obterMudasDaEntrega(conexao, entrega.getId()));
+                entrega.setCliente(obterClienteDaEntrega(conexao, entrega.getId()));
+
                 System.out.println("A entrega foi adicionada! Resultado: " + resultadoEntrega);
 
                 return entrega;
@@ -72,6 +73,7 @@ public class EntregaRepository {
                 statementMuda.setInt(3, idEntrega);
                 statementMuda.setInt(4, muda.getQuantidade());
                 statementMuda.executeUpdate();
+
             }
         }
     }
@@ -150,18 +152,27 @@ public class EntregaRepository {
         }
     }
 
-    private void atualizarMudas(Connection conexao, int idEntrega, List<Muda> mudas) throws SQLException {
-        String sqlMuda = "UPDATE VS_13_EQUIPE_5.ENTREGA_MUDA SET ID_MUDA = ?, QUANTIDADE = ? WHERE ID_ENTREGA = ?";
 
+    private void atualizarMudas(Connection conexao, int idEntrega, List<Muda> mudas) throws SQLException {
+        String sqlDeleteMudas = "DELETE FROM VS_13_EQUIPE_5.ENTREGA_MUDA WHERE ID_ENTREGA = ?";
+        try (PreparedStatement statementDeleteMudas = conexao.prepareStatement(sqlDeleteMudas)) {
+            statementDeleteMudas.setInt(1, idEntrega);
+            statementDeleteMudas.executeUpdate();
+        }
+
+        String sqlMuda = "INSERT INTO VS_13_EQUIPE_5.ENTREGA_MUDA (ID_ENTREGA_MUDA, ID_MUDA, ID_ENTREGA, QUANTIDADE) VALUES (?, ?, ?, ?)";
         try (PreparedStatement statementMuda = conexao.prepareStatement(sqlMuda)) {
             for (Muda muda : mudas) {
-                statementMuda.setInt(1, muda.getId());
-                statementMuda.setInt(2, muda.getQuantidade());
+                int proximoIdEntregaMuda = obterProximoIdEntregaMuda(conexao);
+                statementMuda.setInt(1, proximoIdEntregaMuda);
+                statementMuda.setInt(2, muda.getId());
                 statementMuda.setInt(3, idEntrega);
+                statementMuda.setInt(4, muda.getQuantidade());
                 statementMuda.executeUpdate();
             }
         }
     }
+
 
     public List<Entrega> listar() throws ErroNoBancoDeDados {
         Connection conexao = null;
@@ -179,11 +190,9 @@ public class EntregaRepository {
                 entregaAtual.setId(entregaTabela.getInt("ID_ENTREGA"));
                 entregaAtual.setStatus(StatusEntrega.valueOf(entregaTabela.getString("STATUS")));
 
-                // Obter mudas relacionadas à entrega
                 List<Muda> mudas = obterMudasDaEntrega(conexao, entregaAtual.getId());
                 entregaAtual.setMudas(mudas);
 
-                // Obter cliente relacionado à entrega
                 Cliente clienteAtual = obterClienteDaEntrega(conexao, entregaAtual.getId());
                 entregaAtual.setCliente(clienteAtual);
 
@@ -205,7 +214,7 @@ public class EntregaRepository {
 
     private List<Muda> obterMudasDaEntrega(Connection conexao, int idEntrega) throws SQLException {
         List<Muda> mudas = new ArrayList<>();
-        String sqlMudas = "SELECT DISTINCT m.ID_MUDA, m.QUANTIDADE, m.PORTE, m.TIPO_MUDA, m.NOME, m.NOME_CIENTIFICO, m.AMBIENTE_IDEAL, m.DESCRICAO " +
+        String sqlMudas = "SELECT em.QUANTIDADE AS QTD_ENTREGA, m.* " +
                 "FROM VS_13_EQUIPE_5.ENTREGA_MUDA em " +
                 "JOIN VS_13_EQUIPE_5.MUDA m ON em.ID_MUDA = m.ID_MUDA " +
                 "WHERE em.ID_ENTREGA = ?";
@@ -217,19 +226,20 @@ public class EntregaRepository {
             while (resultadoMudas.next()) {
                 Muda mudaAtual = new Muda();
                 mudaAtual.setId(resultadoMudas.getInt("ID_MUDA"));
-                mudaAtual.setQuantidade(resultadoMudas.getInt("QUANTIDADE"));
+                mudaAtual.setQuantidade(resultadoMudas.getInt("QTD_ENTREGA"));
                 mudaAtual.setPorte(TamanhoMuda.valueOf(resultadoMudas.getString("PORTE")));
                 mudaAtual.setTipo(TipoMuda.valueOf(resultadoMudas.getString("TIPO_MUDA")));
                 mudaAtual.setNome(resultadoMudas.getString("NOME"));
                 mudaAtual.setNomeCientifico(resultadoMudas.getString("NOME_CIENTIFICO"));
-                mudaAtual.setAmbienteIdeal(resultadoMudas.getString("AMBIENTE_IDEAL"));
+                mudaAtual.setEcossistema(Ecossistema.valueOf(resultadoMudas.getString("ECOSSISTEMA")));
                 mudaAtual.setDescricao(resultadoMudas.getString("DESCRICAO"));
-                // ... outros atributos da muda
+                mudaAtual.setAtivo(Ativo.valueOf(resultadoMudas.getString("ATIVO")));
                 mudas.add(mudaAtual);
             }
         }
         return mudas;
     }
+
 
 
     private Cliente obterClienteDaEntrega(Connection conexao, int idEntrega) throws SQLException {
@@ -244,7 +254,6 @@ public class EntregaRepository {
                 clienteAtual.setId(resultadoCliente.getInt("ID_CLIENTE"));
                 clienteAtual.setCpf(resultadoCliente.getString("CPF"));
                 clienteAtual.setNome(resultadoCliente.getString("NOME"));
-                // ... outros atributos do cliente, se necessário
             }
         }
         return clienteAtual;
@@ -282,9 +291,10 @@ public class EntregaRepository {
                     mudaAtual.setTipo(TipoMuda.valueOf(resultadoMudas.getString("TIPO_MUDA")));
                     mudaAtual.setNome(resultadoMudas.getString("NOME"));
                     mudaAtual.setNomeCientifico(resultadoMudas.getString("NOME_CIENTIFICO"));
-                    mudaAtual.setAmbienteIdeal(resultadoMudas.getString("AMBIENTE_IDEAL"));
+                    mudaAtual.setEcossistema(Ecossistema.valueOf(resultadoMudas.getString("ECOSSISTEMA")));
                     mudaAtual.setQuantidade(resultadoMudas.getInt("QUANTIDADE"));
                     mudaAtual.setDescricao(resultadoMudas.getString("DESCRICAO"));
+                    mudaAtual.setAtivo(Ativo.valueOf(resultadoMudas.getString("ATIVO")));
 
                     entregaAtual.getMudas().add(mudaAtual);
                 }
@@ -339,8 +349,6 @@ public class EntregaRepository {
         }
     }
 
-
-    // Método(s) da classe:
     private void fecharConexao(Connection conexao) throws SQLException {
         if (conexao != null) {
             conexao.close();
