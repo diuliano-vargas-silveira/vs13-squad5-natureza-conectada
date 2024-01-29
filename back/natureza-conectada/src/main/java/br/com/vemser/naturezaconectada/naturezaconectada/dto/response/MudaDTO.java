@@ -28,4 +28,6 @@ public class MudaDTO {
     private Ecossistema ecossistema;
 
     private String descricao;
+
+    private int quantidade;
 }

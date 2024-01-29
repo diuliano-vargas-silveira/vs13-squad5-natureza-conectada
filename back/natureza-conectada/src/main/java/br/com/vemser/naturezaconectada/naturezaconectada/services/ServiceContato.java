@@ -24,11 +24,14 @@
     private final ContatoRepository contatoRepository;
     private final ObjectMapper objectMapper;
 
+    private final ServiceCliente serviceCliente;
 
-     public ContatoDTO adicionar(ContatoCreateDTO contatoCreateDTO, Integer idUsuario) throws Exception {
+
+     public ContatoDTO adicionar(ContatoCreateDTO contatoCreateDTO, Integer idCliente) throws Exception {
          var contato = objectMapper.convertValue(contatoCreateDTO, Contato.class);
+         this.serviceCliente.procurarClientesAtivos(idCliente);
 
-        contato = contatoRepository.adicionar(contato, idUsuario);
+        contato = contatoRepository.adicionar(contato, idCliente);
 
         return objectMapper.convertValue(contato, ContatoDTO.class);
     }

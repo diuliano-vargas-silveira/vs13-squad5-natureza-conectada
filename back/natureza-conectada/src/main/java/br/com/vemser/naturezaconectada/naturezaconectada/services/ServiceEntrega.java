@@ -4,6 +4,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EntregaRequ
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EntregaResponseDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.StatusEntrega;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoEmail;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
@@ -12,7 +13,9 @@ import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.EntregaRepository;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.MudaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jdk.jshell.Snippet;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -23,6 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ServiceEntrega {
 
     private final EntregaRepository entregaRepository;
@@ -31,7 +35,9 @@ public class ServiceEntrega {
     private final MudaRepository mudaRepository;
     private final ObjectMapper objectMapper;
 
-    public EntregaResponseDTO adicionar(EntregaRequestDTO entregaRequestDTO, int idEndereco) throws RegraDeNegocioException {
+    private final EmailService emailService;
+
+    public EntregaResponseDTO adicionar(EntregaRequestDTO entregaRequestDTO, int idEndereco) throws Exception {
         try {
 
             if (serviceEndereco.procurarPorIdEndereco(idEndereco) == null) {
@@ -65,37 +71,49 @@ public class ServiceEntrega {
 
             Entrega entregaProcessada = entregaRepository.adicionar(entrega, idEndereco);
 
-            return objectMapper.convertValue(entregaProcessada, EntregaResponseDTO.class);
+            EntregaResponseDTO novaEntrega = objectMapper.convertValue(entregaProcessada, EntregaResponseDTO.class);
+             this.emailService.sendEmail(novaEntrega,TipoEmail.CRIACAO);
+            return novaEntrega ;
         } catch (RegraDeNegocioException e) {
             throw e;
         } catch (InformacaoNaoEncontrada e) {
             throw new RegraDeNegocioException("Erro ao adicionar entrega: " + e.getMessage());
-        } catch (Exception e) {
-            throw new RegraDeNegocioException("Erro ao adicionar entrega.");
         }
     }
 
 
-    public EntregaResponseDTO editar(int id, EntregaRequestDTO entregaRequestDTO) throws ErroNoBancoDeDados {
+
+    public EntregaResponseDTO editarMudasEntrega(int id, EntregaRequestDTO entregaRequestDTO) throws ErroNoBancoDeDados {
         Entrega entrega = procurar(id);
         if (entrega == null) throw new InformacaoNaoEncontrada("Não existe nenhuma entregada com o ID: " + id);
 
         try {
             Entrega entregaEntity = objectMapper.convertValue(entregaRequestDTO, Entrega.class);
 
-            entrega.setStatus(entregaEntity.getStatus());
+
             entrega.setMudas(entregaEntity.getMudas());
 
-            Entrega entregaProcessada = entregaRepository.editar(id, entrega);
-
-            return objectMapper.convertValue(entregaProcessada, EntregaResponseDTO.class);
+             entregaRepository.atualizarMudas(id, entrega.getMudas());
+            Entrega entregaProcessada = this.procurar(id);
+            EntregaResponseDTO novaEntrega = objectMapper.convertValue(entregaProcessada, EntregaResponseDTO.class);
+            this.emailService.sendEmail(novaEntrega,TipoEmail.ALTERACAO);
+            return novaEntrega;
         } catch (Exception e) {
             throw new ErroNoBancoDeDados("Erro ao editar entrega com Id: " + id);
         }
     }
+    public EntregaResponseDTO mudarStatusEntrega(Integer idEntrega, String status) throws Exception {
+
+       Entrega entrega =  this.entregaRepository.editarStatus(idEntrega, StatusEntrega.valueOf(status.toUpperCase()));
+
+       return this.objectMapper.convertValue(entrega,EntregaResponseDTO.class);
 
 
-    public List<EntregaResponseDTO> listarTodos() throws ErroNoBancoDeDados {
+
+    }
+
+
+    public List<EntregaResponseDTO> listarTodos() throws Exception {
         try {
             List<Entrega> entregas = entregaRepository.listar();
 
@@ -115,12 +133,13 @@ public class ServiceEntrega {
         return entregaResponseDTO;
     }
 
-    public void deletar(Integer id) throws ErroNoBancoDeDados {
+    public void deletar(Integer id) throws Exception {
         Entrega entrega = procurar(id);
         if (entrega == null) throw new InformacaoNaoEncontrada("Não existe nenhuma entregada com o ID: " + id);
 
         try {
             this.entregaRepository.remover(id);
+            this.emailService.sendEmail(this.objectMapper.convertValue(entrega,EntregaResponseDTO.class),TipoEmail.EXCLUSAO);
         } catch (ErroNoBancoDeDados e) {
             throw new ErroNoBancoDeDados("Não foi encontrado entrega para o id: " + id);
         } catch (SQLException e) {
@@ -135,4 +154,6 @@ public class ServiceEntrega {
             throw new ErroNoBancoDeDados("Nenhuma entrega encontrada para o Id: " + id);
         }
     }
+
+
 }

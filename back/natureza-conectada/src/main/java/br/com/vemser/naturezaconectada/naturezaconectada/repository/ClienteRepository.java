@@ -1,10 +1,14 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.config.ConexaoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.*;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Contato;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Endereco;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -12,13 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class ClienteRepository {
 
     private final ConexaoBancoDeDados conexaoBancoDeDados;
 
-    public ClienteRepository(ConexaoBancoDeDados conexaoBancoDeDados) {
-        this.conexaoBancoDeDados = conexaoBancoDeDados;
-    }
+    private final ObjectMapper objectMapper;
+
+
 
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT seq_cliente.nextval mysequence from DUAL";
@@ -139,13 +144,14 @@ public class ClienteRepository {
 
             Statement stmt = conexao.createStatement();
             ResultSet res = stmt.executeQuery(
-                    "SELECT c.ID_CLIENTE, c.CPF, u.NOME, u.EMAIL, u.ATIVO, u.TIPO_USUARIO " +
+                    "SELECT c.ID_USUARIO,c.ID_CLIENTE, c.CPF, u.NOME, u.EMAIL, u.ATIVO, u.TIPO_USUARIO " +
                             "FROM VS_13_EQUIPE_5.CLIENTE c " +
                             "INNER JOIN VS_13_EQUIPE_5.USUARIO u ON (c.ID_USUARIO = u.ID_USUARIO )");
 
             while (res.next()) {
                 Cliente cliente = new Cliente();
-                cliente.setId(res.getInt("ID_CLIENTE"));
+                cliente.setIdCliente(res.getInt("ID_CLIENTE"));
+                cliente.setId(res.getInt("ID_USUARIO"));
                 cliente.setNome(res.getString("NOME"));
                 cliente.setEmail(res.getString("EMAIL"));
                 cliente.setCpf(res.getString("CPF"));
@@ -153,6 +159,7 @@ public class ClienteRepository {
                 cliente.setTipoUsuario(TipoUsuario.CLIENTE);
 
                 cliente.setEnderecos(buscarEnderecosPorIdCliente(conexao, cliente.getId()));
+               cliente.setMudas(listarMudasPorcliente(cliente.getIdCliente()) );
 
                 cliente.setContatos(buscarContatosPorIdCliente(conexao, cliente.getId()));
 
@@ -172,6 +179,45 @@ public class ClienteRepository {
         return clientes;
     }
 
+    public List<Muda> listarMudasPorcliente(Integer idCliente) throws Exception {
+        List<Muda> listaDeMudas = new ArrayList<>();
+        Connection conn = null;
+        try {
+            conn = conexaoBancoDeDados.getConnection();
+            String sql = "select m.* from muda m right join CLIENTE_MUDA mc on  m.Id_muda = mc.id_muda where mc.id_cliente = ?";
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setInt(1,idCliente);
+
+            ResultSet mudas = stm.executeQuery();
+
+            while (mudas.next()){
+                Muda muda = new Muda();
+                muda.setNome(mudas.getString("NOME"));
+                muda.setEcossistema(Ecossistema.valueOf(mudas.getString("ECOSSISTEMA")));
+                muda.setDescricao(mudas.getString("DESCRICAO"));
+                muda.setId(mudas.getInt("ID_MUDA"));
+                muda.setNomeCientifico(mudas.getString("NOME_CIENTIFICO"));
+                muda.setTipo(TipoMuda.valueOf(mudas.getString("Tipo_muda")));
+                muda.setPorte(TamanhoMuda.valueOf(mudas.getString("porte")));
+                listaDeMudas.add(muda);
+            }
+            return listaDeMudas;
+
+        }catch (SQLException e ){
+            throw new ErroNoBancoDeDados("Erro ao buscar lista de mudas do cliente erro: "+ e.getMessage());
+        }finally {
+            if(conn != null){
+                try {
+
+                    conn.close();
+                }catch (Exception e){
+                    throw new ErroNoBancoDeDados("Erro ao fechar a conexão no banco de dados Erro "+e.getMessage());
+                }
+            }
+        }
+
+    }
+
     private List<Contato> buscarContatosPorIdCliente(Connection conexao, Integer idCliente) throws SQLException {
         String sqlContato = "SELECT ID_CONTATO, DESCRICAO, NUMERO, TIPO_CONTATO FROM CONTATO WHERE ID_USUARIO = ?";
 
@@ -183,6 +229,7 @@ public class ClienteRepository {
 
         while (resultadoContato.next()) {
             Contato contato = new Contato();
+            contato.setIdCliente(idCliente);
             contato.setId(resultadoContato.getInt("ID_CONTATO"));
             contato.setDescricao(resultadoContato.getString("DESCRICAO"));
             contato.setNumero(resultadoContato.getString("NUMERO"));
@@ -207,6 +254,7 @@ public class ClienteRepository {
 
         while (resultadoEndereco.next()) {
             Endereco endereco = new Endereco();
+            endereco.setIdCliente(idCliente);
             endereco.setIdEndereco(resultadoEndereco.getInt("ID_ENDERECO"));
             endereco.setCep(resultadoEndereco.getString("CEP"));
             endereco.setLogradouro(resultadoEndereco.getString("LOGRADOURO"));
@@ -230,7 +278,7 @@ public class ClienteRepository {
 
         try {
             conexao = conexaoBancoDeDados.getConnection();
-            String sqlCliente = "SELECT c.ID_CLIENTE, c.CPF, u.NOME, u.EMAIL, u.ATIVO, u.TIPO_USUARIO " +
+            String sqlCliente = "SELECT  c.*, u.NOME, u.EMAIL, u.ATIVO, u.TIPO_USUARIO " +
                     "FROM VS_13_EQUIPE_5.CLIENTE c " +
                     "INNER JOIN VS_13_EQUIPE_5.USUARIO u ON (c.ID_USUARIO = u.ID_USUARIO) " +
                     "WHERE c.ID_CLIENTE = ?";
@@ -241,12 +289,14 @@ public class ClienteRepository {
             ResultSet resultadoCliente = statementCliente.executeQuery();
 
             while (resultadoCliente.next()) {
-                // Preenche os dados do cliente
-                cliente.setId(resultadoCliente.getInt("ID_CLIENTE"));
+                // Preenche os dados do cliente3
+                cliente.setId(resultadoCliente.getInt("ID_USUARIO"));
+                cliente.setIdCliente(resultadoCliente.getInt("ID_CLIENTE"));
                 cliente.setCpf(resultadoCliente.getString("CPF"));
                 cliente.setNome(resultadoCliente.getString("NOME"));
                 cliente.setEmail(resultadoCliente.getString("EMAIL"));
                 cliente.setAtivo(Ativo.valueOf(resultadoCliente.getString("ATIVO")));
+                cliente.setMudas(listarMudasPorcliente(cliente.getIdCliente()));
                 cliente.setTipoUsuario(TipoUsuario.CLIENTE);
             }
 
@@ -356,6 +406,7 @@ public class ClienteRepository {
         Connection connection = null;
         try {
             connection = conexaoBancoDeDados.getConnection();
+
             int proximoId = this.getProximoIDMudaCliente(connection);
             String sql = "Insert Into CLIENTE_MUDA (ID_CLIENTE_MUDA,ID_MUDA,ID_CLIENTE)" +
                     "values(?,?,?)";

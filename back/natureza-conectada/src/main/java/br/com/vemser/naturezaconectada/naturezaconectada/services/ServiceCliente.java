@@ -93,12 +93,10 @@ public class ServiceCliente  {
         var cliente = clienteRepository.procurarPorIdCliente(idCliente);
         var usuario = objectMapper.convertValue(cliente, UsuarioRequestDTO.class);
 
-        var usuariosAtivos = serviceUsuario.procurarUsuariosAtivos();
+        var usuariosAtivos = serviceUsuario.buscarUsuarioAtivo(usuario.getId());
     }
 
-//    public ClienteDTO listrPorEmail(String email) {
-//
-//    }
+
 
     public void inserirMudasEntregues(Integer idCliente,Integer idMuda) throws Exception {
         clienteRepository.InserirMudaEmCliente(idCliente,idMuda);

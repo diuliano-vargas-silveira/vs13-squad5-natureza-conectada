@@ -1,5 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.config.ConexaoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Tipo;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Contato;
 import org.springframework.stereotype.Repository;
@@ -28,7 +29,7 @@ public class ContatoRepository {
         return null;
     }
 
-    public Contato adicionar(Contato contato, Integer idUsuario) throws Exception {
+    public Contato adicionar(Contato contato, Integer idCliente) throws Exception {
 
         Connection connection = null;
 
@@ -36,6 +37,7 @@ public class ContatoRepository {
             connection = conexaoBancoDeDados.getConnection();
             Integer proximoId = getProximoId(connection);
             contato.setId(proximoId.intValue());
+            contato.setIdCliente(idCliente);
 
             String sql = "INSERT INTO CONTATO " +
                     "(ID_CONTATO, ID_USUARIO, DESCRICAO, NUMERO, TIPO_CONTATO) " +

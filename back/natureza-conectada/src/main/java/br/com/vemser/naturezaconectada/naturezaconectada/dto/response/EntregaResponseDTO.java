@@ -20,7 +20,7 @@ public class EntregaResponseDTO {
     private int id;
 
     @Schema(description = "Lista de mudas", example = "[{'id': 1,'quantidade': 5},{'id': 2,'quantidade': 3}]")
-    private List<Muda> mudas = new ArrayList<>();
+    private List<MudaDTO> mudas = new ArrayList<>();
     @Schema(description = "Status da entrega", example = "ENTREGUE")
     private StatusEntrega status;
     @Schema(description = "Informações do cliente", implementation = Cliente.class)
