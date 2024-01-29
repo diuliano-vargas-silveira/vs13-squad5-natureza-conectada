@@ -107,5 +107,13 @@ public class ServiceUsuario implements IServiceUsuario {
             throw new RegraDeNegocioException("Nenhum usuário encontrado para o Id: " + id);
         }
     }
+    public Usuario buscarUsuarioAtivo(int id) throws Exception {
+        try {
+            Usuario usuarioRecuperado = usuarioRepository.procurarAtivoPorId(id);
+            return usuarioRecuperado;
+        } catch (Exception ex) {
+            throw new RegraDeNegocioException("Nenhum usuário Ativo encontrado para o Id: " + id);
+        }
+    }
 
 }

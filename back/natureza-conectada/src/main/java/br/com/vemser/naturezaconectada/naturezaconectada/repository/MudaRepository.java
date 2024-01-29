@@ -1,11 +1,13 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.config.ConexaoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TamanhoMuda;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoMuda;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -80,7 +82,7 @@ public class MudaRepository  {
         try{
             conexao = conexaoBancoDeDados.getConnection();
             String sql = "UPDATE MUDA SET " +
-                    "ATIVO = D " +
+                    "ATIVO = ? " +
                     "WHERE ID_MUDA = ?";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
@@ -342,5 +344,50 @@ public class MudaRepository  {
             }
         }
 
+    }
+
+
+
+    public List<Muda> obterMudasDaEntrega( int idEntrega) throws Exception {
+        List<Muda> mudas = new ArrayList<>();
+        Connection conexao = null;
+        String sqlMudas = "SELECT em.QUANTIDADE AS QTD_ENTREGA, m.* " +
+                "FROM VS_13_EQUIPE_5.ENTREGA_MUDA em " +
+                "JOIN VS_13_EQUIPE_5.MUDA m ON em.ID_MUDA = m.ID_MUDA " +
+                "WHERE em.ID_ENTREGA = ?";
+
+        try  {
+            conexao = conexaoBancoDeDados.getConnection();
+            PreparedStatement statementMudas = conexao.prepareStatement(sqlMudas);
+            statementMudas.setInt(1, idEntrega);
+            ResultSet resultadoMudas = statementMudas.executeQuery();
+
+            while (resultadoMudas.next()) {
+                Muda mudaAtual = new Muda();
+                mudaAtual.setId(resultadoMudas.getInt("ID_MUDA"));
+                mudaAtual.setQuantidade(resultadoMudas.getInt("QTD_ENTREGA"));
+                mudaAtual.setPorte(TamanhoMuda.valueOf(resultadoMudas.getString("PORTE")));
+                mudaAtual.setTipo(TipoMuda.valueOf(resultadoMudas.getString("TIPO_MUDA")));
+                mudaAtual.setNome(resultadoMudas.getString("NOME"));
+                mudaAtual.setNomeCientifico(resultadoMudas.getString("NOME_CIENTIFICO"));
+                mudaAtual.setEcossistema(Ecossistema.valueOf(resultadoMudas.getString("ECOSSISTEMA")));
+                mudaAtual.setDescricao(resultadoMudas.getString("DESCRICAO"));
+                mudaAtual.setAtivo(Ativo.valueOf(resultadoMudas.getString("ATIVO")));
+                mudas.add(mudaAtual);
+            }
+        }catch (Exception ex){
+
+            throw new RegraDeNegocioException("Erro ao buscar as mudas da entrega");
+        }finally {
+            if(conexao != null){
+                try {
+                    conexao.close();
+                }catch (Exception e){
+                    throw new ErroNoBancoDeDados("Erro ao fechar a conexão");
+
+                }
+            }
+        }
+        return mudas;
     }
 }

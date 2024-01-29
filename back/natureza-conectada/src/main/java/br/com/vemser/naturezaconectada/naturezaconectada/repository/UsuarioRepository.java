@@ -1,5 +1,7 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.config.ConexaoBancoDeDados;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
 import java.lang.Exception;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
@@ -8,6 +10,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Especialista;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Usuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.interfaces.IRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -15,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@Slf4j
 public class UsuarioRepository implements IRepository<Integer, Usuario> {
 
     private final ConexaoBancoDeDados conexaoBancoDeDados;
@@ -55,9 +59,11 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
             stmt.setString(4, usuario.getSenha());
             stmt.setString(5, usuario.getTipoUsuario().toString());
 
+
             int resultado = stmt.executeUpdate();
             System.out.println("Usuário criado! Resultado: ".concat(String.valueOf(resultado)));
             return usuario;
+
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado para adicionar o usuário ao banco de dados.");
             throw new Exception(erro.getMessage());
@@ -174,7 +180,7 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
         Connection con = null;
         try {
             con = conexaoBancoDeDados.getConnection();
-            String sql = "SELECT * FROM USUARIO WHERE EMAIL = ?";
+            String sql = "SELECT * FROM USUARIO WHERE EMAIL = ? AND ATIVO = 'A'";
 
             try (PreparedStatement pstmt = con.prepareStatement(sql)) {
                 pstmt.setString(1, email);
@@ -187,6 +193,7 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
                         usuario.setEmail(res.getString("EMAIL"));
                         usuario.setSenha(res.getString("SENHA"));
                         usuario.setTipoUsuario(TipoUsuario.valueOf(res.getString("TIPO_USUARIO")));
+                        usuario.setAtivo(Ativo.valueOf(res.getString("Ativo")));
                     }
                 }
             }
@@ -246,6 +253,45 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
             }
         }
     }
+    public Usuario procurarAtivoPorId(int id) throws Exception {
+        Usuario usuario = null;
+        Connection con = null;
+        try {
+            con = conexaoBancoDeDados.getConnection();
+            String sql = "SELECT * FROM USUARIO WHERE ID_USUARIO = ? and Ativo ='A'";
+
+            try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+                pstmt.setLong(1, id);
+
+                try (ResultSet res = pstmt.executeQuery()) {
+                    if (res.next()) {
+                        usuario = new Usuario();
+                        usuario.setId(res.getInt("ID_USUARIO"));
+                        usuario.setNome(res.getString("NOME"));
+                        usuario.setEmail(res.getString("EMAIL"));
+                        usuario.setTipoUsuario(TipoUsuario.valueOf(res.getString("TIPO_USUARIO")));
+                    } else {
+                        throw new RegraDeNegocioException("Nenhum usuario encontrado para o Id: " + id);
+                    }
+                } catch (RegraDeNegocioException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return usuario;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new Exception("ERRO: Algo deu errado ao buscar o usuário do banco de dados.");
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     public List<Usuario> procurarUsuariosAtivos() throws Exception {
         Usuario usuario = null;
@@ -253,8 +299,9 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
         List<Usuario> listaUsuario = new ArrayList<>();
 
         try {
-            Statement statment = con.createStatement();
+
             con = conexaoBancoDeDados.getConnection();
+            Statement statment = con.createStatement();
             String sql = "SELECT * FROM USUARIO WHERE ATIVO = 'A'";
 
             ResultSet usuarioTabela = statment.executeQuery(sql);

@@ -27,9 +27,9 @@ public class ClienteDTO extends UsuarioResponseDTO {
 
     private List<Contato> contatos = new ArrayList<>();
 
-    @JsonIgnore
+
     private List<Muda> mudas = new ArrayList<>();
 
-    @JsonIgnore
+@JsonIgnore
     private List<Entrega> entregas = new ArrayList<>();
 }

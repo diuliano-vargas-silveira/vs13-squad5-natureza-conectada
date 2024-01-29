@@ -27,10 +27,10 @@ public class ClienteController {
 
     @PostMapping
     public ResponseEntity<ClienteDTO> adicionar(@Valid @RequestBody ClienteCreateDTO clienteCreateDTO) throws Exception {
-        log.debug("Criando contato");
+        log.debug("Criando cliente");
 
         ClienteDTO cliente = serviceCliente.adicionar(clienteCreateDTO);
-        log.debug("Contato criado");
+        log.debug("Contato cliente");
 
         return new ResponseEntity<>(cliente, HttpStatus.CREATED);
     }

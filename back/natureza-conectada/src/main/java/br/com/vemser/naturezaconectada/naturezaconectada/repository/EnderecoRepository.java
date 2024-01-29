@@ -1,9 +1,11 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.config.ConexaoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Tipo;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Endereco;
 import org.springframework.stereotype.Repository;
@@ -136,18 +138,27 @@ public class EnderecoRepository {
         return true;
     }
 
-    public List<Endereco> listarEnderecosAtivos() throws Exception {
+    public List<Endereco> listarEnderecosPorAtivo(String ativo) throws Exception {
         List<Endereco> listaEndereco = new ArrayList<>();
         Connection conexao = null;
 
         try {
             conexao = conexaoBancoDeDados.getConnection();
-            Statement statment = conexao.createStatement();
 
-            String sqlEndereco = "SELECT * ENDERECO WHERE ATIVO = 'A'";
+            String sqlEndereco = "SELECT * FROM ENDERECO WHERE ATIVO = ?";
+
+            PreparedStatement statment = conexao.prepareStatement(sqlEndereco);
+
+            try {
+                Ativo.valueOf(ativo);
+            }catch (IllegalArgumentException e){
+                throw  new RegraDeNegocioException("Não existe o Ativo "+ ativo + " apenas A->Ativo D->Desativo ");
+            }
+
+            statment.setString(1,ativo.toLowerCase());
 
 
-            ResultSet enderecoTabela = statment.executeQuery(sqlEndereco);
+            ResultSet enderecoTabela = statment.executeQuery();
 
             while (enderecoTabela.next()) {
 
@@ -165,6 +176,9 @@ public class EnderecoRepository {
                 enderecoAtual.setAtivo(Ativo.valueOf(enderecoTabela.getString("ATIVO")));
                 listaEndereco.add(enderecoAtual);
 
+            }
+            if(listaEndereco.isEmpty()){
+                throw new InformacaoNaoEncontrada("não foi encontrado endereços com o Ativo "+ ativo);
             }
         } catch (SQLException e) {
             System.out.println("Não foi possível listar os endereços.");

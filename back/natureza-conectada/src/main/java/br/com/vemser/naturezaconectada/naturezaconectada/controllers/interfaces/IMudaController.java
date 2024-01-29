@@ -3,6 +3,7 @@ package br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.MudaCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.MudaDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -26,6 +27,18 @@ public interface IMudaController {
     @GetMapping
     public List<MudaDTO> listarMudas() throws Exception;
 
+    @Operation(summary = "Listar Mudas Ativas", description = "Lista todas as Mudas Ativas do banco")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Retorna a lista de Mudas ativas"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Erro ao buscar no banco de dados"),
+                    @ApiResponse(responseCode = "400", description = "não há mudas Ativas  no banco de dados")
+            }
+    )
+    @GetMapping("/ativas")
+    public List<MudaDTO> listarAtivas() throws Exception ;
+
     @Operation(summary = "Lista Muda por ID", description = "Busca uma muda por id")
     @ApiResponses(
             value = {
@@ -37,6 +50,18 @@ public interface IMudaController {
     )
     @GetMapping("/{idMuda}")
     public ResponseEntity<MudaDTO> buscarPorId(@PathVariable Integer idMuda) throws Exception;
+
+    @Operation(summary = "Lista Muda por ecossistema", description = "Busca uma muda por ecossistema")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Retorna uma lista de  Mudas por ecossistema"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Erro ao buscar no banco de dados"),
+                    @ApiResponse(responseCode = "400", description = "não há muda com deste ecossistema no banco de dados")
+            }
+    )
+    @GetMapping("/buscar")
+    public ResponseEntity<MudaDTO> buscarPorEco(@RequestParam Ecossistema eco) throws Exception;
 
     @Operation(summary = "Cria uma nova muda", description = "Cria uma nova muda no banco de dados")
     @ApiResponses(

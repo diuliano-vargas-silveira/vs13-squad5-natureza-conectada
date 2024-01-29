@@ -1,5 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.config.ConexaoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.*;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
@@ -7,6 +8,10 @@ import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Entrega;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceCliente;
+import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceMudas;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -14,14 +19,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
+@Slf4j
 public class EntregaRepository {
     private final ServiceCliente serviceCliente;
     private final ConexaoBancoDeDados conexaoBancoDeDados;
 
-    public EntregaRepository(ServiceCliente serviceCliente, ConexaoBancoDeDados conexaoBancoDeDados) {
-        this.serviceCliente = serviceCliente;
-        this.conexaoBancoDeDados = conexaoBancoDeDados;
-    }
+    private final ServiceMudas serviceMudas;
+
+    private final ObjectMapper objectMapper;
+
+
+
+
 
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_ENTREGA.NEXTVAL mysequence FROM DUAL";
@@ -34,7 +44,7 @@ public class EntregaRepository {
     }
 
 
-    public Entrega adicionar(Entrega entrega, Integer idEndereco) throws ErroNoBancoDeDados {
+    public Entrega adicionar(Entrega entrega, Integer idEndereco) throws Exception {
         try (Connection conexao = conexaoBancoDeDados.getConnection()) {
             entrega.setId(getProximoId(conexao));
 
@@ -49,8 +59,8 @@ public class EntregaRepository {
 
                 adicionarMudas(conexao, entrega.getId(), entrega.getMudas());
 
-                entrega.setMudas(obterMudasDaEntrega(conexao, entrega.getId()));
-                entrega.setCliente(obterClienteDaEntrega(conexao, entrega.getId()));
+                entrega.setMudas(this.serviceMudas.obterMudasDaEntrega( entrega.getId()).stream().map(mudaDTO -> this.objectMapper.convertValue(mudaDTO, Muda.class)).toList());
+                entrega.setCliente(this.objectMapper.convertValue(this.serviceCliente.procurarPorIdCliente(entrega.getCliente().getId()),Cliente.class));
 
                 System.out.println("A entrega foi adicionada! Resultado: " + resultadoEntrega);
 
@@ -131,37 +141,53 @@ public class EntregaRepository {
         }
     }
 
-    public Entrega editar(int idEntrega, Entrega entrega) throws ErroNoBancoDeDados {
+    public Entrega editarStatus(int idEntrega, StatusEntrega status) throws Exception {
         try (Connection conexao = conexaoBancoDeDados.getConnection()) {
             String sqlEntrega = "UPDATE VS_13_EQUIPE_5.ENTREGA SET STATUS = ? WHERE ID_ENTREGA = ?";
 
             try (PreparedStatement statementEntrega = conexao.prepareStatement(sqlEntrega)) {
-                statementEntrega.setString(1, String.valueOf(entrega.getStatus()));
+                statementEntrega.setString(1, String.valueOf(status));
                 statementEntrega.setInt(2, idEntrega);
                 int resultadoEntrega = statementEntrega.executeUpdate();
-
-                atualizarMudas(conexao, idEntrega, entrega.getMudas());
+                Entrega entrega = this.procurarPorId(idEntrega);
 
                 System.out.println("A entrega foi atualizada! Resultado: " + resultadoEntrega);
+
+                if(status == StatusEntrega.ENTREGUE){
+
+                    entrega.getMudas().forEach(muda -> {
+                        try {
+                            this.serviceCliente.inserirMudasEntregues(entrega.getCliente().getIdCliente(),muda.getId());
+                        } catch (Exception e) {
+                            log.error("erro ao anexar muda ao clienete");
+                            throw new RuntimeException("Erro ao anexar muda");
+                        }
+                    });
+
+                }
 
                 return entrega;
             }
         } catch (SQLException erro) {
             System.out.println("ERRO: Algo deu errado ao atualizar a entrega no banco de dados.");
             throw new ErroNoBancoDeDados(erro.getMessage());
+        }catch (Exception e){
+            throw new ErroNoBancoDeDados("erro ao buscar");
         }
     }
 
 
-    private void atualizarMudas(Connection conexao, int idEntrega, List<Muda> mudas) throws SQLException {
+    public void atualizarMudas( int idEntrega, List<Muda> mudas) throws SQLException {
         String sqlDeleteMudas = "DELETE FROM VS_13_EQUIPE_5.ENTREGA_MUDA WHERE ID_ENTREGA = ?";
-        try (PreparedStatement statementDeleteMudas = conexao.prepareStatement(sqlDeleteMudas)) {
+        try (Connection conexao = conexaoBancoDeDados.getConnection()) {
+            PreparedStatement statementDeleteMudas = conexao.prepareStatement(sqlDeleteMudas);
             statementDeleteMudas.setInt(1, idEntrega);
             statementDeleteMudas.executeUpdate();
         }
 
         String sqlMuda = "INSERT INTO VS_13_EQUIPE_5.ENTREGA_MUDA (ID_ENTREGA_MUDA, ID_MUDA, ID_ENTREGA, QUANTIDADE) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement statementMuda = conexao.prepareStatement(sqlMuda)) {
+        try  (Connection conexao = conexaoBancoDeDados.getConnection()) {
+            PreparedStatement statementMuda = conexao.prepareStatement(sqlMuda);
             for (Muda muda : mudas) {
                 int proximoIdEntregaMuda = obterProximoIdEntregaMuda(conexao);
                 statementMuda.setInt(1, proximoIdEntregaMuda);
@@ -174,7 +200,7 @@ public class EntregaRepository {
     }
 
 
-    public List<Entrega> listar() throws ErroNoBancoDeDados {
+    public List<Entrega> listar() throws Exception {
         Connection conexao = null;
         List<Entrega> listaEntrega = new ArrayList<>();
 
@@ -190,7 +216,7 @@ public class EntregaRepository {
                 entregaAtual.setId(entregaTabela.getInt("ID_ENTREGA"));
                 entregaAtual.setStatus(StatusEntrega.valueOf(entregaTabela.getString("STATUS")));
 
-                List<Muda> mudas = obterMudasDaEntrega(conexao, entregaAtual.getId());
+                List<Muda> mudas = this.serviceMudas.obterMudasDaEntrega( entregaAtual.getId()).stream().map(muda ->this.objectMapper.convertValue(muda,Muda.class) ).toList();
                 entregaAtual.setMudas(mudas);
 
                 Cliente clienteAtual = obterClienteDaEntrega(conexao, entregaAtual.getId());
@@ -212,33 +238,6 @@ public class EntregaRepository {
         return listaEntrega;
     }
 
-    private List<Muda> obterMudasDaEntrega(Connection conexao, int idEntrega) throws SQLException {
-        List<Muda> mudas = new ArrayList<>();
-        String sqlMudas = "SELECT em.QUANTIDADE AS QTD_ENTREGA, m.* " +
-                "FROM VS_13_EQUIPE_5.ENTREGA_MUDA em " +
-                "JOIN VS_13_EQUIPE_5.MUDA m ON em.ID_MUDA = m.ID_MUDA " +
-                "WHERE em.ID_ENTREGA = ?";
-
-        try (PreparedStatement statementMudas = conexao.prepareStatement(sqlMudas)) {
-            statementMudas.setInt(1, idEntrega);
-            ResultSet resultadoMudas = statementMudas.executeQuery();
-
-            while (resultadoMudas.next()) {
-                Muda mudaAtual = new Muda();
-                mudaAtual.setId(resultadoMudas.getInt("ID_MUDA"));
-                mudaAtual.setQuantidade(resultadoMudas.getInt("QTD_ENTREGA"));
-                mudaAtual.setPorte(TamanhoMuda.valueOf(resultadoMudas.getString("PORTE")));
-                mudaAtual.setTipo(TipoMuda.valueOf(resultadoMudas.getString("TIPO_MUDA")));
-                mudaAtual.setNome(resultadoMudas.getString("NOME"));
-                mudaAtual.setNomeCientifico(resultadoMudas.getString("NOME_CIENTIFICO"));
-                mudaAtual.setEcossistema(Ecossistema.valueOf(resultadoMudas.getString("ECOSSISTEMA")));
-                mudaAtual.setDescricao(resultadoMudas.getString("DESCRICAO"));
-                mudaAtual.setAtivo(Ativo.valueOf(resultadoMudas.getString("ATIVO")));
-                mudas.add(mudaAtual);
-            }
-        }
-        return mudas;
-    }
 
 
 
@@ -260,7 +259,7 @@ public class EntregaRepository {
     }
 
 
-    public Entrega procurarPorId(int idEntrega) throws ErroNoBancoDeDados {
+    public Entrega procurarPorId(int idEntrega) throws Exception {
         Connection conexao = null;
 
         try {
@@ -282,8 +281,9 @@ public class EntregaRepository {
                         + "WHERE em.ID_ENTREGA = ?";
                 PreparedStatement statementMudas = conexao.prepareStatement(sqlMudas);
                 statementMudas.setInt(1, idEntrega);
-
+                log.debug("service");
                 ResultSet resultadoMudas = statementMudas.executeQuery();
+
                 while (resultadoMudas.next()) {
                     Muda mudaAtual = new Muda();
                     mudaAtual.setId(resultadoMudas.getInt("ID_MUDA"));
@@ -299,42 +299,13 @@ public class EntregaRepository {
                     entregaAtual.getMudas().add(mudaAtual);
                 }
 
-                String sqlCliente = "SELECT * FROM VS_13_EQUIPE_5.CLIENTE c WHERE c.ID_CLIENTE = ?";
-                PreparedStatement statementCliente = conexao.prepareStatement(sqlCliente);
-                statementCliente.setInt(1, idCliente);
 
-                ResultSet clienteTabela = statementCliente.executeQuery();
-
-                Cliente clienteAtual = new Cliente();
-                while (clienteTabela.next()) {
-                    int idUsuario = clienteTabela.getInt("ID_USUARIO");
-                    clienteAtual.setCpf(clienteTabela.getString("CPF"));
-                    clienteAtual.setId(clienteTabela.getInt("ID_CLIENTE"));
-
-                    String sqlUsuario = "SELECT * FROM VS_13_EQUIPE_5.USUARIO WHERE ID_USUARIO = ?";
-                    PreparedStatement statementUsuario = conexao.prepareStatement(sqlUsuario);
-                    statementUsuario.setInt(1, idUsuario);
-
-                    ResultSet queryUsuario = statementUsuario.executeQuery();
-                    while (queryUsuario.next()) {
-                        clienteAtual.setNome(queryUsuario.getString("NOME"));
-                    }
-
-                    String sqlEndereco = "SELECT * FROM VS_13_EQUIPE_5.ENDERECO e WHERE e.ID_USUARIO = ?";
-                    PreparedStatement statementEndereco = conexao.prepareStatement(sqlEndereco);
-                    statementEndereco.setInt(1, idUsuario);
-
-                    ResultSet queryEndereco = statementEndereco.executeQuery();
-                    while (queryEndereco.next()) {
-//                        entregaAtual.getEnderecoDeEntrega().setTipo(Tipo.valueOf(queryEndereco.getString("TIPO")));
-                    }
-
-                    entregaAtual.setCliente(clienteAtual);
-                }
+                Cliente clienteAtual = this.objectMapper.convertValue(this.serviceCliente.procurarPorIdCliente(idCliente),Cliente.class);
+                entregaAtual.setCliente(clienteAtual);
 
                 return entregaAtual;
             } else {
-                return null;
+                throw new InformacaoNaoEncontrada("Não foi encontrado nenhuma entrega com este id");
             }
 
         } catch (SQLException erro) {

@@ -3,6 +3,9 @@ package br.com.vemser.naturezaconectada.naturezaconectada.services;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ClienteCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.UsuarioRequestDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ClienteDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoEmail;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.ClienteRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,10 +25,15 @@ public class ServiceCliente  {
     private final ClienteRepository clienteRepository;
     private final ObjectMapper objectMapper;
 
+    private final EmailService emailService;
+
 
 
     public ClienteDTO adicionar(ClienteCreateDTO cliente) throws Exception {
 
+        if (cliente.getTipoUsuario() != TipoUsuario.CLIENTE) {
+            throw new RegraDeNegocioException("Tipo de usuário deve ser Cliente");
+        }
         var usuarioCriado = objectMapper.convertValue(cliente, UsuarioRequestDTO.class);
         var usuario = serviceUsuario.adicionarUsuario(usuarioCriado);
 
@@ -34,6 +42,8 @@ public class ServiceCliente  {
         var clienteCriado = objectMapper.convertValue(cliente, Cliente.class);
 
         clienteRepository.adicionar(clienteCriado);
+
+        this.emailService.sendEmail(cliente, TipoEmail.CRIACAO);
 
         return objectMapper.convertValue(clienteCriado, ClienteDTO.class);
 
@@ -49,6 +59,8 @@ public class ServiceCliente  {
 
         clienteRepository.editar(idCliente, cliente);
 
+        this.emailService.sendEmail(clienteEditado, TipoEmail.ALTERACAO);
+
         return objectMapper.convertValue(cliente, ClienteDTO.class);
     }
 
@@ -56,6 +68,8 @@ public class ServiceCliente  {
         var clienteEncontrado = clienteRepository.procurarPorIdCliente(idCliente);
 
         serviceUsuario.remover(clienteEncontrado.getId());
+
+        this.emailService.sendEmail( this.objectMapper.convertValue(clienteEncontrado,ClienteCreateDTO.class), TipoEmail.EXCLUSAO);
     }
 
     public List<ClienteDTO> listarTodos() throws Exception {
@@ -79,12 +93,10 @@ public class ServiceCliente  {
         var cliente = clienteRepository.procurarPorIdCliente(idCliente);
         var usuario = objectMapper.convertValue(cliente, UsuarioRequestDTO.class);
 
-        var usuariosAtivos = serviceUsuario.procurarUsuariosAtivos();
+        var usuariosAtivos = serviceUsuario.buscarUsuarioAtivo(usuario.getId());
     }
 
-//    public ClienteDTO listrPorEmail(String email) {
-//
-//    }
+
 
     public void inserirMudasEntregues(Integer idCliente,Integer idMuda) throws Exception {
         clienteRepository.InserirMudaEmCliente(idCliente,idMuda);

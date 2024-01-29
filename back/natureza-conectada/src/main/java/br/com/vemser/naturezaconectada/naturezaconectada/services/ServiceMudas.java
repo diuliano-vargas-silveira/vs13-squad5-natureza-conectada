@@ -21,6 +21,8 @@ public class ServiceMudas {
     private final MudaRepository mudaRepository;
     private final ObjectMapper objectMapper;
 
+    private final ServiceCliente serviceCliente;
+
 
     public MudaCreateDTO adicionar(MudaCreateDTO mudadto) throws Exception {
         Muda muda = objectMapper.convertValue(mudadto,Muda.class);
@@ -36,6 +38,14 @@ public class ServiceMudas {
         this.mudaRepository.mudarAtivoMuda(idMuda,ativo);
 
     }
+
+    public List<MudaDTO> obterMudasDaEntrega (int idEntrega) throws Exception {
+
+        return this.mudaRepository.obterMudasDaEntrega(idEntrega).stream().map(muda -> this.objectMapper.convertValue(muda,MudaDTO.class)).toList();
+
+    }
+
+
 
     public MudaCreateDTO editarmuda(Integer idMuda, MudaCreateDTO muda) throws Exception {
         Muda mudaEditada = objectMapper.convertValue(muda,Muda.class);

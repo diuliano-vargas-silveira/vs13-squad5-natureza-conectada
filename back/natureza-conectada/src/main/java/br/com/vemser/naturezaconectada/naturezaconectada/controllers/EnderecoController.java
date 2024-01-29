@@ -53,10 +53,6 @@ public class EnderecoController implements IEnderecoController {
     public ResponseEntity<Void> remover(@PathVariable("idEndereco") Integer idEndereco) throws Exception {
         log.debug("Excluindo endereço");
 
-        var enderecoEncontrado = serviceEndereco.procurarPorIdEndereco(idEndereco);
-
-        if (enderecoEncontrado == null)
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 
         serviceEndereco.deletar(idEndereco);
 
@@ -103,10 +99,16 @@ public class EnderecoController implements IEnderecoController {
 
         EnderecoDTO enderecoAtualizado = serviceEndereco.ativarEndereco(idEndereco,eco);
 
+
         log.debug("Endereço atualizado");
 
         // email pro cliente
 
         return new ResponseEntity<>(enderecoAtualizado, HttpStatus.OK);
+    }
+
+    @GetMapping("/ativo/{ativo}")
+    public  List<EnderecoDTO> buscarPorAtivo (@PathVariable String ativo) throws Exception {
+        return this.serviceEndereco.listarEnderecosPorAtivo(ativo);
     }
 }
