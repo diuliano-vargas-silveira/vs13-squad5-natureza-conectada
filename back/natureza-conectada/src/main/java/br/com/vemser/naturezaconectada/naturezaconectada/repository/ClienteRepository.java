@@ -241,7 +241,6 @@ public class ClienteRepository {
             ResultSet resultadoCliente = statementCliente.executeQuery();
 
             while (resultadoCliente.next()) {
-                // Preenche os dados do cliente
                 cliente.setId(resultadoCliente.getInt("ID_CLIENTE"));
                 cliente.setCpf(resultadoCliente.getString("CPF"));
                 cliente.setNome(resultadoCliente.getString("NOME"));
@@ -251,7 +250,6 @@ public class ClienteRepository {
             }
 
             if (cliente.getId() != 0) {
-                // Cliente encontrado, então busca os endereços associados
                 String sqlEndereco = "SELECT e.ID_ENDERECO, e.ID_USUARIO, e.CEP, e.LOGRADOURO, e.NUMERO, e.COMPLEMENTO, e.CIDADE, e.ID_ESTADO, e.TIPO, e.ECOSSISTEMA, e.ATIVO " +
                         "FROM VS_13_EQUIPE_5.ENDERECO e " +
                         "WHERE e.ID_USUARIO = ?";
@@ -278,7 +276,6 @@ public class ClienteRepository {
                     cliente.getEnderecos().add(endereco);
                 }
 
-                // Busca os contatos associados
                 cliente.setContatos(buscarContatosPorIdCliente(conexao, cliente.getId()));
             }
 
