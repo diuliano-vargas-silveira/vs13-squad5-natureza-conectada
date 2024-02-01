@@ -24,9 +24,7 @@ public class ServiceCliente  {
     private final ServiceUsuario serviceUsuario;
     private final ClienteRepository clienteRepository;
     private final ObjectMapper objectMapper;
-
     private final EmailService emailService;
-
 
 
     public ClienteDTO adicionar(ClienteCreateDTO cliente) throws Exception {

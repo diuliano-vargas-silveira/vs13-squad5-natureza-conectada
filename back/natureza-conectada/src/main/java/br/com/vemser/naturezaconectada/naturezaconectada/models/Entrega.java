@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 public class Entrega {
 
-    private int id;
+    private Integer id;
     private List<Muda> mudas = new ArrayList<>();
     private StatusEntrega status;
     private Cliente cliente;

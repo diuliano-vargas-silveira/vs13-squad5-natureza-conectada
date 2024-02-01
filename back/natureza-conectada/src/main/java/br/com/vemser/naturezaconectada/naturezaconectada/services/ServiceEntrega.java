@@ -13,7 +13,6 @@ import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.EntregaRepository;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.MudaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jdk.jshell.Snippet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,7 +33,6 @@ public class ServiceEntrega {
     private final ServiceEndereco serviceEndereco;
     private final MudaRepository mudaRepository;
     private final ObjectMapper objectMapper;
-
     private final EmailService emailService;
 
     public EntregaResponseDTO adicionar(EntregaRequestDTO entregaRequestDTO, int idEndereco) throws Exception {

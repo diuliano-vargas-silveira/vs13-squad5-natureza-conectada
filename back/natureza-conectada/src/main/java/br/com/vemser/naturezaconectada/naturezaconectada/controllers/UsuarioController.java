@@ -3,7 +3,6 @@ package br.com.vemser.naturezaconectada.naturezaconectada.controllers;
 import br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces.IUsuarioController;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.UsuarioRequestDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.UsuarioResponseDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceUsuario;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

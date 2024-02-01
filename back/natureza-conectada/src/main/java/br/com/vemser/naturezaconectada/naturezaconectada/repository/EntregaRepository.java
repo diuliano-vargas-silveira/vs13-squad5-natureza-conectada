@@ -18,8 +18,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository
 @RequiredArgsConstructor
+@Repository
 @Slf4j
 public class EntregaRepository {
     private final ServiceCliente serviceCliente;

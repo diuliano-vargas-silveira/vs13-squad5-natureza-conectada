@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @Data
 public class AdminResponseDTO {
     @Schema(description = "Identificador do admin", example = "1")
-    private int idAdmin;
+    private Integer idAdmin;
 }

@@ -1,6 +1,5 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EntregaRequestDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.UsuarioRequestDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EntregaResponseDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoEmail;
@@ -29,12 +28,7 @@ public class EmailService {
 
     @Value("${spring.mail.username}")
     private String from;
-
-
     private final JavaMailSender emailSender;
-
-
-
 
     public void sendEmail(UsuarioRequestDTO dto, TipoEmail tipoEmail) throws Exception {
         MimeMessage mimeMessage = emailSender.createMimeMessage();

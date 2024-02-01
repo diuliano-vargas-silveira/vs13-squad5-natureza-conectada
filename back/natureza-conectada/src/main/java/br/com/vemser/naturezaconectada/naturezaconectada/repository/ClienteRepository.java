@@ -15,8 +15,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository
 @RequiredArgsConstructor
+@Repository
 public class ClienteRepository {
 
     private final ConexaoBancoDeDados conexaoBancoDeDados;

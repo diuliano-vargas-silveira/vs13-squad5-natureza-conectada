@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @Data
 public class RelatorioDTO {
 
-    private int id;
+    private Integer id;
 
     @NotNull(message = "Dono não pode ser nulo!")
     private Cliente dono;

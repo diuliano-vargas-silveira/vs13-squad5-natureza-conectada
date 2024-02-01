@@ -1,6 +1,4 @@
-
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
-
 
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.MudaCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.MudaDTO;
@@ -44,7 +42,6 @@ public class ServiceMudas {
         return this.mudaRepository.obterMudasDaEntrega(idEntrega).stream().map(muda -> this.objectMapper.convertValue(muda,MudaDTO.class)).toList();
 
     }
-
 
 
     public MudaCreateDTO editarmuda(Integer idMuda, MudaCreateDTO muda) throws Exception {

@@ -4,7 +4,6 @@ import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.MudaCreateD
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.MudaDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

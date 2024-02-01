@@ -19,7 +19,7 @@ import java.util.List;
 public class EntregaRequestDTO {
 
     @Schema(description = "Identificador da entrega", required = false, hidden = true, example = "1")
-    private int id;
+    private Integer id;
 
     @Schema(description = "Informações do cliente", required = true, implementation = Cliente.class)
     @NotNull(message = "Cliente não pode ser nulo!")

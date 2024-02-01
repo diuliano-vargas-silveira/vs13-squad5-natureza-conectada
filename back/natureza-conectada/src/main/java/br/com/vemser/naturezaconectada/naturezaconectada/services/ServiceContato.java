@@ -1,6 +1,5 @@
  package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-
  import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ContatoCreateDTO;
  import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ContatoDTO;
  import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
@@ -12,7 +11,6 @@
  import org.springframework.stereotype.Service;
 
  import java.sql.SQLException;
- import java.util.ArrayList;
  import java.util.List;
  import java.util.stream.Collectors;
 

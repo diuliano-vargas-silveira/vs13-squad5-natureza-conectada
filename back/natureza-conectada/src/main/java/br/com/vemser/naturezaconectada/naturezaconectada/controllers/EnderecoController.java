@@ -3,7 +3,6 @@ package br.com.vemser.naturezaconectada.naturezaconectada.controllers;
 import br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces.IEnderecoController;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EnderecoCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EnderecoDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceEndereco;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

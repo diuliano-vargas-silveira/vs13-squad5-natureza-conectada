@@ -3,8 +3,6 @@ package br.com.vemser.naturezaconectada.naturezaconectada.controllers;
 import br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces.IEspecialistaController;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EspecialistaCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EspecialistaDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
-import br.com.vemser.naturezaconectada.naturezaconectada.models.Especialista;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceEspecialista;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
