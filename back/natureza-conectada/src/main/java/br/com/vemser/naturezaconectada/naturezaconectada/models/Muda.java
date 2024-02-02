@@ -6,6 +6,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoMuda;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -36,5 +37,18 @@ public class Muda {
     @Column(name = "ATIVO")
     private Ativo ativo;
 
-}
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "CLIENTE_MUDA",
+            joinColumns = @JoinColumn(name = "ID_MUDA"),
+            inverseJoinColumns = @JoinColumn(name = "ID_CLIENTE"))
+    private List<Cliente> clientes;
 
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "ENTREGA_MUDA",
+            joinColumns = @JoinColumn(name = "ID_ENTREGA"),
+            inverseJoinColumns = @JoinColumn(name = "ID_MUDA"))
+    private List<Entrega> entregas;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "muda", orphanRemoval = true)
+    private List<Relatorio> relatorios;
+}

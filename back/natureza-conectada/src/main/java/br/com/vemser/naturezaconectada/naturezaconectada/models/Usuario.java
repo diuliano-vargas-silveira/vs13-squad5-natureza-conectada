@@ -12,6 +12,8 @@ import javax.persistence.*;
 @Setter
 @Entity(name = "Usuario")
 @Table(name = "USUARIO")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="TIPO_USUARIO", discriminatorType = DiscriminatorType.STRING)
 public class Usuario {
 
     @Id
@@ -25,7 +27,7 @@ public class Usuario {
     private String email;
     @Column(name = "SENHA")
     private String senha;
-    @Column(name = "TIPO_USUARIO")
+    @Column(name = "TIPO_USUARIO",updatable = false, insertable = false)
     private TipoUsuario tipoUsuario;
     @Column(name = "ATIVO")
     private Ativo ativo;

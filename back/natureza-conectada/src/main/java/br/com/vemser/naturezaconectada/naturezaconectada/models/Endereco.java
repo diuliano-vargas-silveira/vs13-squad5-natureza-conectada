@@ -7,6 +7,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.enums.Tipo;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,8 +23,6 @@ public class Endereco {
     @SequenceGenerator(name = "ENDERECO_SEQ", sequenceName = "SEQ_ENDERECO", allocationSize = 1)
     @Column(name = "ID_ENDERECO")
     private Integer idEndereco;
-    @Column(name = "ID_USUARIO")
-    private Integer idCliente;
     @Column(name = "ID_ESTADO")
     private Estados estado;
     @Column(name = "CEP")
@@ -42,5 +41,16 @@ public class Endereco {
     private Ecossistema ecossistema;
     @Column(name = "ATIVO")
     private Ativo ativo;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "ENDERECO_CLIENTE",
+            joinColumns = @JoinColumn(name = "ID_ENDERECO"),
+            inverseJoinColumns = @JoinColumn(name = "ID_CLIENTE"))
+    private List<Cliente> clientes;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "endereco", orphanRemoval = true)
+    private List<Entrega> entregas;
+
+
 
 }

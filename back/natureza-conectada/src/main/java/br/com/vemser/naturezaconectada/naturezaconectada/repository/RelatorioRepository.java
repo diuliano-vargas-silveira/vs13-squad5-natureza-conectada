@@ -1,11 +1,9 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.config.ConexaoBancoDeDados;
+
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Relatorio;
-import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceCliente;
-import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceEspecialista;
-import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceMudas;
+
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;

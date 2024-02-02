@@ -1,21 +1,17 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.config.ConexaoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.*;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
+
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Entrega;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
-import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceCliente;
-import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceMudas;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
-import java.util.ArrayList;
+
 import java.util.List;
 
 @RequiredArgsConstructor

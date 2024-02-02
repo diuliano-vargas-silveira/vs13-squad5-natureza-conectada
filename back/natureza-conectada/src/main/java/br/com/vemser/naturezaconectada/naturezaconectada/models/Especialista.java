@@ -1,9 +1,11 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.models;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
@@ -12,19 +14,17 @@ import javax.persistence.*;
 @Setter
 @Entity(name = "Especialista")
 @Table(name = "ESPECIALISTA")
+@DiscriminatorValue("ESPECIALISTA")
 public class Especialista extends Usuario {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ESPECIALISTA_SEQ")
-    @SequenceGenerator(name = "ESPECIALISTA_SEQ", sequenceName = "SEQ_ESPECIALISTA", allocationSize = 1)
-    @Column(name = "ID_ESPECIALISTA")
-    private Integer idEspecialista;
-    private Contato contato;
     @Column(name = "DOCUMENTO")
     private String documento;
     @Column(name = "ESPECIALIZACAO")
     private String especializacao;
     @Column(name = "ID_ESTADO")
     private Estados regiaoResponsavel;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "especialista", orphanRemoval = true)
+    private List<Relatorio> relatorios;
 
 }
