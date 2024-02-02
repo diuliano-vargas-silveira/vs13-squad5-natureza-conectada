@@ -11,20 +11,14 @@ import javax.validation.constraints.NotNull;
 @Data
 public class Relatorio {
 
-    private int id;
-
+    private Integer id;
     @NotNull(message = "Dono não pode ser nulo!")
     private Cliente dono;
-
     private Especialista avaliador;
-
     @NotNull(message = "Muda não pode ser nula!")
     private Muda muda;
-
     private String estadoMuda;
-
     private String sugestoes;
-
     private double avaliacaoEspecialista;
 
 }

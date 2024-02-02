@@ -7,28 +7,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class Muda {
-
-    private int id;
-
+    private Integer id;
     private int quantidade;
-
     private TipoMuda tipo;
-
     private String nome;
-
     private String nomeCientifico;
-
     private TamanhoMuda porte;
-
     private Ecossistema ecossistema;
-
     private String descricao;
-
     private Ativo ativo;
 
 }

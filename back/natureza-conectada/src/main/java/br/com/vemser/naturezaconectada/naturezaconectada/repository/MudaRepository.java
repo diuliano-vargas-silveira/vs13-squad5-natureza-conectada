@@ -12,19 +12,17 @@ import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository
 @RequiredArgsConstructor
+@Repository
 @Slf4j
 public class MudaRepository  {
 
     private final ConexaoBancoDeDados conexaoBancoDeDados;
-
-
-
 
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_MUDA.NEXTVAL mysequence FROM DUAL";

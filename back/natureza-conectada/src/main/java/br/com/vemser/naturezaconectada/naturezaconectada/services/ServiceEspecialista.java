@@ -20,7 +20,6 @@ public class ServiceEspecialista  {
 
     private final EspecialistaRepository especialistaRepository;
     private final ServiceUsuario serviceUsuario;
-
     private final ObjectMapper objectMapper;
 
 

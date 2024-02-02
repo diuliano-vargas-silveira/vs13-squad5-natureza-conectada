@@ -9,7 +9,6 @@ import br.com.vemser.naturezaconectada.naturezaconectada.models.Admin;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Especialista;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Usuario;
-import br.com.vemser.naturezaconectada.naturezaconectada.repository.interfaces.IRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
@@ -17,9 +16,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository
 @Slf4j
-public class UsuarioRepository implements IRepository<Integer, Usuario> {
+@Repository
+public class UsuarioRepository {
 
     private final ConexaoBancoDeDados conexaoBancoDeDados;
 
@@ -27,7 +26,6 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
         this.conexaoBancoDeDados = conexaoBancoDeDados;
     }
 
-    @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_USUARIO.nextval mysequence FROM DUAL";
         Statement stmt = connection.createStatement();
@@ -40,7 +38,6 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
         return null;
     }
 
-    @Override
     public Usuario adicionar(Usuario usuario) throws Exception {
         Connection conexao = null;
         try {
@@ -77,7 +74,6 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
         }
     }
 
-    @Override
     public boolean remover(Integer id) throws Exception {
         Connection conexao = null;
         try {
@@ -104,7 +100,6 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
         }
     }
 
-    @Override
     public boolean editar(Integer id, Usuario usuario) throws Exception {
         Connection conexao = null;
         try {
@@ -140,7 +135,6 @@ public class UsuarioRepository implements IRepository<Integer, Usuario> {
         return true;
     }
 
-    @Override
     public List<Usuario> listar() throws Exception {
         Connection conexao = null;
         List<Usuario> listaUsuario = new ArrayList<>();

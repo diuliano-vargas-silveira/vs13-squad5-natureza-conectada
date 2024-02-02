@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 public class RelatorioCreateDTO {
-    private int id;
+    private Integer id;
 
     @NotNull(message = "Dono não pode ser nulo!")
     private Cliente dono;

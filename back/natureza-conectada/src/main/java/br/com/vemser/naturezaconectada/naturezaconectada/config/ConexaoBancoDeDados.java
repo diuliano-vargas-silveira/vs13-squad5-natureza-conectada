@@ -10,8 +10,6 @@ import java.sql.SQLException;
 @Component
 public class ConexaoBancoDeDados {
 
-
-
     @Value("${spring.datasource.url}")
     private String SERVER;
     @Value("${spring.datasource.username}")

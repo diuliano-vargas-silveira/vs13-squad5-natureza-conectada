@@ -21,7 +21,7 @@ public class UsuarioRequestDTO {
     private static final String PASSWORD_VALIDATION_REGEX = "^(?=.*\\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$";
 
     @Schema(description = "Identificador do usuário", required = false, hidden = true, example = "1")
-    private int id;
+    private Integer id;
 
     @Schema(description = "Ativo", example = "A")
     private Ativo ativo;

@@ -4,9 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.br.CPF;
 
-import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 public class Cliente extends Usuario {
-
-    private int idCliente;
+    private Integer idCliente;
     private String cpf;
     private List<Endereco> enderecos = new ArrayList<>();
     private List<Contato> contatos = new ArrayList<>();

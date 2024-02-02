@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class UsuarioResponseDTO {
 
     @Schema(description = "Identificador do usuário", example = "1")
-    private int id;
+    private Integer id;
     @Schema(description = "Nome do usuário", example = "Lucas Alves")
     private String nome;
     @Schema(description = "E-mail", example = "lucas@gmail.com")

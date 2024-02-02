@@ -3,7 +3,6 @@ package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 import br.com.vemser.naturezaconectada.naturezaconectada.config.ConexaoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Admin;
-import br.com.vemser.naturezaconectada.naturezaconectada.repository.interfaces.IRepository;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class AdminRepository implements IRepository<Integer, Admin> {
+public class AdminRepository {
 
     private final ConexaoBancoDeDados conexaoBancoDeDados;
 
@@ -19,7 +18,7 @@ public class AdminRepository implements IRepository<Integer, Admin> {
         this.conexaoBancoDeDados = conexaoBancoDeDados;
     }
 
-    @Override
+
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT seq_admin.nextval mysequence from DUAL";
         Statement stmt = connection.createStatement();
@@ -32,7 +31,7 @@ public class AdminRepository implements IRepository<Integer, Admin> {
         return null;
     }
 
-    @Override
+
     public Admin adicionar(Admin admin) throws Exception {
         Connection conexao = null;
         try {
@@ -67,7 +66,7 @@ public class AdminRepository implements IRepository<Integer, Admin> {
         return admin;
     }
 
-    @Override
+
     public boolean remover(Integer id) throws Exception {
         Connection conexao = null;
         try {
@@ -97,7 +96,7 @@ public class AdminRepository implements IRepository<Integer, Admin> {
         }
     }
 
-    @Override
+
     public boolean editar(Integer id, Admin adminEditado) throws Exception {
         Connection conexao = null;
         try {
@@ -134,7 +133,7 @@ public class AdminRepository implements IRepository<Integer, Admin> {
         }
     }
 
-    @Override
+
     public List<Admin> listar() throws Exception {
         List<Admin> admins = new ArrayList<>();
         Connection conexao = null;

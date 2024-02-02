@@ -10,14 +10,13 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class EspecialistaCreateDTO extends UsuarioRequestDTO{
 
-    private int idEspecialista;
+    private Integer idEspecialista;
 
     private Contato contato;
     @Schema(description = "Documento, um CPF valido", required = true, example = "83303022020")
@@ -25,7 +24,7 @@ public class EspecialistaCreateDTO extends UsuarioRequestDTO{
     @CPF(message = "Cpf inválido!")
     private String documento;
 
-  @Hidden
+    @Hidden
     private String especializacao;
 
     @Schema(description = "Região responsável (Apenas a Sigla do Estado Maiusculo)", required = true, example = "AC")
