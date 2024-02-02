@@ -1,22 +1,38 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
+@Entity(name = "Relatorio")
+@Table(name = "RELATORIO")
 public class Relatorio {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "RELATORIO_SEQ")
+    @SequenceGenerator(name = "RELATORIO", sequenceName = "SEQ_RELATORIO", allocationSize = 1)
+    @Column(name = "ID_RELATORIO")
     private Integer id;
-    @NotNull(message = "Dono não pode ser nulo!")
-    private Cliente dono;
-    private Especialista avaliador;
-    @NotNull(message = "Muda não pode ser nula!")
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_CLIENTE", referencedColumnName = "ID_USUARIO")
+    private Cliente cliente;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_ESPECIALISTA", referencedColumnName = "ID_USUARIO")
+    private Especialista especialista;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_MUDA", referencedColumnName = "ID_MUDA")
     private Muda muda;
+
+
+    @Column(name = "ESTADO_MUDA")
     private String estadoMuda;
     private String sugestoes;
     private double avaliacaoEspecialista;

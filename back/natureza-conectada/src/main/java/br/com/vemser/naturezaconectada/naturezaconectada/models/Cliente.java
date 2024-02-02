@@ -1,22 +1,49 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
+@DiscriminatorValue("CLIENTE")
+@Entity(name = "Cliente")
+@Table(name = "CLIENTE")
 public class Cliente extends Usuario {
-    private Integer idCliente;
+
+
+    @Column(name = "CPF")
     private String cpf;
-    private List<Endereco> enderecos = new ArrayList<>();
-    private List<Contato> contatos = new ArrayList<>();
-    private List<Muda> mudas = new ArrayList<>();
-    private List<Entrega> entregas = new ArrayList<>();
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "ENDERECO_CLIENTE",
+            joinColumns = @JoinColumn(name = "ID_CLIENTE"),
+            inverseJoinColumns = @JoinColumn(name = "ID_ENDERECO"))
+    private List<Endereco> enderecos;
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cliente", orphanRemoval = true)
+    private List<Contato> contatos;
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "CLIENTE_MUDA",
+            joinColumns = @JoinColumn(name = "ID_CLIENTE"),
+            inverseJoinColumns = @JoinColumn(name = "ID_MUDA"))
+    private List<Muda> mudas;
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cliente", orphanRemoval = true)
+    private List<Entrega> entregas;
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cliente", orphanRemoval = true)
+    private List<Relatorio> relatorios;
 }
