@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@DiscriminatorValue("CLIENTE")
 @Entity(name = "Cliente")
 @Table(name = "CLIENTE")
 public class Cliente extends Usuario {

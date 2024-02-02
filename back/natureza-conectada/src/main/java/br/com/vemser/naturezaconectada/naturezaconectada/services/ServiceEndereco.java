@@ -50,7 +50,7 @@ public class ServiceEndereco {
     }
 
     public EnderecoDTO procurarPorIdEndereco(int idEndereco) throws Exception {
-        var enderecoEncontrado = enderecoRepository.procurarPorIdEndereco(idEndereco);
+        var enderecoEncontrado = enderecoRepository.procurarEnderecoPorId(idEndereco);
 
         if (enderecoEncontrado == null)
             return null;
@@ -71,7 +71,7 @@ public class ServiceEndereco {
 
 
     public List<EnderecoDTO> procurarEnderecoPorIdCliente(Integer idCliente) throws Exception {
-        var enderecos = enderecoRepository.procurarEnderecoPorCliente(idCliente);
+        var enderecos = enderecoRepository.procurarEnderecoPorIdCliente(idCliente);
 
         if (enderecos == null)
             return null;

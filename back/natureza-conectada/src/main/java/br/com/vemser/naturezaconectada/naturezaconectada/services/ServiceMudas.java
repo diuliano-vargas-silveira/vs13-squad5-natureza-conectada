@@ -39,7 +39,7 @@ public class ServiceMudas {
 
     public List<MudaDTO> obterMudasDaEntrega (int idEntrega) throws Exception {
 
-        return this.mudaRepository.obterMudasDaEntrega(idEntrega).stream().map(muda -> this.objectMapper.convertValue(muda,MudaDTO.class)).toList();
+        return this.mudaRepository.procurarMudasEntrega(idEntrega).stream().map(muda -> this.objectMapper.convertValue(muda,MudaDTO.class)).toList();
 
     }
 
@@ -67,7 +67,7 @@ public class ServiceMudas {
 
     }
     public MudaDTO buscarPorEco(Ecossistema ecossistema) throws Exception {
-        Muda muda = this.mudaRepository.buscarPorEco(ecossistema);
+        Muda muda = this.mudaRepository.procurarPorEco(ecossistema);
 
         return this.objectMapper.convertValue(muda, MudaDTO.class);
 

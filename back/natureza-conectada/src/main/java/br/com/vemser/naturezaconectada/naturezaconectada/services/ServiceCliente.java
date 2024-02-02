@@ -97,7 +97,7 @@ public class ServiceCliente  {
 
 
     public void inserirMudasEntregues(Integer idCliente,Integer idMuda) throws Exception {
-        clienteRepository.InserirMudaEmCliente(idCliente,idMuda);
+        clienteRepository.inserirMudaEmCliente(idCliente,idMuda);
 
     }
 }
