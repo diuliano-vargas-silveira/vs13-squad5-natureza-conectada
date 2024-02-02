@@ -19,7 +19,7 @@ import java.util.List;
 @Slf4j
 @Repository
 public class UsuarioRepository {
-    
+
 
     public Usuario adicionar(Usuario usuario) throws Exception {
         return null;
