@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface IMudaController {
 
-    @Operation(summary = "Listar Mudas", description = "Lista todas as Mudas do banco")
+    @Operation(summary = "Listar todas as  Mudas salvas no banco", description = "Lista todas as Mudas do banco")
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "Retorna a lista de Mudas"),
@@ -24,7 +24,7 @@ public interface IMudaController {
             }
     )
     @GetMapping
-    public List<MudaDTO> listarMudas() throws Exception;
+    public ResponseEntity<List<MudaCreateDTO>> listarMudas() throws Exception;
 
     @Operation(summary = "Listar Mudas Ativas", description = "Lista todas as Mudas Ativas do banco")
     @ApiResponses(
@@ -36,7 +36,7 @@ public interface IMudaController {
             }
     )
     @GetMapping("/ativas")
-    public List<MudaDTO> listarAtivas() throws Exception ;
+    public ResponseEntity<List<MudaDTO>>listarAtivas() throws Exception ;
 
     @Operation(summary = "Lista Muda por ID", description = "Busca uma muda por id")
     @ApiResponses(
@@ -60,7 +60,7 @@ public interface IMudaController {
             }
     )
     @GetMapping("/buscar")
-    public ResponseEntity<MudaDTO> buscarPorEco(@RequestParam Ecossistema eco) throws Exception;
+    public ResponseEntity<List<MudaDTO>> buscarPorEco(@RequestParam Ecossistema eco) throws Exception;
 
     @Operation(summary = "Cria uma nova muda", description = "Cria uma nova muda no banco de dados")
     @ApiResponses(
@@ -96,5 +96,5 @@ public interface IMudaController {
             }
     )
     @DeleteMapping("/{idMuda}")
-    public ResponseEntity<Void> mudarAtivoMuda(@PathVariable Integer idMuda, @RequestParam Ativo ativo) throws Exception;
+    public ResponseEntity<Void> mudarAtivoMuda(@PathVariable Integer idMuda) throws Exception;
 }

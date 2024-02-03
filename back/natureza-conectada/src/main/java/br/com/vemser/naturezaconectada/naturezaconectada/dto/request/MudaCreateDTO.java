@@ -17,12 +17,12 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Data
 public class MudaCreateDTO {
-    @Hidden
+   @Schema(hidden = true)
     private Integer id;
 
-    @Schema(description = "Quantidade de mudas", required = true, example = "41")
-    @NotNull(message = "Quantidade não pode ser nulo ")
-    private int quantidade;
+    @Schema(description = "Quantidade de mudas em estoque", required = true, example = "41")
+    @NotNull(message = "estoque não pode ser nulo ")
+    private int estoque;
 
     @Schema(description = "Tipo de Muda (PLANTA ou ARVORE)", required = true, example = "ARVORE")
     @NotNull(message = "Tipo da Muda não pode ser nulo!")
@@ -42,12 +42,12 @@ public class MudaCreateDTO {
 
     @Schema(description = "Ecossistema ideal da muda (COSTEIRO, MATA_ATLANTICA, CAMPOS_ARAUCARIAS)", required = true, example = "COSTEIRO")
     @NotNull(message = "Ecossistema ideal não pode ser vazio!")
-    private Ecossistema Ecossistema;
+    private Ecossistema ecossistema;
 
     @Schema(description = "Descrição da muda", example = "arvore grande com folhas pequenas")
     private String descricao;
 
-    @Hidden
+    @Schema(hidden = true)
     private Ativo ativo;
 
 

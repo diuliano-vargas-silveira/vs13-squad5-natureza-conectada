@@ -5,7 +5,6 @@ import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.Especialist
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EspecialistaDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Especialista;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.EspecialistaRepository;
@@ -33,10 +32,14 @@ public class ServiceEspecialista {
     }
 
 
-    public void deletar(int id) throws Exception {
+    public void mudarAtivoEspecialista(int id) throws Exception {
         Especialista especialista = procurarPorIDEntidade(id);
 
-        especialista.setAtivo(Ativo.D);
+        if (especialista.getAtivo() == Ativo.A) {
+            especialista.setAtivo(Ativo.D);
+        } else {
+            especialista.setAtivo(Ativo.A);
+        }
 
         this.especialistaRepository.save(especialista);
 
