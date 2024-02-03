@@ -14,7 +14,7 @@ public interface IUsuarioRepository extends JpaRepository<Usuario, Integer> {
     Usuario findByEmail(String email);
 
     @Query("SELECT new br.com.vemser.naturezaconectada.naturezaconectada.dto.response.UsuarioResponseDTO" +
-            "(u.id, u.nome, u.email, u.tipoUsuario, u.ativo) " +
+            "(u.id, u.nome, u.email, u.tipoUsuario, u.ativo, u.cpf, u.senha) " +
             "FROM Usuario u " +
             "WHERE u.ativo = 'A'")
     List<UsuarioResponseDTO> findAllUsuariosAtivos();
