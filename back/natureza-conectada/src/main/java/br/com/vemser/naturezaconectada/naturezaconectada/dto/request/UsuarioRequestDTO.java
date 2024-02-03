@@ -10,7 +10,6 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @AllArgsConstructor
@@ -42,7 +41,6 @@ public class UsuarioRequestDTO {
             message = "Senha com formato inválido, você precisa de pelo menos 1 número e 1 letra, com no mínimo 8 de tamanho!")
     private String senha;
 
-    @Schema(description = "Tipo do usuário", required = true, example = "ADMIN")
-    @NotNull(message = "Especifique o tipo do seu Usuário")
+    @Schema(description = "Tipo do usuário", required = false, hidden = true, example = "ADMIN")
     private TipoUsuario tipoUsuario;
 }
