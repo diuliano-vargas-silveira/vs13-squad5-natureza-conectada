@@ -37,8 +37,8 @@ public class EspecialistaController implements IEspecialistaController {
         return new ResponseEntity<>(this.serviceEspecialista.adicionar(dto),HttpStatus.CREATED);
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarEspecialista(@PathVariable Integer id) throws Exception {
-        this.serviceEspecialista.deletar(id);
+    public ResponseEntity<Void> mudarAtivoEspecialista(@PathVariable Integer id) throws Exception {
+        this.serviceEspecialista.mudarAtivoEspecialista(id);
         return ResponseEntity.ok().build();
     }
 

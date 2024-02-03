@@ -1,88 +1,125 @@
-//package br.com.vemser.naturezaconectada.naturezaconectada.services;
-//
-//import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.MudaCreateDTO;
-//import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.MudaDTO;
-//import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
-//import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
-//import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
-//import br.com.vemser.naturezaconectada.naturezaconectada.repository.MudaRepository;
-//import com.fasterxml.jackson.databind.ObjectMapper;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.stereotype.Service;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//@Service
-//@RequiredArgsConstructor
-//public class ServiceMudas {
-//    private final MudaRepository mudaRepository;
-//    private final ObjectMapper objectMapper;
-//
+package br.com.vemser.naturezaconectada.naturezaconectada.services;
+
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.MudaCreateDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.MudaDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
+import br.com.vemser.naturezaconectada.naturezaconectada.repository.MudaRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class ServiceMudas {
+    private final MudaRepository mudaRepository;
+    private final ObjectMapper objectMapper;
+
 //    private final ServiceCliente serviceCliente;
-//
-//
-//    public MudaCreateDTO adicionar(MudaCreateDTO mudadto) throws Exception {
-//        Muda muda = objectMapper.convertValue(mudadto,Muda.class);
-//
-//        Muda mudaCriada = this.mudaRepository.adicionar(muda);
-//
-//        MudaCreateDTO retorno = objectMapper.convertValue(mudaCriada, MudaCreateDTO.class);
-//
-//        return retorno;
-//    }
-//
-//    public void mudarAtivoMuda(Integer idMuda, Ativo ativo) throws Exception {
-//        this.mudaRepository.mudarAtivoMuda(idMuda,ativo);
-//
-//    }
-//
-//    public List<MudaDTO> obterMudasDaEntrega (int idEntrega) throws Exception {
+
+
+    public MudaCreateDTO adicionar(MudaCreateDTO mudadto) throws Exception {
+        Muda muda = retornarEntidade(mudadto);
+        muda.setAtivo(Ativo.A);
+
+        Muda mudaCriada = this.mudaRepository.save(muda);
+
+        return retornarDto(mudaCriada);
+    }
+
+    public void mudarAtivoMuda(int id) throws Exception {
+        Muda mudaEncontrada = procurarPorIDEntidade(id);
+
+        if (mudaEncontrada.getAtivo() == Ativo.A) {
+            mudaEncontrada.setAtivo(Ativo.D);
+        } else {
+            mudaEncontrada.setAtivo(Ativo.A);
+        }
+
+        this.mudaRepository.save(mudaEncontrada);
+
+    }
+
+    private Muda procurarPorIDEntidade(int id) throws Exception {
+        Muda mudaEncontrada = this.mudaRepository.findById(id).orElseThrow(() -> new InformacaoNaoEncontrada("Não foi encontrado a muda com id " + id));
+        return mudaEncontrada;
+    }
+
+    public MudaDTO procurarPorIdDto(int id) throws Exception {
+        Muda mudaEncontrada = this.mudaRepository.findById(id).orElseThrow(() -> new InformacaoNaoEncontrada("Não foi encontrado a muda com id " + id));
+        return this.objectMapper.convertValue(mudaEncontrada, MudaDTO.class);
+    }
+
+//    public List<MudaDTO> obterMudasDaEntrega (int idEntrega) throws Exception { todo:verificar se é necessario, ou se o entrega ja consegue anexar automaticamente
 //
 //        return this.mudaRepository.procurarMudasEntrega(idEntrega).stream().map(muda -> this.objectMapper.convertValue(muda,MudaDTO.class)).toList();
 //
 //    }
-//
-//
-//    public MudaCreateDTO editarmuda(Integer idMuda, MudaCreateDTO muda) throws Exception {
-//        Muda mudaEditada = objectMapper.convertValue(muda,Muda.class);
-//        this.mudaRepository.editar(idMuda, mudaEditada);
-//        mudaEditada.setId(idMuda);
-//        MudaCreateDTO mudaRetorno = objectMapper.convertValue(mudaEditada, MudaCreateDTO.class);
-//        return mudaRetorno;
-//    }
-//
-//    public List<MudaDTO> listarMudas() throws Exception {
-//        List<MudaDTO> listaDeMudas = new ArrayList<>();
-//
-//        this.mudaRepository.listar().forEach(muda -> listaDeMudas.add(this.objectMapper.convertValue(muda,MudaDTO.class)));
-//
-//        return listaDeMudas;
-//    }
-//
-//    public MudaDTO buscarPorId(Integer idMuda) throws Exception {
-//        Muda muda = this.mudaRepository.buscarPorId(idMuda);
-//
-//            return this.objectMapper.convertValue(muda, MudaDTO.class);
-//
-//    }
-//    public MudaDTO buscarPorEco(Ecossistema ecossistema) throws Exception {
-//        Muda muda = this.mudaRepository.procurarPorEco(ecossistema);
-//
-//        return this.objectMapper.convertValue(muda, MudaDTO.class);
-//
-//    }
-//
-//    public MudaCreateDTO novaMuda(MudaCreateDTO mudaDto) throws Exception {
-//        Muda novaMuda = this.objectMapper.convertValue(mudaDto,Muda.class);
-//        return this.objectMapper.convertValue(this.mudaRepository.adicionar(novaMuda), MudaCreateDTO.class);
-//    }
-//
-//    public List<MudaDTO> listarMudasAtivas() throws Exception {
-//        List<MudaDTO> listaDeMudasAtivas = new ArrayList<>();
-//
-//        this.mudaRepository.listarMudasAtivas().forEach(muda -> listaDeMudasAtivas.add(this.objectMapper.convertValue(muda,MudaDTO.class)));
-//
-//        return listaDeMudasAtivas;
-//    }
-//}
+
+
+    public MudaCreateDTO editarmuda(Integer idMuda, MudaCreateDTO mudaEditada) throws Exception {
+
+        Muda mudaAtualizada = this.procurarPorIDEntidade(idMuda);
+
+        mudaAtualizada.setPorte(mudaEditada.getPorte());
+        mudaAtualizada.setDescricao(mudaEditada.getDescricao());
+        mudaAtualizada.setEcossistema(mudaEditada.getEcossistema());
+        mudaAtualizada.setEstoque(mudaEditada.getEstoque());
+        mudaAtualizada.setNome(mudaEditada.getNome());
+        mudaAtualizada.setNomeCientifico(mudaEditada.getNomeCientifico());
+        mudaAtualizada.setTipo(mudaEditada.getTipo());
+
+        this.mudaRepository.save(mudaAtualizada);
+        ;
+        return retornarDto(mudaAtualizada);
+    }
+
+    public List<MudaCreateDTO> listarTodasMudas() throws Exception {
+        List<MudaCreateDTO> listaDeMudas = new ArrayList<>();
+
+
+        this.mudaRepository.findAll().forEach(muda -> listaDeMudas.add(retornarDto(muda)));
+
+        return listaDeMudas;
+    }
+
+    public List<MudaDTO> listarMudasAtivas() throws Exception {
+        List<MudaDTO> listaDeMudas = new ArrayList<>();
+
+        this.mudaRepository.findByAtivoIs(Ativo.A).forEach(muda -> listaDeMudas.add(this.objectMapper.convertValue(muda, MudaDTO.class)));
+
+        return listaDeMudas;
+    }
+
+
+    public List<MudaDTO> buscarPorEco(Ecossistema ecossistema) throws Exception {
+        List<MudaDTO> listaDeMudas = new ArrayList<>();
+
+        this.mudaRepository.findByEcossistemaIs(ecossistema).forEach(muda -> listaDeMudas.add(this.objectMapper.convertValue(muda, MudaDTO.class)));
+
+        return listaDeMudas;
+
+    }
+
+    public MudaCreateDTO novaMuda(MudaCreateDTO mudaDto) throws Exception {
+        Muda novaMuda = retornarEntidade(mudaDto);
+        novaMuda.setAtivo(Ativo.A);
+
+        return retornarDto(this.mudaRepository.save(novaMuda));
+    }
+
+
+    private MudaCreateDTO retornarDto(Muda muda) {
+        return this.objectMapper.convertValue(muda, MudaCreateDTO.class);
+    }
+
+    private Muda retornarEntidade(MudaCreateDTO muda) {
+        return this.objectMapper.convertValue(muda, Muda.class);
+    }
+
+}

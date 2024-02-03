@@ -28,5 +28,4 @@ public class MudaDTO {
 
     private String descricao;
 
-    private int quantidade;
 }
