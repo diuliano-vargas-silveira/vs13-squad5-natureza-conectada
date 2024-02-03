@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Table(name = "USUARIO")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="TIPO_USUARIO", discriminatorType = DiscriminatorType.STRING)
-public class Usuario {
+public abstract class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USUARIO_SEQ")
@@ -27,9 +27,11 @@ public class Usuario {
     private String email;
     @Column(name = "SENHA")
     private String senha;
-    @Column(name = "TIPO_USUARIO",updatable = false, insertable = false)
+    @Column(name = "TIPO_USUARIO", updatable = false, insertable = false)
+    @Enumerated(EnumType.STRING)
     private TipoUsuario tipoUsuario;
     @Column(name = "ATIVO")
+    @Enumerated(EnumType.STRING)
     private Ativo ativo;
 
 }

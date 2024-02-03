@@ -7,6 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -19,7 +22,9 @@ public class UsuarioResponseDTO {
     @Schema(description = "E-mail", example = "lucas@gmail.com")
     private String email;
     @Schema(description = "Tipo do usuário", example = "ADMIN")
+    @Enumerated(EnumType.STRING)
     private TipoUsuario tipoUsuario;
     @Schema(description = "Ativo", example = "A")
+    @Enumerated(EnumType.STRING)
     private Ativo ativo;
 }
