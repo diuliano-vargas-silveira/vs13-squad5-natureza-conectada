@@ -37,4 +37,6 @@ public abstract class Usuario {
     @Enumerated(EnumType.STRING)
     private Ativo ativo;
 
+    @Column(name = "CPF")
+    private String cpf;
 }

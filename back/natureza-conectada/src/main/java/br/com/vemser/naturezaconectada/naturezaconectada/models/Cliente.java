@@ -16,10 +16,6 @@ import java.util.List;
 @Table(name = "CLIENTE")
 public class Cliente extends Usuario {
 
-
-    @Column(name = "CPF")
-    private String cpf;
-
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "ENDERECO_CLIENTE",
