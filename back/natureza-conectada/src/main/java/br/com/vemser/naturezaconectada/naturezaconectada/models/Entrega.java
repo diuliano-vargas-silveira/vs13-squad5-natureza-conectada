@@ -25,7 +25,10 @@ public class Entrega {
     @Column(name = "STATUS")
     private StatusEntrega status;
 
+    @Column(name = "DATA_PEDIDO")
     private LocalDate dataPedido;
+
+    @Column(name = "DATA_ENTREGUE")
     private LocalDate dataEntrega;
 
 

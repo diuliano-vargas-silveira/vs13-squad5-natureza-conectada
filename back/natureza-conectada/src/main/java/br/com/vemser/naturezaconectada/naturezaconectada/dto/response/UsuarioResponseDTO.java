@@ -24,6 +24,7 @@ public class UsuarioResponseDTO {
     @Schema(description = "Tipo do usuário", example = "ADMIN")
     @Enumerated(EnumType.STRING)
     private TipoUsuario tipoUsuario;
+
     @Schema(description = "Ativo", example = "A")
     @Enumerated(EnumType.STRING)
     private Ativo ativo;

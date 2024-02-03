@@ -34,7 +34,11 @@ public class Relatorio {
 
     @Column(name = "ESTADO_MUDA")
     private String estadoMuda;
+
+    @Column(name = "SUGESTOES")
     private String sugestoes;
+
+    @Column(name = "AVALIACAO")
     private double avaliacaoEspecialista;
 
 }
