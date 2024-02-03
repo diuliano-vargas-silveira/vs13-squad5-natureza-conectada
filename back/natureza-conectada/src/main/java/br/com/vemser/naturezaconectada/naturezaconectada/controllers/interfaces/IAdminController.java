@@ -57,14 +57,14 @@ public interface IAdminController {
     @PutMapping("/{idAdmin}")
     ResponseEntity<AdminResponseDTO> editar(@PathVariable("idAdmin") int id, @Valid @RequestBody AdminRequestDTO adminRequestDTO) throws java.lang.Exception;
 
-    @Operation(summary = "Deletar administrador por ID", description = "Deleta um administrador pelo ID especificado")
+    @Operation(summary = "Alterar status do administrador por ID", description = "Altera o status de um administrador pelo ID especificado")
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "200", description = "Administrador deletado com sucesso"),
+                    @ApiResponse(responseCode = "200", description = "Administrador alterado com sucesso"),
                     @ApiResponse(responseCode = "404", description = "Administrador não encontrado"),
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @DeleteMapping("/{idAdmin}")
-    ResponseEntity<Void> deletar(@PathVariable("idAdmin") int id) throws java.lang.Exception;
+    @PutMapping("/{idAdmin}/status")
+    ResponseEntity<AdminResponseDTO> alterarStatus(@PathVariable("idAdmin") int id, @RequestBody AdminRequestDTO adminRequestDTO) throws java.lang.Exception;
 }

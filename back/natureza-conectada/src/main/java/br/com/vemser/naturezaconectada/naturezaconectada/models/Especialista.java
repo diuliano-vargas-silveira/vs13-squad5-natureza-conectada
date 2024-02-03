@@ -21,9 +21,6 @@ public class Especialista extends Usuario {
     private String documento;
     @Column(name = "ESPECIALIZACAO")
     private String especializacao;
-    @Column(name = "ID_ESTADO")
-    private Estados regiaoResponsavel;
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "especialista", orphanRemoval = true)
     private List<Relatorio> relatorios;
 

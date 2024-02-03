@@ -1,81 +1,74 @@
-//package br.com.vemser.naturezaconectada.naturezaconectada.services;
-//
-//import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.AdminRequestDTO;
-//import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.AdminResponseDTO;
-//import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.UsuarioResponseDTO;
-//import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
-//import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
-//import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
-//import br.com.vemser.naturezaconectada.naturezaconectada.models.Admin;
-//import br.com.vemser.naturezaconectada.naturezaconectada.repository.AdminRepository;
-//import com.fasterxml.jackson.databind.ObjectMapper;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.stereotype.Service;
-//
-//import java.util.List;
-//import java.util.stream.Collectors;
-//
-//@Service
-//@RequiredArgsConstructor
-//public class ServiceAdmin {
-//
-//    private final AdminRepository adminRepository;
-//    private final ServiceUsuario serviceUsuario;
-//    private final ObjectMapper objectMapper;
-//
-//    public AdminResponseDTO adicionar(AdminRequestDTO adminRequestDTO) throws java.lang.Exception {
-//        if (adminRequestDTO.getTipoUsuario() == TipoUsuario.ADMIN) {
-//            UsuarioResponseDTO usuarioResponseDTO = serviceUsuario.adicionarUsuario(adminRequestDTO);
-//            adminRequestDTO.setId(usuarioResponseDTO.getId());
-//            Admin admin = adminRepository.adicionar(objectMapper.convertValue(adminRequestDTO, Admin.class));
-//            adminRequestDTO.setIdAdmin(admin.getIdAdmin());
-//            AdminResponseDTO adminResponseDTO = objectMapper.convertValue(adminRequestDTO, AdminResponseDTO.class);
-//            return adminResponseDTO;
-//        } else {
-//            throw new RegraDeNegocioException("Tipo de usuário deve ser ADMIN");
-//        }
-//    }
-//
-//    public void deletar(int id) throws java.lang.Exception {
-//        Admin admin = procurar(id);
-//        int idUsuario = admin.getId();
-//        adminRepository.remover(id);
-//        serviceUsuario.remover(idUsuario);
-//    }
-//
-//    public AdminResponseDTO editar(int id, AdminRequestDTO adminRequestDTO) throws java.lang.Exception {
-//        Admin admin = procurar(id);
-//        adminRequestDTO.setTipoUsuario(TipoUsuario.ADMIN);
-//        UsuarioResponseDTO usuarioResponseDTO = serviceUsuario.editar(admin.getId(), adminRequestDTO);
-//        adminRequestDTO.setIdAdmin(id);
-//        AdminResponseDTO adminResponseDTO = objectMapper.convertValue(adminRequestDTO, AdminResponseDTO.class);
-//        return adminResponseDTO;
-//    }
-//
-//    public AdminResponseDTO procurarPorID(int id) throws RegraDeNegocioException, InformacaoNaoEncontrada {
-//        Admin admin = procurar(id);
-//
-//        if (admin == null) {
-//            throw new InformacaoNaoEncontrada("Não existe nenhum administrador com este ID!");
-//        }
-//        AdminResponseDTO adminResponseDTO = objectMapper.convertValue(admin, AdminResponseDTO.class);
-//        return adminResponseDTO;
-//    }
-//
-//    public List<AdminResponseDTO> listarTodos() throws Exception {
-//        List<Admin> admin= adminRepository.listar();
-//        List<AdminResponseDTO> adminResponseDTO = admin.stream()
-//                .map(adminEntity -> objectMapper.convertValue(adminEntity, AdminResponseDTO.class))
-//                .collect(Collectors.toList());
-//
-//        return adminResponseDTO;
-//    }
-//
-//    private Admin procurar(int id) throws RegraDeNegocioException {
-//        try {
-//            return adminRepository.procurarPorId(id);
-//        } catch (Exception ex) {
-//            throw new RegraDeNegocioException("Nenhum admin encontrado para o Id: " + id);
-//        }
-//    }
-//}
+package br.com.vemser.naturezaconectada.naturezaconectada.services;
+
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.AdminRequestDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.AdminResponseDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.Admin;
+import br.com.vemser.naturezaconectada.naturezaconectada.repository.IAdminRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class ServiceAdmin {
+
+    private final IAdminRepository adminRepository;
+    private final ObjectMapper objectMapper;
+
+    public AdminResponseDTO adicionar(AdminRequestDTO adminRequestDTO) throws java.lang.Exception {
+        Admin buscarAdminPorEmail = adminRepository.findByEmail(adminRequestDTO.getEmail());
+        if (buscarAdminPorEmail == null) {
+            adminRequestDTO.setTipoUsuario(TipoUsuario.ADMIN);
+            adminRequestDTO.setAtivo(Ativo.A);
+            Admin admin = adminRepository.save(objectMapper.convertValue(adminRequestDTO, Admin.class));
+            AdminResponseDTO adminResponseDTO = objectMapper.convertValue(admin, AdminResponseDTO.class);
+            return adminResponseDTO;
+        } else {
+            throw new RegraDeNegocioException("Já existe um usuário para o e-mail informado: " + adminRequestDTO.getEmail());
+        }
+    }
+
+    public AdminResponseDTO alterarStatusAtivo(int id, AdminRequestDTO adminRequestDTO) throws RegraDeNegocioException {
+        Admin admin = procurarAdmin(id);
+        admin.setAtivo(adminRequestDTO.getAtivo());
+        adminRepository.save(admin);
+        return objectMapper.convertValue(admin, AdminResponseDTO.class);
+    }
+
+    public AdminResponseDTO editar(int id, AdminRequestDTO adminRequestDTO) throws java.lang.Exception {
+        Admin admin = procurarAdmin(id);
+        admin.setNome(adminRequestDTO.getNome());
+        admin.setEmail(adminRequestDTO.getEmail());
+        admin.setSenha(adminRequestDTO.getSenha());
+        adminRepository.save(admin);
+        return objectMapper.convertValue(admin, AdminResponseDTO.class);
+    }
+
+    public AdminResponseDTO procurarPorId(int id) throws RegraDeNegocioException, InformacaoNaoEncontrada {
+        Admin admin = procurarAdmin(id);
+        return objectMapper.convertValue(admin, AdminResponseDTO.class);
+    }
+
+    public List<AdminResponseDTO> listarTodos() throws Exception {
+        return adminRepository.findAll().stream()
+                .map(adminEntity -> objectMapper.convertValue(adminEntity, AdminResponseDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    private Admin procurarAdmin(int id) throws RegraDeNegocioException {
+        Optional<Admin> adminOptional = adminRepository.findById(id);
+        if (adminOptional.isPresent()) {
+            return adminOptional.get();
+        } else {
+            throw new RegraDeNegocioException("Nenhum usuário encontrado para o id: " + id);
+        }
+    }
+}
