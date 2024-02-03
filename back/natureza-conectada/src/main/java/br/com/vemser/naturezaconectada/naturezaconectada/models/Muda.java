@@ -1,9 +1,13 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.models;
+
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TamanhoMuda;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoMuda;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;

@@ -1,17 +1,14 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.enums.*;
-
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.StatusEntrega;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Entrega;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
-
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 @RequiredArgsConstructor

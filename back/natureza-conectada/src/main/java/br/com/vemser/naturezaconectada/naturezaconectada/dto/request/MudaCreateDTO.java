@@ -4,7 +4,6 @@ import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TamanhoMuda;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoMuda;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,7 +16,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Data
 public class MudaCreateDTO {
-   @Schema(hidden = true)
+    @Schema(hidden = true)
     private Integer id;
 
     @Schema(description = "Quantidade de mudas em estoque", required = true, example = "41")
@@ -49,7 +48,6 @@ public class MudaCreateDTO {
 
     @Schema(hidden = true)
     private Ativo ativo;
-
 
 
 }

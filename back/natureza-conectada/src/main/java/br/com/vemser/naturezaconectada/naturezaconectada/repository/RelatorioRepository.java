@@ -3,11 +3,8 @@ package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Relatorio;
-
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository

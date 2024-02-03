@@ -29,8 +29,6 @@ public class ServiceMudas {
 
         Muda mudaCriada = this.mudaRepository.save(muda);
 
-
-
         return retornarDto(mudaCriada);
     }
 
@@ -48,13 +46,13 @@ public class ServiceMudas {
     }
 
     private Muda procurarPorIDEntidade(int id) throws Exception {
-        Muda mudaEncontrada = this.mudaRepository.findById(id).orElseThrow(()->new InformacaoNaoEncontrada("Não foi encontrado a muda com id "+ id));
+        Muda mudaEncontrada = this.mudaRepository.findById(id).orElseThrow(() -> new InformacaoNaoEncontrada("Não foi encontrado a muda com id " + id));
         return mudaEncontrada;
     }
 
     public MudaDTO procurarPorIdDto(int id) throws Exception {
-        Muda mudaEncontrada = this.mudaRepository.findById(id).orElseThrow(()->new InformacaoNaoEncontrada("Não foi encontrado a muda com id "+ id));
-        return this.objectMapper.convertValue(mudaEncontrada,MudaDTO.class);
+        Muda mudaEncontrada = this.mudaRepository.findById(id).orElseThrow(() -> new InformacaoNaoEncontrada("Não foi encontrado a muda com id " + id));
+        return this.objectMapper.convertValue(mudaEncontrada, MudaDTO.class);
     }
 
 //    public List<MudaDTO> obterMudasDaEntrega (int idEntrega) throws Exception { todo:verificar se é necessario, ou se o entrega ja consegue anexar automaticamente
@@ -77,7 +75,7 @@ public class ServiceMudas {
         mudaAtualizada.setTipo(mudaEditada.getTipo());
 
         this.mudaRepository.save(mudaAtualizada);
-   ;
+        ;
         return retornarDto(mudaAtualizada);
     }
 
@@ -89,22 +87,20 @@ public class ServiceMudas {
 
         return listaDeMudas;
     }
+
     public List<MudaDTO> listarMudasAtivas() throws Exception {
         List<MudaDTO> listaDeMudas = new ArrayList<>();
 
-
-        this.mudaRepository.findByAtivoIs(Ativo.A).forEach(muda -> listaDeMudas.add(this.objectMapper.convertValue(muda,MudaDTO.class)));
+        this.mudaRepository.findByAtivoIs(Ativo.A).forEach(muda -> listaDeMudas.add(this.objectMapper.convertValue(muda, MudaDTO.class)));
 
         return listaDeMudas;
     }
 
 
-
     public List<MudaDTO> buscarPorEco(Ecossistema ecossistema) throws Exception {
         List<MudaDTO> listaDeMudas = new ArrayList<>();
 
-
-        this.mudaRepository.findByEcossistemaIs(ecossistema).forEach(muda -> listaDeMudas.add(this.objectMapper.convertValue(muda,MudaDTO.class)));
+        this.mudaRepository.findByEcossistemaIs(ecossistema).forEach(muda -> listaDeMudas.add(this.objectMapper.convertValue(muda, MudaDTO.class)));
 
         return listaDeMudas;
 
@@ -118,11 +114,12 @@ public class ServiceMudas {
     }
 
 
-    private MudaCreateDTO retornarDto(Muda muda){
-        return this.objectMapper.convertValue(muda,MudaCreateDTO.class);
+    private MudaCreateDTO retornarDto(Muda muda) {
+        return this.objectMapper.convertValue(muda, MudaCreateDTO.class);
     }
-    private Muda retornarEntidade(MudaCreateDTO muda){
-        return this.objectMapper.convertValue(muda,Muda.class);
+
+    private Muda retornarEntidade(MudaCreateDTO muda) {
+        return this.objectMapper.convertValue(muda, Muda.class);
     }
 
 }
