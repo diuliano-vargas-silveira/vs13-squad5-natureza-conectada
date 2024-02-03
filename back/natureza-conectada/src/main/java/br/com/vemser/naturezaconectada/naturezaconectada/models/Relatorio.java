@@ -39,6 +39,6 @@ public class Relatorio {
     private String sugestoes;
 
     @Column(name = "AVALIACAO")
-    private double avaliacaoEspecialista;
+    private double avaliacao;
 
 }
