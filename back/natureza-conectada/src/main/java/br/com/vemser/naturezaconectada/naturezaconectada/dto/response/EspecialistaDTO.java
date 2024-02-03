@@ -1,23 +1,24 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.dto.response;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.Relatorio;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class EspecialistaDTO  {
+public class EspecialistaDTO extends UsuarioResponseDTO  {
 
-    private int idEspecialista;
 
-    private int id;
-
-    private String nome;
 
     private String especializacao;
 
-    private Estados regiaoResponsavel;
+    private String documento;
+
+    private List<Relatorio> relatorios;
 
 }

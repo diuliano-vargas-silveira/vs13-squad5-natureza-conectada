@@ -2,6 +2,7 @@ package br.com.vemser.naturezaconectada.naturezaconectada.dto.request;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +23,8 @@ public class UsuarioRequestDTO {
     @Schema(description = "Identificador do usuário", required = false, hidden = true, example = "1")
     private Integer id;
 
-    @Schema(description = "Ativo", example = "A")
+    @Schema(description = "Ativo", example = "A",hidden = true)
+    @Hidden
     private Ativo ativo;
 
     @Schema(description = "Nome do usuário", required = true, example = "Lucas Alves")
@@ -42,5 +44,6 @@ public class UsuarioRequestDTO {
     private String senha;
 
     @Schema(description = "Tipo do usuário", required = false, hidden = true, example = "ADMIN")
+    @Hidden
     private TipoUsuario tipoUsuario;
 }
