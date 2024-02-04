@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -16,10 +15,6 @@ import java.util.List;
 @Entity(name = "Cliente")
 @Table(name = "CLIENTE")
 public class Cliente extends Usuario {
-
-
-    @Column(name = "CPF")
-    private String cpf;
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

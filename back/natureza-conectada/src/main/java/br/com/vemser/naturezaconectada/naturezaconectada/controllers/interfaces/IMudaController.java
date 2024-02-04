@@ -2,7 +2,6 @@ package br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces
 
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.MudaCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.MudaDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

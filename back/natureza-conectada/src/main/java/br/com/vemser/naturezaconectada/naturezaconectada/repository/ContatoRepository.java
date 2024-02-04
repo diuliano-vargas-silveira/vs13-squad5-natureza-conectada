@@ -4,7 +4,7 @@ package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Contato;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
+import java.sql.SQLException;
 import java.util.List;
 
 @Repository
