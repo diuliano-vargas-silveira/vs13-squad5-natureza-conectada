@@ -2,6 +2,7 @@ package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EntregaRequestDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.MudaCreateDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ClienteDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EntregaResponseDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.UsuarioResponseDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
@@ -33,7 +34,7 @@ import java.util.stream.Collectors;
 public class ServiceEntrega {
 
     private final IEntregaRepository entregaRepository;
-//    private final ServiceCliente serviceCliente;
+    private final ServiceCliente serviceCliente;
 //    private final ServiceEndereco serviceEndereco;
     private final MudaRepository mudaRepository;
     private final ObjectMapper objectMapper;
@@ -48,13 +49,13 @@ public class ServiceEntrega {
 //            serviceCliente.procurarPorIdCliente(entregaRequestDTO.getIdCliente());
 
             Set<Integer> idsMudas = new HashSet<>();
-            for (Muda muda : entregaRequestDTO.getMudas()) {
-                if (!idsMudas.add(muda.getId())) {
-                    throw new RegraDeNegocioException("A mesma muda não pode ser adicionada mais de uma vez à entrega.");
-                }
-                if (muda.getQuantidade() != 1) {
-                    throw new RegraDeNegocioException("A quantidade de muda por id deve ser igual a 1.");
-                }
+//            for (Muda muda : entregaRequestDTO.getMudas()) {
+//                if (!idsMudas.add(muda.getId())) {
+//                    throw new RegraDeNegocioException("A mesma muda não pode ser adicionada mais de uma vez à entrega.");
+//                }
+//                if (muda.getQuantidade() != 1) {
+//                    throw new RegraDeNegocioException("A quantidade de muda por id deve ser igual a 1.");
+//                }
 
 //                Muda mudaCadastrada = mudaRepository.buscarPorId(muda.getId());
 
@@ -65,15 +66,18 @@ public class ServiceEntrega {
 //                if (mudaCadastrada.getQuantidade() < 1) {
 //                    throw new RegraDeNegocioException("Quantidade insuficiente para a muda com ID " + muda.getId());
 //                }
-            }
+//            }
 
             entregaRequestDTO.setStatus(StatusEntrega.RECEBIDO);
             entregaRequestDTO.setDataPedido(LocalDate.now());
 //            entregaRequestDTO.setEndereco(enderecoRecuperado);
-            Cliente cliente = clienteService.findById(entregaRequestDTO.getIdCliente());
+
+            ClienteDTO clienteDTO = serviceCliente.procurarPorId(entregaRequestDTO.getIdCliente());
+            Cliente cliente = objectMapper.convertValue(clienteDTO, Cliente.class);
 
             Entrega entrega = objectMapper.convertValue(entregaRequestDTO, Entrega.class);
             entrega.setCliente(cliente);
+
 
             Entrega entregaProcessada = entregaRepository.save(entrega);
 
