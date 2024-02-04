@@ -4,14 +4,18 @@ import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Tipo;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -20,8 +24,8 @@ public class EnderecoCreateDTO {
     private static final String PAIS = "Brasil";
     @NotNull
     private Integer idEndereco;
-    @NotNull
-    private Integer idCliente;
+//    @NotNull
+    private List<Cliente> clientes;
     @NotEmpty
     @NotNull
     @Size(min = 8, max = 8)
@@ -46,9 +50,10 @@ public class EnderecoCreateDTO {
     @NotNull
     @Schema(description = "Estado", required = true, example = "RS")
     private Estados estado;
-    @NotNull
-    @Schema(description = "Tipo de Endereço", required = true)
-    private Tipo tipo;
+//    @Enumerated(EnumType.STRING)
+//    @NotNull
+//    @Schema(description = "Tipo de Endereço", required = true)
+//    private Tipo tipo;
     private Ecossistema ecossistema;
     private Ativo ativo;
 

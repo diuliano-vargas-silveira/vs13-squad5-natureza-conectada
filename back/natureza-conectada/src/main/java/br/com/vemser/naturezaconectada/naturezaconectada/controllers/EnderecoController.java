@@ -1,28 +1,28 @@
-//package br.com.vemser.naturezaconectada.naturezaconectada.controllers;
-//
-//import br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces.IEnderecoController;
-//import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EnderecoCreateDTO;
-//import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EnderecoDTO;
-//import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceEndereco;
-//import lombok.RequiredArgsConstructor;
-//import lombok.extern.slf4j.Slf4j;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.validation.annotation.Validated;
-//import org.springframework.web.bind.annotation.*;
-//
-//import javax.validation.Valid;
-//import java.util.List;
-//
-//@RequiredArgsConstructor
-//@RestController
-//@RequestMapping("/endereco")
-//@Validated
-//@Slf4j
-//public class EnderecoController implements IEnderecoController {
-//
-//    private final ServiceEndereco serviceEndereco;
-//
+package br.com.vemser.naturezaconectada.naturezaconectada.controllers;
+
+import br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces.IEnderecoController;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EnderecoCreateDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EnderecoDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceEndereco;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
+
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/endereco")
+@Validated
+@Slf4j
+public class EnderecoController {
+
+    private final ServiceEndereco serviceEndereco;
+
 //    @PostMapping("/{idCliente}")
 //    public ResponseEntity<EnderecoDTO> adicionar(@PathVariable("idCliente") Integer idCliente, @Valid @RequestBody EnderecoCreateDTO endereco) throws Exception {
 //        log.debug("Criando endereço");
@@ -47,7 +47,7 @@
 //
 //        return new ResponseEntity<>(enderecoAtualizado, HttpStatus.OK);
 //    }
-//
+
 //    @DeleteMapping("/{idEndereco}")
 //    public ResponseEntity<Void> remover(@PathVariable("idEndereco") Integer idEndereco) throws Exception {
 //        log.debug("Excluindo endereço");
@@ -60,28 +60,28 @@
 //        return ResponseEntity.ok().build();
 //    }
 //
-//    @GetMapping
-//    public ResponseEntity<List<EnderecoDTO>> listarTodos() throws Exception {
-//        var enderecos = serviceEndereco.listarTodos();
-//
-//        if (enderecos == null)
-//            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-//
-//        return new ResponseEntity<>(enderecos, HttpStatus.OK);
-//    }
-//
-//    @GetMapping("/{idEndereco}")
-//    public ResponseEntity<EnderecoDTO> procurarPorIdEndereco(@PathVariable("idEndereco") Integer idEndereco) throws Exception {
-//        var endereco = serviceEndereco.procurarPorIdEndereco(idEndereco);
-//
-//        if (endereco == null)
-//            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-//
-//        log.debug("Endereço encontrado");
-//
-//        return new ResponseEntity<>(endereco, HttpStatus.OK);
-//    }
-//
+    @GetMapping
+    public ResponseEntity<List<EnderecoDTO>> listarTodos() throws Exception {
+        var enderecos = serviceEndereco.listarTodos();
+
+        if (enderecos == null)
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+
+        return new ResponseEntity<>(enderecos, HttpStatus.OK);
+    }
+
+    @GetMapping("/{idEndereco}")
+    public ResponseEntity<EnderecoDTO> procurarPorIdEndereco(@PathVariable("idEndereco") Integer idEndereco) throws Exception {
+        var endereco = serviceEndereco.procurarPorIdEndereco(idEndereco);
+
+        if (endereco == null)
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+
+        log.debug("Endereço encontrado");
+
+        return new ResponseEntity<>(endereco, HttpStatus.OK);
+    }
+
 //    @GetMapping("/{idCliente}/cliente")
 //    public ResponseEntity<List<EnderecoDTO>> procurarPorIdCliente(@PathVariable("idCliente") Integer idCliente) throws Exception {
 //        var enderecos = serviceEndereco.procurarEnderecoPorIdCliente(idCliente);
@@ -110,4 +110,4 @@
 //    public  List<EnderecoDTO> buscarPorAtivo (@PathVariable String ativo) throws Exception {
 //        return this.serviceEndereco.listarEnderecosPorAtivo(ativo);
 //    }
-//}
+}
