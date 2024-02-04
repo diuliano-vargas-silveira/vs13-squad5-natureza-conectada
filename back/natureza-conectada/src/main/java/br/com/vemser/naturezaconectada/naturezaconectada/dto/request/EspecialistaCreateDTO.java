@@ -1,12 +1,11 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.dto.request;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
-import br.com.vemser.naturezaconectada.naturezaconectada.models.Contato;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Relatorio;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
-import org.hibernate.validator.constraints.br.CPF;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;

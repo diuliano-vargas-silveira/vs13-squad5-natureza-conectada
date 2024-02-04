@@ -1,7 +1,5 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.models;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;

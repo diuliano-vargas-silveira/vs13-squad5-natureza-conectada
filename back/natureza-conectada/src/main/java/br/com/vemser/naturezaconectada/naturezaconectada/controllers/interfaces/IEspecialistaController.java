@@ -84,6 +84,6 @@ public interface IEspecialistaController {
             }
     )
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarEspecialista(@PathVariable Integer id) throws Exception;
+    public ResponseEntity<Void> mudarAtivoEspecialista(@PathVariable Integer id) throws Exception;
 
 }

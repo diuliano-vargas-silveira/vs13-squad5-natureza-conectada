@@ -1,6 +1,5 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.dto.response;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Relatorio;
 import lombok.AllArgsConstructor;
 import lombok.Data;
