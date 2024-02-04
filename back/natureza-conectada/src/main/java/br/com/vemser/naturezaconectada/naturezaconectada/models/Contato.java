@@ -1,6 +1,7 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.models;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Tipo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,9 +25,11 @@ public class Contato {
     private String descricao;
     @Column(name = "NUMERO")
     private String numero;
+    @Enumerated(EnumType.STRING)
     @Column(name = "TIPO_CONTATO")
     private Tipo tipo;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID_USUARIO")
     private Cliente cliente;

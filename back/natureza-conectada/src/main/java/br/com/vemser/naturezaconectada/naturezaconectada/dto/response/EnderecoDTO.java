@@ -22,7 +22,6 @@ public class EnderecoDTO {
 
     private Integer idEndereco;
 
-    private List<Cliente> clientes;
 
     @Schema(description = "CEP do Endereço (8 caracteres)", required = true, example = "12345678")
     private String cep;
