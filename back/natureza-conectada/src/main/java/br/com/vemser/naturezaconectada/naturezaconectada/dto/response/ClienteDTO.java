@@ -19,9 +19,14 @@ public class ClienteDTO extends UsuarioResponseDTO {
 
     private String cpf;
     private Ativo ativo;
-    private List<Endereco> enderecos = new ArrayList<>();
-    private List<Contato> contatos = new ArrayList<>();
-    private List<Muda> mudas = new ArrayList<>();
+
+    private List<Endereco> enderecos;
+
+    private List<Contato> contatos;
+
     @JsonIgnore
-    private List<Entrega> entregas = new ArrayList<>();
+    private List<Muda> mudas;
+
+    @JsonIgnore
+    private List<Entrega> entregas;
 }
