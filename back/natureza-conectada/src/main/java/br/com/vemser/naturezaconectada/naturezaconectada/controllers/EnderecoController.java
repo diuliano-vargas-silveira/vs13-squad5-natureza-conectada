@@ -1,5 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.controllers;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces.IEnderecoController;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EnderecoCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EnderecoDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceEndereco;
@@ -18,7 +19,7 @@ import java.util.List;
 @RequestMapping("/endereco")
 @Validated
 @Slf4j
-public class EnderecoController {
+public class EnderecoController implements IEnderecoController {
 
     private final ServiceEndereco serviceEndereco;
 
@@ -81,16 +82,6 @@ public class EnderecoController {
         return new ResponseEntity<>(endereco, HttpStatus.OK);
     }
 
-//    @GetMapping("/{idCliente}/cliente")
-//    public ResponseEntity<List<EnderecoDTO>> procurarPorIdCliente(@PathVariable("idCliente") Integer idCliente) throws Exception {
-//        var enderecos = serviceEndereco.procurarEnderecoPorIdCliente(idCliente);
-//
-//
-//        if (enderecos == null)
-//            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-//
-//        return new ResponseEntity<>(enderecos, HttpStatus.OK);
-//    }
 
     @PutMapping("/ativar/{idEndereco}")
     public ResponseEntity<EnderecoDTO> ativarEndereco(@PathVariable("idEndereco") Integer idEndereco, @RequestParam String eco) throws Exception {
@@ -107,7 +98,7 @@ public class EnderecoController {
     }
 
     @GetMapping("/ativos")
-    public  List<EnderecoDTO> buscarPorAtivo () throws Exception {
-        return this.serviceEndereco.listarEnderecosPorAtivo();
+    public List<EnderecoDTO> listarEnderecosPorAtivo() throws Exception {
+        return serviceEndereco.listarEnderecosPorAtivo();
     }
 }

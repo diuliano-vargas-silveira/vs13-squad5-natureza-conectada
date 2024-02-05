@@ -6,6 +6,9 @@ import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +26,7 @@ public interface IMudaController {
             }
     )
     @GetMapping
-    public ResponseEntity<List<MudaCreateDTO>> listarMudas() throws Exception;
+    public ResponseEntity<Page<MudaCreateDTO>> listarMudas(@PageableDefault() Pageable paginacao) throws Exception;
 
     @Operation(summary = "Listar Mudas Ativas", description = "Lista todas as Mudas Ativas do banco")
     @ApiResponses(

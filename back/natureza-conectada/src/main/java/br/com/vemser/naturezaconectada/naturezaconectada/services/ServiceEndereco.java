@@ -81,19 +81,7 @@ public class ServiceEndereco {
                 .map(endereco -> objectMapper.convertValue(endereco, EnderecoDTO.class))
                 .collect(Collectors.toList());
     }
-//
-//
-//    public List<EnderecoDTO> procurarEnderecoPorIdCliente(Integer idCliente) throws Exception {
-//        var enderecos = enderecoRepository.procurarEnderecoPorIdCliente(idCliente);
-//
-//        if (enderecos == null)
-//            return null;
-//
-//        return enderecos.stream()
-//                .map(endereco -> objectMapper.convertValue(endereco, EnderecoDTO.class))
-//                .collect(Collectors.toList());
-//    }
-//
+
     public EnderecoDTO ativarEndereco(Integer idEndereco, String eco) throws Exception {
         var enderecoEncontrado = procurarPorIdEndereco(idEndereco);
 
@@ -110,8 +98,5 @@ public class ServiceEndereco {
         return listaEnderecosAtivos.stream()
                 .map(endereco -> objectMapper.convertValue(endereco, EnderecoDTO.class))
                 .collect(Collectors.toList());
-
-
-
     }
 }

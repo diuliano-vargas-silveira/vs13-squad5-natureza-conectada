@@ -1,10 +1,14 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.controllers;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces.IClienteController;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ClienteCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ClienteDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceCliente;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -17,7 +21,7 @@ import java.util.List;
 @RequestMapping("/cliente")
 @Validated
 @Slf4j
-public class ClienteController {
+public class ClienteController implements IClienteController {
 
     private final ServiceCliente serviceCliente;
 
@@ -45,8 +49,9 @@ public class ClienteController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ClienteDTO>> listarClientes() throws Exception {
-        return new ResponseEntity<>(serviceCliente.listarTodos(), HttpStatus.OK);
+    public ResponseEntity<Page<ClienteDTO>> listarClientes(@PageableDefault(size=10, sort={"nome"}) Pageable paginacao) throws Exception {
+
+        return ResponseEntity.ok().body(serviceCliente.listarTodos(paginacao));
     }
 
     @GetMapping("/{id}")
