@@ -1,6 +1,7 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
 //import br.com.vemser.naturezaconectada.naturezaconectada.dto.relatorios.RelatorioMudasDoadas;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.relatorios.RelatorioMudasDoadas;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.MudaCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ClienteDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.MudaDTO;
@@ -147,9 +148,9 @@ public class ServiceMudas {
         return this.objectMapper.convertValue(muda, Muda.class);
     }
 
-//    public List<RelatorioMudasDoadas> mudasDoadas(){
-//        return this.mudaRepository.mudasDoadas();
-//    }
+    public List<RelatorioMudasDoadas> mudasDoadas(){
+        return this.mudaRepository.mudasDoadas();
+    }
 
 
 //    public Entrega adicionar(RequestEntregaDTO dto){
