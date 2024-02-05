@@ -1,12 +1,14 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,7 +24,7 @@ public class Cliente extends Usuario {
     @JoinTable(name = "ENDERECO_CLIENTE",
             joinColumns = @JoinColumn(name = "ID_CLIENTE"),
             inverseJoinColumns = @JoinColumn(name = "ID_ENDERECO"))
-    private List<Endereco> enderecos;
+    private List<Endereco> enderecos = new ArrayList<>();
 
 //    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "cliente", orphanRemoval = true)
@@ -42,4 +44,5 @@ public class Cliente extends Usuario {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cliente", orphanRemoval = true)
     private List<Relatorio> relatorios;
+
 }

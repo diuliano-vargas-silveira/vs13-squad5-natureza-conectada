@@ -6,11 +6,13 @@ import br.com.vemser.naturezaconectada.naturezaconectada.models.Endereco;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Entrega;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -20,9 +22,9 @@ public class ClienteDTO extends UsuarioResponseDTO {
     private String cpf;
     private Ativo ativo;
 
-    private List<Endereco> enderecos;
+    private List<Endereco> enderecos = new ArrayList<>();
 
-    private List<Contato> contatos;
+    private List<Contato> contatos = new ArrayList<>();
 
     @JsonIgnore
     private List<Muda> mudas;
