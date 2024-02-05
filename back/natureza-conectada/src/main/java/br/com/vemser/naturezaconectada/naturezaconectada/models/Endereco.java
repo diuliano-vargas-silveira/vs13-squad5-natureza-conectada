@@ -21,7 +21,6 @@ import java.util.List;
 @Setter
 @Entity(name = "Endereco")
 @Table(name = "ENDERECO")
-@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Endereco {
 
     private static final String PAIS = "Brasil";

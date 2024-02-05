@@ -102,13 +102,23 @@ public class ServiceEntrega {
         }
     }
 
+    //TODO
     public EntregaResponseDTO editarMudasEntrega(Integer id, EntregaRequestDTO entregaRequestDTO) throws ErroNoBancoDeDados, RegraDeNegocioException {
         return null;
     }
     public EntregaResponseDTO mudarStatusEntrega(Integer idEntrega, String status) throws Exception {
         Entrega entrega = procurar(idEntrega);
+        Optional<Cliente> cliente = clienteRepository.findById(entrega.getCliente().getId());
         entrega.setStatus(StatusEntrega.valueOf(status.toUpperCase()));
         entregaRepository.save(entrega);
+
+        if (StatusEntrega.valueOf(status.toUpperCase()) == StatusEntrega.ENTREGUE) {
+            List<Muda> mudaList = buscarMudasEntityEntrega(idEntrega);
+            cliente.get().setMudas(mudaList);
+        }
+
+        clienteRepository.save(cliente.get());
+
         EntregaResponseDTO entregaResponseDTO = objectMapper.convertValue(entrega, EntregaResponseDTO.class);
         alteraMudasEnderecosClienteNoEntregaResponseDTO(entregaResponseDTO, idEntrega);
         return entregaResponseDTO;
@@ -158,6 +168,17 @@ public class ServiceEntrega {
             MudaDTO mudaDTO = new MudaDTO();
             mudaDTO = serviceMudas.procurarPorIdDto(entregaMuda.getEntregaPK().getIdMuda());
             mudaList.add(mudaDTO);
+        }
+        return mudaList;
+    }
+
+    private List<Muda> buscarMudasEntityEntrega(Integer idEntrega) throws Exception {
+        List<EntregaMuda> entregaList = entregaMudaRepository.buscarMudasEntrega(idEntrega);
+        List<Muda> mudaList = new ArrayList<>();
+        for (EntregaMuda entregaMuda : entregaList) {
+            Muda muda = new Muda();
+            muda = serviceMudas.procurarPorIDEntidade(entregaMuda.getEntregaPK().getIdMuda());
+            mudaList.add(muda);
         }
         return mudaList;
     }
