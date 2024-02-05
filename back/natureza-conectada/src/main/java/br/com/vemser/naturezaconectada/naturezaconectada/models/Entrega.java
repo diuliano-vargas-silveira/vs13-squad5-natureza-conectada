@@ -1,10 +1,8 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.models;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.StatusEntrega;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -25,6 +23,7 @@ public class Entrega {
     private Integer id;
 
     @Column(name = "STATUS")
+    @Enumerated(EnumType.STRING)
     private StatusEntrega status;
 
     @Column(name = "DATA_PEDIDO")
@@ -33,21 +32,20 @@ public class Entrega {
     @Column(name = "DATA_ENTREGUE")
     private LocalDate dataEntrega;
 
-
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_CLIENTE", referencedColumnName = "ID_USUARIO")
     private Cliente cliente;
 
+//    @JsonIgnore
+//    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinTable(name = "ENTREGA_MUDA",
+//            joinColumns = @JoinColumn(name = "ID_ENTREGA"),
+//            inverseJoinColumns = @JoinColumn(name = "ID_MUDA"))
+//    private List<Muda> mudas;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "ENTREGA_MUDA",
-            joinColumns = @JoinColumn(name = "ID_ENTREGA"),
-            inverseJoinColumns = @JoinColumn(name = "ID_MUDA"))
-    private List<Muda> mudas;
-
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_ENDERECO", referencedColumnName = "ID_ENDERECO")
     private Endereco endereco;
-
-
 }
