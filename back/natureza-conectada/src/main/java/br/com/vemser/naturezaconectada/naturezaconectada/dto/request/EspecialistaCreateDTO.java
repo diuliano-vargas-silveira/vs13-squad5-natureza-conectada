@@ -1,6 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.dto.request;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.models.Relatorio;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.RelatorioMuda;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,6 +24,6 @@ public class EspecialistaCreateDTO extends UsuarioRequestDTO{
     @NotBlank(message = "especialização não pode ser vazia!")
     private String especializacao;
 
-    private List<Relatorio> relatorios;
+    private List<RelatorioMuda> relatorioMudas;
 
 }

@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Setter
 @Entity(name = "Relatorio")
 @Table(name = "RELATORIO")
-public class Relatorio {
+public class RelatorioMuda {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "RELATORIO_SEQ")

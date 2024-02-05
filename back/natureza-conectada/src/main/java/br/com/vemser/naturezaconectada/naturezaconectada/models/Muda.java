@@ -71,5 +71,5 @@ public class Muda {
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "muda", orphanRemoval = true)
-    private List<Relatorio> relatorios;
+    private List<RelatorioMuda> relatorioMudas;
 }

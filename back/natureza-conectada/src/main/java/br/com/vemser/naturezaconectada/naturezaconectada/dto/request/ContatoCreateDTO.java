@@ -1,6 +1,7 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.dto.request;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Tipo;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ import javax.validation.constraints.NotNull;
 public class ContatoCreateDTO {
 
     private Integer id;
-    private Integer idCliente;
+    private Cliente cliente;
     @NotBlank(message = "Descrição não pode ser vazia!")
     @Length(max = 255, message = "Mensagem muito longa!")
     private String descricao;

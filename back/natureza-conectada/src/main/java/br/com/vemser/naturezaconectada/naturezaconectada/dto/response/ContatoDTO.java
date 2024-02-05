@@ -1,27 +1,26 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.dto.response;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Tipo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class ContatoDTO {
 
-    private Integer id;
-    private Integer idCliente;
-    @NotBlank(message = "Descrição não pode ser vazia!")
-    @Length(max = 255, message = "Mensagem muito longa!")
+    private Integer idContato;
+//    private Integer idCliente;
     private String descricao;
-    @NotBlank(message = "Número não pode ser vazio!")
-    @Length(min = 11, max = 11, message = "Número tem que ter tamanho de 11!")
     private String numero;
-    @NotNull(message = "Tipo de Contato não pode ser nulo!")
+
+    @Enumerated(EnumType.STRING)
     private Tipo tipo;
+
 }

@@ -20,6 +20,6 @@ public class Especialista extends Usuario {
     @Column(name = "ESPECIALIZACAO")
     private String especializacao;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "especialista", orphanRemoval = true)
-    private List<Relatorio> relatorios;
+    private List<RelatorioMuda> relatorioMudas;
 
 }

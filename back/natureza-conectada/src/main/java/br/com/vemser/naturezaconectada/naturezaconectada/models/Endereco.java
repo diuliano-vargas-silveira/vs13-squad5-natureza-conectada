@@ -5,6 +5,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Tipo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.List;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -27,7 +29,9 @@ public class Endereco {
     @SequenceGenerator(name = "ENDERECO_SEQ", sequenceName = "SEQ_ENDERECO", allocationSize = 1)
     @Column(name = "ID_ENDERECO")
     private Integer idEndereco;
-    @Column(name = "ID_ESTADO")
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ESTADO")
     private Estados estado;
     @Column(name = "CEP")
     private String cep;
@@ -39,10 +43,15 @@ public class Endereco {
     private String complemento;
     @Column(name = "CIDADE")
     private String cidade;
-    @Column(name = "TIPO")
-    private Tipo tipo;
-    @Column(name = "ECOSSISTEMA")
-    private Ecossistema ecossistema;
+
+//    @Enumerated(EnumType.STRING)
+//    @Column(name = "TIPO")
+//    private Tipo tipo;
+//    @Enumerated(EnumType.STRING)
+//    @Column(name = "ECOSSISTEMA")
+//    private Ecossistema ecossistema;
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "ATIVO")
     private Ativo ativo;
 
@@ -54,9 +63,7 @@ public class Endereco {
     private List<Cliente> clientes;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "endereco", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "endereco")
     private List<Entrega> entregas;
-
-
 
 }

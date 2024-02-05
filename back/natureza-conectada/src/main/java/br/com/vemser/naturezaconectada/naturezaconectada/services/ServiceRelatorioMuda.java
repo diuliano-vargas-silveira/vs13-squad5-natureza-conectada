@@ -3,26 +3,20 @@ package br.com.vemser.naturezaconectada.naturezaconectada.services;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.RelatorioRequestDTO;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.RelatorioClienteDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
-import br.com.vemser.naturezaconectada.naturezaconectada.models.Especialista;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
-import br.com.vemser.naturezaconectada.naturezaconectada.models.Relatorio;
-import br.com.vemser.naturezaconectada.naturezaconectada.repository.RelatorioRepository;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.RelatorioMuda;
+import br.com.vemser.naturezaconectada.naturezaconectada.repository.RelatorioMudaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-
-import java.sql.SQLException;
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
-public class ServiceRelatorio {
+public class ServiceRelatorioMuda {
 
-    private final RelatorioRepository relatorioRepository;
+    private final RelatorioMudaRepository relatorioMudaRepository;
 
     private final ServiceCliente serviceCliente;
 
@@ -34,35 +28,35 @@ public class ServiceRelatorio {
 
 
     public RelatorioClienteDTO adicionar(RelatorioRequestDTO dto) throws Exception {
-        Relatorio novoRelatorio = new Relatorio();
+        RelatorioMuda novoRelatorioMuda = new RelatorioMuda();
         Cliente clienteEncontrado = this.serviceCliente.buscarPorIdEntidade(dto.getIdCliente());
         this.serviceMudas.confereMudaCliente(dto.getIdMuda(),dto.getIdCliente());
         Muda mudaEncontrada = this.serviceMudas.buscarMudaAtiva(dto.getIdMuda());
 
-        novoRelatorio.setCliente(clienteEncontrado);
-        novoRelatorio.setMuda(mudaEncontrada);
-        novoRelatorio.setAvaliacao(null);
-        novoRelatorio.setEspecialista(null);
-        novoRelatorio.setSugestoes(null);
-        novoRelatorio.setEstadoMuda(dto.getEstadoMuda());
+        novoRelatorioMuda.setCliente(clienteEncontrado);
+        novoRelatorioMuda.setMuda(mudaEncontrada);
+        novoRelatorioMuda.setAvaliacao(null);
+        novoRelatorioMuda.setEspecialista(null);
+        novoRelatorioMuda.setSugestoes(null);
+        novoRelatorioMuda.setEstadoMuda(dto.getEstadoMuda());
 
-        this.relatorioRepository.save(novoRelatorio);
+        this.relatorioMudaRepository.save(novoRelatorioMuda);
 
-        return retornarDtoCliente(novoRelatorio);
+        return retornarDtoCliente(novoRelatorioMuda);
 
 
 
     }
 
     public RelatorioClienteDTO editarRelatorio(Integer id,RelatorioRequestDTO dto) throws Exception {
-            Relatorio relatorioAtualizado = procurarPorID(id);
-            if(relatorioAtualizado.getAvaliacao() != null){
+            RelatorioMuda relatorioMudaAtualizado = procurarPorID(id);
+            if(relatorioMudaAtualizado.getAvaliacao() != null){
                 throw  new RegraDeNegocioException("Este relatório ja foi avaliado e não pode ser editado");
             }else{
                 this.serviceMudas.confereMudaCliente(dto.getIdMuda(),dto.getIdCliente());
-                relatorioAtualizado.setEstadoMuda(relatorioAtualizado.getEstadoMuda());
-                relatorioAtualizado.setMuda(this.serviceMudas.getByEntidade(id));
-                return retornarDtoCliente(relatorioAtualizado);
+                relatorioMudaAtualizado.setEstadoMuda(relatorioMudaAtualizado.getEstadoMuda());
+                relatorioMudaAtualizado.setMuda(this.serviceMudas.getByEntidade(id));
+                return retornarDtoCliente(relatorioMudaAtualizado);
             }
 
 
@@ -110,11 +104,11 @@ public class ServiceRelatorio {
 //        return resultado;
 //    }
 //
-    public Relatorio procurarPorID(Integer id) throws Exception {
+    public RelatorioMuda procurarPorID(Integer id) throws Exception {
 
-        Relatorio relatorio = this.relatorioRepository.findById(id).orElseThrow(()->new RegraDeNegocioException("Não existe relatório com este id no banco de dados"));
+        RelatorioMuda relatorioMuda = this.relatorioMudaRepository.findById(id).orElseThrow(()->new RegraDeNegocioException("Não existe relatório com este id no banco de dados"));
 
-        return relatorio;
+        return relatorioMuda;
 
     }
 //
@@ -135,7 +129,7 @@ public class ServiceRelatorio {
 //        }
 //        return null;
 //    }
-    private RelatorioClienteDTO retornarDtoCliente(Relatorio relatorio) {
+    private RelatorioClienteDTO retornarDtoCliente(RelatorioMuda relatorioMuda) {
 //        RelatorioClienteDTO retorno = new RelatorioClienteDTO();
 //        retorno.setCliente(relatorio.getCliente());
 //        retorno.setSugestoes(relatorio.getSugestoes());
@@ -143,11 +137,11 @@ public class ServiceRelatorio {
 //        retorno.setSugestoes(relatorio.getSugestoes());
 //        retorno.setAvaliacao(relatorio.getAvaliacao());
 //        retorno.setId(relatorio.getId());
-        return this.objectMapper.convertValue(relatorio, RelatorioClienteDTO.class);
+        return this.objectMapper.convertValue(relatorioMuda, RelatorioClienteDTO.class);
     }
 
-    private Relatorio retornarEntidade(RelatorioClienteDTO relatorio) {
-        return this.objectMapper.convertValue(relatorio, Relatorio.class);
+    private RelatorioMuda retornarEntidade(RelatorioClienteDTO relatorio) {
+        return this.objectMapper.convertValue(relatorio, RelatorioMuda.class);
     }
 
 }
