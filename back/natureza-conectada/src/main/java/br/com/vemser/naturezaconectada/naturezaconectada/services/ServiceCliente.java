@@ -11,6 +11,8 @@ import br.com.vemser.naturezaconectada.naturezaconectada.repository.IUsuarioRepo
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -56,12 +58,10 @@ public class ServiceCliente  {
             clienteEncontrado.setAtivo(Ativo.D);
     }
 
-    public List<ClienteDTO> listarTodos() throws Exception {
-        var clientes =  clienteRepository.findAll();
+    public Page<ClienteDTO> listarTodos(Pageable paginacao) throws Exception {
+        var clientesPaginados = clienteRepository.findAll(paginacao);
 
-        return clientes.stream()
-                .map(cliente -> objectMapper.convertValue(cliente, ClienteDTO.class))
-                .collect(Collectors.toList());
+        return clientesPaginados.map(cliente -> objectMapper.convertValue(cliente, ClienteDTO.class));
     }
 
     public ClienteDTO procurarPorId(Integer id) throws Exception {

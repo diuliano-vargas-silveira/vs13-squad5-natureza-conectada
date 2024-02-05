@@ -33,7 +33,7 @@ public interface IEnderecoController {
             }
     )
     @PutMapping("/{idEndereco}")
-    public ResponseEntity<EnderecoDTO> atualizar(@PathVariable("idEndereco") Integer idEndereco, @Valid @RequestBody EnderecoCreateDTO endereco) throws Exception;
+    public ResponseEntity<EnderecoDTO> editar(@PathVariable("idEndereco") Integer idEndereco, @Valid @RequestBody EnderecoCreateDTO endereco) throws Exception;
 
     @Operation(summary = "Ativar endereço de cliente", description = "Ativa uma endereço no banco pelo id e insere um ecossistema ")
     @ApiResponses(
@@ -77,17 +77,6 @@ public interface IEnderecoController {
     @GetMapping("/{idEndereco}")
     public ResponseEntity<EnderecoDTO> procurarPorIdEndereco(@PathVariable("idEndereco") Integer idEndereco) throws Exception;
 
-    @Operation(summary = "Listar endereço por id do cliente", description = "Lista todas os endereços cadastrados no banco com o id do cliente")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "200", description = "Retorna a lista de endereços pelo id do cliente"),
-                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
-                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
-            }
-    )
-    @GetMapping("/{idCliente}/cliente")
-    public ResponseEntity<List<EnderecoDTO>> procurarPorIdCliente(@PathVariable("idCliente") Integer idCliente) throws Exception;
-
     @Operation(summary = "Listar endereço  Ativos com is do cliente", description = "Lista todas os endereços cadastrados e ativos no banco com o id do cliente")
     @ApiResponses(
             value = {
@@ -97,5 +86,5 @@ public interface IEnderecoController {
             }
     )
     @GetMapping
-    public  List<EnderecoDTO> buscarPorAtivo (@PathVariable String ativo) throws Exception;
+    public List<EnderecoDTO> listarEnderecosPorAtivo() throws Exception;
 }

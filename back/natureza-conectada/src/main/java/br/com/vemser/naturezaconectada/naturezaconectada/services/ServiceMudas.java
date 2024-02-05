@@ -1,7 +1,8 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.relatorios.RelatorioMudasDoadas;
+//import br.com.vemser.naturezaconectada.naturezaconectada.dto.relatorios.RelatorioMudasDoadas;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.MudaCreateDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ClienteDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.MudaDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
@@ -12,6 +13,8 @@ import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.MudaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -90,13 +93,11 @@ public class ServiceMudas {
         return retornarDto(mudaAtualizada);
     }
 
-    public List<MudaCreateDTO> listarTodasMudas() throws Exception {
-        List<MudaCreateDTO> listaDeMudas = new ArrayList<>();
+    public Page<MudaCreateDTO> listarTodasMudas(Pageable paginacao) throws Exception {
+        var mudasPaginadas = mudaRepository.findAll(paginacao);
 
 
-        this.mudaRepository.findAll().forEach(muda -> listaDeMudas.add(retornarDto(muda)));
-
-        return listaDeMudas;
+        return mudasPaginadas.map(muda -> objectMapper.convertValue(muda, MudaCreateDTO.class));
     }
 
     public List<MudaDTO> listarMudasAtivas() throws Exception {
@@ -146,9 +147,9 @@ public class ServiceMudas {
         return this.objectMapper.convertValue(muda, Muda.class);
     }
 
-    public List<RelatorioMudasDoadas> mudasDoadas(){
-        return this.mudaRepository.mudasDoadas();
-    }
+//    public List<RelatorioMudasDoadas> mudasDoadas(){
+//        return this.mudaRepository.mudasDoadas();
+//    }
 
 
 //    public Entrega adicionar(RequestEntregaDTO dto){
