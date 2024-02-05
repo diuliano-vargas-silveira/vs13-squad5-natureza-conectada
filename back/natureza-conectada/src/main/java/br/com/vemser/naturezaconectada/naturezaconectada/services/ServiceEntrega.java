@@ -113,6 +113,8 @@ public class ServiceEntrega {
         entregaRepository.save(entrega);
 
         if (StatusEntrega.valueOf(status.toUpperCase()) == StatusEntrega.ENTREGUE) {
+            entrega.setDataEntrega(LocalDate.now());
+            entregaRepository.save(entrega);
             List<Muda> mudaList = buscarMudasEntityEntrega(idEntrega);
             cliente.get().setMudas(mudaList);
         }
@@ -120,6 +122,7 @@ public class ServiceEntrega {
         clienteRepository.save(cliente.get());
 
         EntregaResponseDTO entregaResponseDTO = objectMapper.convertValue(entrega, EntregaResponseDTO.class);
+        entregaResponseDTO.setDataEntregue(LocalDate.now());
         alteraMudasEnderecosClienteNoEntregaResponseDTO(entregaResponseDTO, idEntrega);
         return entregaResponseDTO;
     }
