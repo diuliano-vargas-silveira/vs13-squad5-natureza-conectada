@@ -3,7 +3,6 @@ package br.com.vemser.naturezaconectada.naturezaconectada.controllers;
 import br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces.IClienteController;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ClienteCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ClienteDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceCliente;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

@@ -9,10 +9,10 @@ import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNa
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.*;
 import br.com.vemser.naturezaconectada.naturezaconectada.pk.EntregaMudaPK;
+import br.com.vemser.naturezaconectada.naturezaconectada.repository.ClienteRepository;
+import br.com.vemser.naturezaconectada.naturezaconectada.repository.EnderecoRepository;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.EntregaMudaRepository;
-import br.com.vemser.naturezaconectada.naturezaconectada.repository.IClienteRepository;
-import br.com.vemser.naturezaconectada.naturezaconectada.repository.IEnderecoRepository;
-import br.com.vemser.naturezaconectada.naturezaconectada.repository.IEntregaRepository;
+import br.com.vemser.naturezaconectada.naturezaconectada.repository.EntregaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,9 +27,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ServiceEntrega {
 
-    private final IEntregaRepository entregaRepository;
-    private final IClienteRepository clienteRepository;
-    private final IEnderecoRepository enderecoRepository;
+    private final EntregaRepository entregaRepository;
+    private final ClienteRepository clienteRepository;
+    private final EnderecoRepository enderecoRepository;
     private final ServiceCliente serviceCliente;
     private final ServiceEndereco serviceEndereco;
     private final ServiceMudas serviceMudas;

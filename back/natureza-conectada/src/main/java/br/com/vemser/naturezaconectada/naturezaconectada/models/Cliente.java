@@ -18,15 +18,12 @@ import java.util.List;
 @Entity(name = "Cliente")
 @Table(name = "CLIENTE")
 public class Cliente extends Usuario {
-
-//    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "ENDERECO_CLIENTE",
             joinColumns = @JoinColumn(name = "ID_CLIENTE"),
             inverseJoinColumns = @JoinColumn(name = "ID_ENDERECO"))
     private List<Endereco> enderecos = new ArrayList<>();
 
-//    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "cliente", orphanRemoval = true)
     private List<Contato> contatos = new ArrayList<>();
 

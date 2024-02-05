@@ -16,10 +16,8 @@ import javax.persistence.Enumerated;
 public class ContatoDTO {
 
     private Integer idContato;
-//    private Integer idCliente;
     private String descricao;
     private String numero;
-
     @Enumerated(EnumType.STRING)
     private Tipo tipo;
 

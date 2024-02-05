@@ -1,7 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.dto.request;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.StatusEntrega;
-import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Endereco;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
 import io.swagger.v3.oas.annotations.media.Schema;

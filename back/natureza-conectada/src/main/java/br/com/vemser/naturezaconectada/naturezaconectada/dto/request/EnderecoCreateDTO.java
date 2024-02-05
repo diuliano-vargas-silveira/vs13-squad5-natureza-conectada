@@ -22,9 +22,7 @@ import java.util.List;
 public class EnderecoCreateDTO {
 
     private static final String PAIS = "Brasil";
-//    @NotNull
     private Integer idEndereco;
-//    @NotNull
     private List<Cliente> clientes;
     @NotEmpty
     @NotNull

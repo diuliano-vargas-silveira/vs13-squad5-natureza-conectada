@@ -4,13 +4,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.models.Entrega;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
-public interface IEntregaRepository extends JpaRepository<Entrega, Integer> {
-
-//    void atualizarMudas(int idEntrega, List<Muda> mudas);
-
-
+public interface EntregaRepository extends JpaRepository<Entrega, Integer> {
 
 }
