@@ -1,5 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
 import org.springframework.data.jpa.repository.JpaRepository;

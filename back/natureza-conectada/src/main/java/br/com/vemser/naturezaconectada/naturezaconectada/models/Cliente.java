@@ -43,6 +43,6 @@ public class Cliente extends Usuario {
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cliente")
-    private List<Relatorio> relatorios;
+    private List<RelatorioMuda> relatorios;
 
 }
