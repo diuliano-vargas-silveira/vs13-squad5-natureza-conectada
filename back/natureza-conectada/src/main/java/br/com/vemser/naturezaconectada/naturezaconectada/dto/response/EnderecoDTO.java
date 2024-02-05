@@ -43,12 +43,12 @@ public class EnderecoDTO {
     @Schema(description = "Estado", required = true, example = "RS")
     private Estados estado;
 
-//    @Enumerated(EnumType.STRING)
-//    @Schema(description = "Tipo de Endereço", required = true)
-//    private Tipo tipo;
+    @Enumerated(EnumType.STRING)
+    @Schema(description = "Tipo de Endereço", required = true)
+    private Tipo tipo;
 
-//    @Enumerated(EnumType.STRING)
-//    private Ecossistema ecossistema;
+    @Enumerated(EnumType.STRING)
+    private Ecossistema ecossistema;
 
     @Enumerated(EnumType.STRING)
     private Ativo ativo;
