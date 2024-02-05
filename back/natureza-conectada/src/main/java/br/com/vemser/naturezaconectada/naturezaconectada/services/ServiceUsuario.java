@@ -1,5 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.relatorios.RelatorioQuantidadeUsuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.UsuarioResponseDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.interfaces.IServiceUsuario;
@@ -55,5 +56,9 @@ public class ServiceUsuario implements IServiceUsuario {
         } else {
             throw new RegraDeNegocioException("Nenhum usuário encontrado para o email: " + email);
         }
+    }
+
+    public List<RelatorioQuantidadeUsuario> gerarRelatorio(){
+       return this.usuarioRepository.relatorioParaAdmin();
     }
 }

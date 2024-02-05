@@ -1,6 +1,7 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.controllers;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces.IMudaController;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.relatorios.RelatorioMudasDoadas;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.MudaCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.MudaDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
@@ -46,7 +47,7 @@ public class MudaController implements IMudaController {
     }
 
     @PutMapping("/{idMuda}")
-    public ResponseEntity<MudaCreateDTO> atualizarMuda(@PathVariable Integer idMuda,@Valid @RequestBody MudaCreateDTO dto) throws Exception {
+    public ResponseEntity<MudaCreateDTO> atualizarMuda(@PathVariable Integer idMuda, @Valid @RequestBody MudaCreateDTO dto) throws Exception {
         return new ResponseEntity<>(this.serviceMudas.editarmuda(idMuda, dto), HttpStatus.OK);
 
     }
@@ -57,5 +58,10 @@ public class MudaController implements IMudaController {
 
         return ResponseEntity.ok().build();
 
+    }
+
+    @GetMapping("/doacoes")
+    public List<RelatorioMudasDoadas> mudasDoadas() {
+        return this.serviceMudas.mudasDoadas();
     }
 }
