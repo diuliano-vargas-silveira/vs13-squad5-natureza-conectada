@@ -55,11 +55,12 @@ public class Muda {
     @Column(name = "ATIVO")
     private Ativo ativo;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "CLIENTE_MUDA",
             joinColumns = @JoinColumn(name = "ID_MUDA"),
             inverseJoinColumns = @JoinColumn(name = "ID_CLIENTE"))
-    private List<Cliente> clientes;
+    private List<Cliente> cliente;
 
 //    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 //    @JoinTable(name = "ENTREGA_MUDA",
@@ -69,5 +70,5 @@ public class Muda {
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "muda", orphanRemoval = true)
-    private List<Relatorio> relatorios;
+    private List<RelatorioMuda> relatorios;
 }

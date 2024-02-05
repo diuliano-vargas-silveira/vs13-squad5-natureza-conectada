@@ -1,6 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.dto.response;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.models.Relatorio;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.RelatorioMuda;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +18,6 @@ public class EspecialistaDTO extends UsuarioResponseDTO  {
 
     private String documento;
 
-    private List<Relatorio> relatorios;
+    private List<RelatorioMuda> relatorioMudas;
 
 }

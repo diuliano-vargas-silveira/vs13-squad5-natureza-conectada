@@ -13,11 +13,11 @@ import javax.persistence.*;
 @Setter
 @Entity(name = "Relatorio")
 @Table(name = "RELATORIO")
-public class Relatorio {
+public class RelatorioMuda {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "RELATORIO_SEQ")
-    @SequenceGenerator(name = "RELATORIO", sequenceName = "SEQ_RELATORIO", allocationSize = 1)
+    @SequenceGenerator(name = "RELATORIO_SEQ", sequenceName = "SEQ_RELATORIO", allocationSize = 1)
     @Column(name = "ID_RELATORIO")
     private Integer id;
 
@@ -41,6 +41,6 @@ public class Relatorio {
     private String sugestoes;
 
     @Column(name = "AVALIACAO")
-    private double avaliacaoEspecialista;
+    private Double avaliacao;
 
 }

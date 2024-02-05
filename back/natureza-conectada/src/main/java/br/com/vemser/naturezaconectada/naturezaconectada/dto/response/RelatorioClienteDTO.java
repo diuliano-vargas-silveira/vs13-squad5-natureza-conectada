@@ -1,19 +1,25 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.dto.response;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
-import br.com.vemser.naturezaconectada.naturezaconectada.models.Especialista;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-public class RelatorioCreateDTO {
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+public class RelatorioClienteDTO {
+
     private Integer id;
 
-    @NotNull(message = "Dono não pode ser nulo!")
-    private Cliente dono;
 
-    private Especialista avaliador;
+    private Cliente cliente;
+
+    private String nomeEspecialista;
 
     @NotNull(message = "Muda não pode ser nula!")
     private Muda muda;
@@ -23,5 +29,6 @@ public class RelatorioCreateDTO {
 
     private String sugestoes;
 
-    private double avaliacaoEspecialista;
+    private double avaliacao;
+
 }
