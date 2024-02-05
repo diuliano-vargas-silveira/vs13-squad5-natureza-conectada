@@ -6,8 +6,8 @@ import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Endereco;
-import br.com.vemser.naturezaconectada.naturezaconectada.repository.IClienteRepository;
-import br.com.vemser.naturezaconectada.naturezaconectada.repository.IEnderecoRepository;
+import br.com.vemser.naturezaconectada.naturezaconectada.repository.ClienteRepository;
+import br.com.vemser.naturezaconectada.naturezaconectada.repository.EnderecoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ServiceEndereco {
 
-    private final IEnderecoRepository enderecoRepository;
-    private final IClienteRepository clienteRepository;
+    private final EnderecoRepository enderecoRepository;
+    private final ClienteRepository clienteRepository;
     private final ObjectMapper objectMapper;
 
     public EnderecoDTO adicionar(EnderecoCreateDTO enderecoCreateDTO, Integer idCliente) throws Exception {

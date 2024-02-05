@@ -2,11 +2,13 @@ package br.com.vemser.naturezaconectada.naturezaconectada.models;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.StatusEntrega;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -36,13 +38,6 @@ public class Entrega {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_CLIENTE", referencedColumnName = "ID_USUARIO")
     private Cliente cliente;
-
-//    @JsonIgnore
-//    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    @JoinTable(name = "ENTREGA_MUDA",
-//            joinColumns = @JoinColumn(name = "ID_ENTREGA"),
-//            inverseJoinColumns = @JoinColumn(name = "ID_MUDA"))
-//    private List<Muda> mudas;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

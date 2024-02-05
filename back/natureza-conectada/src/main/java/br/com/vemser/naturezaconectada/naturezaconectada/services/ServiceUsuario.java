@@ -1,12 +1,11 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-//import br.com.vemser.naturezaconectada.naturezaconectada.dto.relatorios.RelatorioQuantidadeUsuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.relatorios.RelatorioQuantidadeUsuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.UsuarioResponseDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.interfaces.IServiceUsuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Usuario;
-import br.com.vemser.naturezaconectada.naturezaconectada.repository.IUsuarioRepository;
+import br.com.vemser.naturezaconectada.naturezaconectada.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
 @Service
 public class ServiceUsuario implements IServiceUsuario {
 
-    private final IUsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
     private final ObjectMapper objectMapper;
 
     public UsuarioResponseDTO logar(String email, String senha) throws Exception {

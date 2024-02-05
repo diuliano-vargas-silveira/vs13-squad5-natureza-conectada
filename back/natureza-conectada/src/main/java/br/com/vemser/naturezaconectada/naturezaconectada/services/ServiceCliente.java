@@ -6,8 +6,8 @@ import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
-import br.com.vemser.naturezaconectada.naturezaconectada.repository.IClienteRepository;
-import br.com.vemser.naturezaconectada.naturezaconectada.repository.IUsuarioRepository;
+import br.com.vemser.naturezaconectada.naturezaconectada.repository.ClienteRepository;
+import br.com.vemser.naturezaconectada.naturezaconectada.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ServiceCliente  {
 
-    private final IClienteRepository clienteRepository;
-    private final IUsuarioRepository usuarioRepository;
+    private final ClienteRepository clienteRepository;
+    private final UsuarioRepository usuarioRepository;
     private final ObjectMapper objectMapper;
 
 

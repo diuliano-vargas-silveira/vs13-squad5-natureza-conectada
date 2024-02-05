@@ -5,7 +5,7 @@
  import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
  import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
  import br.com.vemser.naturezaconectada.naturezaconectada.models.Contato;
- import br.com.vemser.naturezaconectada.naturezaconectada.repository.IContatoRepository;
+ import br.com.vemser.naturezaconectada.naturezaconectada.repository.ContatoRepository;
  import com.fasterxml.jackson.databind.ObjectMapper;
  import lombok.RequiredArgsConstructor;
  import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@
  @Slf4j
  public class ServiceContato  {
 
-    private final IContatoRepository contatoRepository;
+    private final ContatoRepository contatoRepository;
     private final ObjectMapper objectMapper;
     private final ServiceCliente serviceCliente;
 

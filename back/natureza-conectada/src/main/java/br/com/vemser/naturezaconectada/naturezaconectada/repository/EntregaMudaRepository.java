@@ -1,7 +1,5 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.repository;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
-import br.com.vemser.naturezaconectada.naturezaconectada.models.Endereco;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.EntregaMuda;
 import br.com.vemser.naturezaconectada.naturezaconectada.pk.EntregaMudaPK;
 import org.springframework.data.jpa.repository.JpaRepository;

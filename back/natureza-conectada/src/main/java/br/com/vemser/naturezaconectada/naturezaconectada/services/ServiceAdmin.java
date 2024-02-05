@@ -7,7 +7,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Admin;
-import br.com.vemser.naturezaconectada.naturezaconectada.repository.IAdminRepository;
+import br.com.vemser.naturezaconectada.naturezaconectada.repository.AdminRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ServiceAdmin {
 
-    private final IAdminRepository adminRepository;
+    private final AdminRepository adminRepository;
     private final ObjectMapper objectMapper;
 
     public AdminResponseDTO adicionar(AdminRequestDTO adminRequestDTO) throws java.lang.Exception {

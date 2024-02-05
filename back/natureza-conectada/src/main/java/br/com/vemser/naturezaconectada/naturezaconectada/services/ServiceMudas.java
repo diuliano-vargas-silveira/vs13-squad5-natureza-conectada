@@ -1,9 +1,7 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-//import br.com.vemser.naturezaconectada.naturezaconectada.dto.relatorios.RelatorioMudasDoadas;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.relatorios.RelatorioMudasDoadas;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.MudaCreateDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ClienteDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.MudaDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
@@ -27,9 +25,6 @@ import java.util.Optional;
 public class ServiceMudas {
     private final MudaRepository mudaRepository;
     private final ObjectMapper objectMapper;
-
-
-
     private final ServiceCliente serviceCliente;
 
 
@@ -69,12 +64,6 @@ public class ServiceMudas {
             Muda mudaEncontrada = this.mudaRepository.findByAtivoAndId(Ativo.A,id).orElseThrow(()->new RegraDeNegocioException("Não foi possível encontrar a muda no banco de dados"));
             return mudaEncontrada;
     }
-
-//    public List<MudaDTO> obterMudasDaEntrega (int idEntrega) throws Exception { todo:verificar se é necessario, ou se o entrega ja consegue anexar automaticamente
-//
-//        return this.mudaRepository.procurarMudasEntrega(idEntrega).stream().map(muda -> this.objectMapper.convertValue(muda,MudaDTO.class)).toList();
-//
-//    }
 
 
     public MudaCreateDTO editarmuda(Integer idMuda, MudaCreateDTO mudaEditada) throws Exception {
@@ -139,7 +128,6 @@ public class ServiceMudas {
         }
     }
 
-
     private MudaCreateDTO retornarDto(Muda muda) {
         return this.objectMapper.convertValue(muda, MudaCreateDTO.class);
     }
@@ -152,13 +140,5 @@ public class ServiceMudas {
         return this.mudaRepository.mudasDoadas();
     }
 
-
-//    public Entrega adicionar(RequestEntregaDTO dto){
-//        this.serviceClient.procurar(dto.idCliente)
-//
-//                EntregaMuda novodado = new EntregaMuda();
-//        novoDado.entrega_Muda.setIdMuda(lista.get(0).getId())
-//                novoDado.entrega_Muda.setIdEntrega()
-//    }
 
 }

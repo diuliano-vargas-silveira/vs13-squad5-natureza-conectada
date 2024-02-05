@@ -62,12 +62,6 @@ public class Muda {
             inverseJoinColumns = @JoinColumn(name = "ID_CLIENTE"))
     private List<Cliente> cliente;
 
-//    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    @JoinTable(name = "ENTREGA_MUDA",
-//            joinColumns = @JoinColumn(name = "ID_ENTREGA"),
-//            inverseJoinColumns = @JoinColumn(name = "ID_MUDA"))
-//    private List<Entrega> entregas;
-
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "muda", orphanRemoval = true)
     private List<RelatorioMuda> relatorios;
