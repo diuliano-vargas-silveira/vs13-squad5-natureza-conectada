@@ -4,6 +4,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Tipo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,12 +46,14 @@ public class Endereco {
     @Column(name = "ATIVO")
     private Ativo ativo;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "ENDERECO_CLIENTE",
             joinColumns = @JoinColumn(name = "ID_ENDERECO"),
             inverseJoinColumns = @JoinColumn(name = "ID_CLIENTE"))
     private List<Cliente> clientes;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "endereco", orphanRemoval = true)
     private List<Entrega> entregas;
 

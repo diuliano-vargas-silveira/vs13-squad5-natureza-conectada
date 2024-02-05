@@ -89,4 +89,8 @@ public class ServiceCliente  {
                 .collect(Collectors.toList());
     }
 
+    public Cliente buscarPorIdEntidade(Integer id) throws Exception{
+        Cliente cliente = this.clienteRepository.findByAtivoAndId(Ativo.A,id).orElseThrow(() -> new RegraDeNegocioException("Não foi possível buscar usuario"));
+        return cliente;
+    }
 }

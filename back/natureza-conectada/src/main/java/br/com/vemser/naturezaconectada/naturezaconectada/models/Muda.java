@@ -4,6 +4,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TamanhoMuda;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoMuda;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -54,18 +55,21 @@ public class Muda {
     @Column(name = "ATIVO")
     private Ativo ativo;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "CLIENTE_MUDA",
             joinColumns = @JoinColumn(name = "ID_MUDA"),
             inverseJoinColumns = @JoinColumn(name = "ID_CLIENTE"))
-    private List<Cliente> clientes;
+    private List<Cliente> cliente;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "ENTREGA_MUDA",
             joinColumns = @JoinColumn(name = "ID_ENTREGA"),
             inverseJoinColumns = @JoinColumn(name = "ID_MUDA"))
     private List<Entrega> entregas;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "muda", orphanRemoval = true)
     private List<Relatorio> relatorios;
 }

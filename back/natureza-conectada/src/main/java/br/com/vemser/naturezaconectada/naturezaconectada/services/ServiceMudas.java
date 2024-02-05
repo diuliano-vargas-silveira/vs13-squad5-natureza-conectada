@@ -5,6 +5,8 @@ import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.MudaDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.MudaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +23,9 @@ public class ServiceMudas {
     private final MudaRepository mudaRepository;
     private final ObjectMapper objectMapper;
 
-//    private final ServiceCliente serviceCliente;
+
+
+    private final ServiceCliente serviceCliente;
 
 
     public MudaCreateDTO adicionar(MudaCreateDTO mudadto) throws Exception {
@@ -53,6 +58,11 @@ public class ServiceMudas {
     public MudaDTO procurarPorIdDto(int id) throws Exception {
         Muda mudaEncontrada = this.mudaRepository.findById(id).orElseThrow(() -> new InformacaoNaoEncontrada("Não foi encontrado a muda com id " + id));
         return this.objectMapper.convertValue(mudaEncontrada, MudaDTO.class);
+    }
+
+    public  Muda buscarMudaAtiva(Integer id) throws Exception{
+            Muda mudaEncontrada = this.mudaRepository.findByAtivoAndId(Ativo.A,id).orElseThrow(()->new RegraDeNegocioException("Não foi possível encontrar a muda no banco de dados"));
+            return mudaEncontrada;
     }
 
 //    public List<MudaDTO> obterMudasDaEntrega (int idEntrega) throws Exception { todo:verificar se é necessario, ou se o entrega ja consegue anexar automaticamente
@@ -113,6 +123,19 @@ public class ServiceMudas {
         return retornarDto(this.mudaRepository.save(novaMuda));
     }
 
+    public Muda getByEntidade(Integer id) throws Exception{
+        Muda retornoMuda = this.mudaRepository.findById(id).orElseThrow(()->new InformacaoNaoEncontrada("Não existe muda com este id no banco de dados"));
+        return retornoMuda;
+    }
+
+    public void confereMudaCliente(Integer idMuda,Integer idCliente) throws Exception{
+        Cliente cliente = this.serviceCliente.buscarPorIdEntidade(idCliente);
+        Optional<List<Muda>> isPertence = this.mudaRepository.findByClienteAndIdIs(cliente,idMuda);
+        if(isPertence.get().isEmpty() ){
+        throw new RegraDeNegocioException("A muda não pertence ao cliente");
+        }
+    }
+
 
     private MudaCreateDTO retornarDto(Muda muda) {
         return this.objectMapper.convertValue(muda, MudaCreateDTO.class);
@@ -121,5 +144,15 @@ public class ServiceMudas {
     private Muda retornarEntidade(MudaCreateDTO muda) {
         return this.objectMapper.convertValue(muda, Muda.class);
     }
+
+
+
+//    public Entrega adicionar(RequestEntregaDTO dto){
+//        this.serviceClient.procurar(dto.idCliente)
+//
+//                EntregaMuda novodado = new EntregaMuda();
+//        novoDado.entrega_Muda.setIdMuda(lista.get(0).getId())
+//                novoDado.entrega_Muda.setIdEntrega()
+//    }
 
 }
