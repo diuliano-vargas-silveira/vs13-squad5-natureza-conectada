@@ -38,11 +38,11 @@ public class Cliente extends Usuario {
     private List<Muda> mudas;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cliente", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cliente")
     private List<Entrega> entregas;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cliente", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cliente")
     private List<Relatorio> relatorios;
 
 }
