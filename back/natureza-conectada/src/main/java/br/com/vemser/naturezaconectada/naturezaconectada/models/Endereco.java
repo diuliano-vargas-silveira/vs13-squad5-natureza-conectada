@@ -44,12 +44,12 @@ public class Endereco {
     @Column(name = "CIDADE")
     private String cidade;
 
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "TIPO")
-//    private Tipo tipo;
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "ECOSSISTEMA")
-//    private Ecossistema ecossistema;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "TIPO")
+    private Tipo tipo;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ECOSSISTEMA")
+    private Ecossistema ecossistema;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "ATIVO")

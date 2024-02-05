@@ -50,10 +50,12 @@ public class EnderecoCreateDTO {
     @NotNull
     @Schema(description = "Estado", required = true, example = "RS")
     private Estados estado;
-//    @Enumerated(EnumType.STRING)
-//    @NotNull
-//    @Schema(description = "Tipo de Endereço", required = true)
-//    private Tipo tipo;
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    @Schema(description = "Tipo de Endereço", required = true)
+    private Tipo tipo;
+    @Enumerated(EnumType.STRING)
+    @Schema(description = "Ecossistema", required = true)
     private Ecossistema ecossistema;
     private Ativo ativo;
 
