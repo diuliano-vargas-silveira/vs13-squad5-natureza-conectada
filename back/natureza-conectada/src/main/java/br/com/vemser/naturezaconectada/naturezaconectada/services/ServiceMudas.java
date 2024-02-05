@@ -45,7 +45,7 @@ public class ServiceMudas {
 
     }
 
-    private Muda procurarPorIDEntidade(int id) throws Exception {
+    public Muda procurarPorIDEntidade(int id) throws Exception {
         Muda mudaEncontrada = this.mudaRepository.findById(id).orElseThrow(() -> new InformacaoNaoEncontrada("Não foi encontrado a muda com id " + id));
         return mudaEncontrada;
     }

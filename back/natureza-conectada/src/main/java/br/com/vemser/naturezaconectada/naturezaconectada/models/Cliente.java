@@ -17,6 +17,7 @@ import java.util.List;
 @DiscriminatorValue("CLIENTE")
 @Entity(name = "Cliente")
 @Table(name = "CLIENTE")
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Cliente extends Usuario {
 
 //    @JsonIgnore
