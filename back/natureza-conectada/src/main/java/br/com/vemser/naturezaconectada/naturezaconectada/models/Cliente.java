@@ -1,6 +1,7 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import java.util.List;
 @DiscriminatorValue("CLIENTE")
 @Entity(name = "Cliente")
 @Table(name = "CLIENTE")
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Cliente extends Usuario {
 
     @JsonIgnore

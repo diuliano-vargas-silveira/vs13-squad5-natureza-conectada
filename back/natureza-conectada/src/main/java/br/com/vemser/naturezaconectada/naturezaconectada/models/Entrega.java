@@ -37,12 +37,12 @@ public class Entrega {
     @JoinColumn(name = "ID_CLIENTE", referencedColumnName = "ID_USUARIO")
     private Cliente cliente;
 
-    @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "ENTREGA_MUDA",
-            joinColumns = @JoinColumn(name = "ID_ENTREGA"),
-            inverseJoinColumns = @JoinColumn(name = "ID_MUDA"))
-    private List<Muda> mudas;
+//    @JsonIgnore
+//    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinTable(name = "ENTREGA_MUDA",
+//            joinColumns = @JoinColumn(name = "ID_ENTREGA"),
+//            inverseJoinColumns = @JoinColumn(name = "ID_MUDA"))
+//    private List<Muda> mudas;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

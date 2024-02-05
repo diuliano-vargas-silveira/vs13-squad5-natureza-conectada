@@ -27,10 +27,10 @@ public class EntregaResponseDTO {
     @Schema(description = "Data da entrega ao cliente", example = "2024-10-10")
     private LocalDate dataEntregue;
     @Schema(description = "Informações do cliente", implementation = ClienteDTO.class)
-    private ClienteDTO cliente;
+    private ClienteEntregaDTO cliente;
     @Schema(description = "Lista de mudas", example = "[{'id': 1,'quantidade': 5},{'id': 2,'quantidade': 3}]")
     private List<MudaDTO> mudas = new ArrayList<>();
     @Schema(description = "Endereço do cliente", example = "{'rua': 'Aimorés', 'numero': 100, 'cidade': 'Belo Horizonte', 'estado': 'MG', 'pais': 'Brasil'}")
-    private EnderecoDTO endereco;
+    private EnderecoEntregaDTO endereco;
 
 }
