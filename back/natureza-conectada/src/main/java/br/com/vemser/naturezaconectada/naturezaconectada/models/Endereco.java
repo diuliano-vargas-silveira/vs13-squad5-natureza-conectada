@@ -14,6 +14,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.List;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -63,7 +64,7 @@ public class Endereco {
     private List<Cliente> clientes;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "endereco", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "endereco")
     private List<Entrega> entregas;
 
 }
