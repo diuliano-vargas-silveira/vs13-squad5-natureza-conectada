@@ -2,6 +2,7 @@ package br.com.vemser.naturezaconectada.naturezaconectada.controllers;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces.IUsuarioController;
 //import br.com.vemser.naturezaconectada.naturezaconectada.dto.relatorios.RelatorioQuantidadeUsuario;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.relatorios.RelatorioQuantidadeUsuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.UsuarioResponseDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceUsuario;
 import lombok.RequiredArgsConstructor;
@@ -42,8 +43,8 @@ public class UsuarioController implements IUsuarioController {
         return ResponseEntity.ok().body(usuarioService.procurarPorEmail(email));
     }
 
-//    @GetMapping("/relatorio")
-//    public List<RelatorioQuantidadeUsuario> gerarRelatorio(){
-//        return this.usuarioService.gerarRelatorio();
-//    }
+    @GetMapping("/relatorio")
+    public List<RelatorioQuantidadeUsuario> gerarRelatorio(){
+        return this.usuarioService.gerarRelatorio();
+    }
 }
