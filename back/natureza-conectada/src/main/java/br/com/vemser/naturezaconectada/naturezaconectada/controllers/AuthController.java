@@ -27,7 +27,7 @@ public class AuthController {
     public String auth(@RequestBody @Valid LoginDTO loginDTO) throws RegraDeNegocioException {
         Optional<Usuario> byEmailAndSenha = usuarioService.findByEmailAndSenha(loginDTO.getEmail(), loginDTO.getSenha());
         if (byEmailAndSenha.isPresent()) {
-            return tokenService.getToken(byEmailAndSenha.get());
+            return tokenService.generateToken(byEmailAndSenha.get());
         } else {
             throw new RegraDeNegocioException("Usuário ou senha inválidos");
         }

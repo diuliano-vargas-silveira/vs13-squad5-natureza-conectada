@@ -25,6 +25,10 @@ public class ServiceUsuario implements IServiceUsuario {
         return usuarioRepository.findByEmailAndSenha(email, senha);
     }
 
+    public Optional<Usuario> findById(Integer idUsuario) {
+        return usuarioRepository.findById(idUsuario);
+    }
+
     public UsuarioResponseDTO logar(String email, String senha) throws Exception {
         Usuario usuario = usuarioRepository.findByEmail(email);
 
