@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -19,6 +20,10 @@ public class ServiceUsuario implements IServiceUsuario {
 
     private final UsuarioRepository usuarioRepository;
     private final ObjectMapper objectMapper;
+
+    public Optional<Usuario> findByEmailAndSenha(String email, String senha) {
+        return usuarioRepository.findByEmailAndSenha(email, senha);
+    }
 
     public UsuarioResponseDTO logar(String email, String senha) throws Exception {
         Usuario usuario = usuarioRepository.findByEmail(email);

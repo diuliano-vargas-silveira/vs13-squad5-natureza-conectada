@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
@@ -23,4 +24,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     @Query(value = "SELECT TIPO_USUARIO AS Usuario,COUNT(TIPO_USUARIO)AS Quantidade  FROM VS_13_EQUIPE_5.USUARIO u GROUP BY TIPO_USUARIO  ",nativeQuery = true)
     List<RelatorioQuantidadeUsuario> relatorioParaAdmin();
+
+    Optional<Usuario> findByEmailAndSenha(String email, String senha);
 }
