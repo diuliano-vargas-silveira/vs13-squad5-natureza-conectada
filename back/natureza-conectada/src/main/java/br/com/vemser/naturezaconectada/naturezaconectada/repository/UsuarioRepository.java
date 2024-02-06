@@ -13,8 +13,6 @@ import java.util.Optional;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
-    Usuario findByEmail(String email);
-
     @Query("SELECT new br.com.vemser.naturezaconectada.naturezaconectada.dto.response.UsuarioResponseDTO" +
             "(u.id, u.nome, u.email, u.tipoUsuario, u.ativo, u.cpf, u.senha) " +
             "FROM Usuario u " +
@@ -26,4 +24,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     List<RelatorioQuantidadeUsuario> relatorioParaAdmin();
 
     Optional<Usuario> findByEmailAndSenha(String email, String senha);
+    Optional<Usuario> findByEmail(String email);
 }

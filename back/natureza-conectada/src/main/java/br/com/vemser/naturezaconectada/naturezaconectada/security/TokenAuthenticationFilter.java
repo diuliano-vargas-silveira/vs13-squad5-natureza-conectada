@@ -23,22 +23,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String tokenFromHeader = getTokenFromHeader(request);
-        Optional<Usuario> usuario = tokenService.isValid(tokenFromHeader);
-
-        authenticate(usuario);
+        UsernamePasswordAuthenticationToken user = tokenService.isValid(tokenFromHeader);
+        SecurityContextHolder.getContext().setAuthentication(user);
 
         filterChain.doFilter(request, response);
-    }
-
-    private void authenticate(Optional<Usuario> optionalUsuario) {
-        if (optionalUsuario.isPresent()) {
-            Usuario usuarioEntity = optionalUsuario.get();
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                    new UsernamePasswordAuthenticationToken(usuarioEntity.getEmail(), usuarioEntity.getSenha(), Collections.emptyList());
-            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-        } else {
-            SecurityContextHolder.getContext().setAuthentication(null);
-        }
     }
 
     private String getTokenFromHeader(HttpServletRequest request) {

@@ -7,17 +7,16 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
-import java.util.Base64;
+import java.util.Collections;
 import java.util.Date;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class TokenService {
     static final String HEADER_STRING = "Authorization";
-    private final ServiceUsuario usuarioService;
     private static final String TOKEN_PREFIX = "Bearer";
 
     @Value("${jwt.expiration}")
@@ -32,7 +31,7 @@ public class TokenService {
 
         return TOKEN_PREFIX + " " +
                 Jwts.builder()
-                        .setIssuer("pessoa-api")
+                        .setIssuer("natureza-conectada")
                         .claim(Claims.ID, usuario.getId().toString())
                         .setIssuedAt(now)
                         .setExpiration(exp)
@@ -40,7 +39,7 @@ public class TokenService {
                         .compact();
     }
 
-    public Optional<Usuario> isValid(String token) {
+    public UsernamePasswordAuthenticationToken isValid(String token) {
         if (token != null) {
             Claims body = Jwts.parser()
                     .setSigningKey(secret)
@@ -48,9 +47,11 @@ public class TokenService {
                     .getBody();
             String user = body.get(Claims.ID, String.class);
             if (user != null) {
-                return usuarioService.findById(Integer.valueOf(user));
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                        new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
+                return usernamePasswordAuthenticationToken;
             }
         }
-        return Optional.empty();
+        return null;
     }
 }

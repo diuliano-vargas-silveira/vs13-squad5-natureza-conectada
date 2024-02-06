@@ -4,8 +4,10 @@ import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegoc
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Usuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.security.LoginDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.security.TokenService;
-import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceUsuario;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,23 +15,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
 @Validated
 @RequiredArgsConstructor
 public class AuthController {
-    private final ServiceUsuario usuarioService;
     private final TokenService tokenService;
+    public final AuthenticationManager authenticationManager;
 
     @PostMapping
     public String auth(@RequestBody @Valid LoginDTO loginDTO) throws RegraDeNegocioException {
-        Optional<Usuario> byEmailAndSenha = usuarioService.findByEmailAndSenha(loginDTO.getEmail(), loginDTO.getSenha());
-        if (byEmailAndSenha.isPresent()) {
-            return tokenService.generateToken(byEmailAndSenha.get());
-        } else {
-            throw new RegraDeNegocioException("Usuário ou senha inválidos");
-        }
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                new UsernamePasswordAuthenticationToken(
+                        loginDTO.getEmail(),
+                        loginDTO.getSenha()
+                );
+
+        Authentication authentication =
+                authenticationManager.authenticate(
+                        usernamePasswordAuthenticationToken);
+
+        Usuario usuarioValidado = (Usuario) authentication.getPrincipal();
+
+        return tokenService.generateToken(usuarioValidado);
     }
 }
