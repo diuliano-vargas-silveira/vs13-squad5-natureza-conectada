@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -20,13 +21,9 @@ public class ServiceUsuario implements IServiceUsuario {
     private final UsuarioRepository usuarioRepository;
     private final ObjectMapper objectMapper;
 
-    public UsuarioResponseDTO logar(String email, String senha) throws Exception {
-        Usuario usuario = usuarioRepository.findByEmail(email);
 
-        if (usuario == null) throw new RegraDeNegocioException("Usuário não existe pra o e-mail informado.");
-
-        if (!usuario.getSenha().equals(senha)) throw new RegraDeNegocioException("Senha incorreta.");
-        return objectMapper.convertValue(usuario, UsuarioResponseDTO.class);
+    public Optional<Usuario> findByLogin(String email) {
+        return usuarioRepository.findByEmail(email);
     }
 
     public List<UsuarioResponseDTO> listarTodos() throws Exception {
@@ -50,7 +47,7 @@ public class ServiceUsuario implements IServiceUsuario {
     }
 
     public UsuarioResponseDTO procurarPorEmail(String email) throws Exception {
-        Usuario usuario = usuarioRepository.findByEmail(email);
+        Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
         if (usuario != null) {
             return objectMapper.convertValue(usuario, UsuarioResponseDTO.class);
         } else {

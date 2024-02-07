@@ -21,11 +21,6 @@ public class UsuarioController implements IUsuarioController {
 
     private final ServiceUsuario usuarioService;
 
-    @PostMapping("/login")
-    public ResponseEntity<UsuarioResponseDTO> logar(@RequestParam String email, @RequestParam String senha) throws Exception {
-        return ResponseEntity.ok().body(usuarioService.logar(email, senha));
-    }
-
     @GetMapping
     public ResponseEntity<List<UsuarioResponseDTO>> listarTodos() throws Exception {
         return ResponseEntity.ok().body(usuarioService.listarTodos());
