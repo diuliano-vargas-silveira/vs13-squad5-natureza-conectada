@@ -27,17 +27,14 @@ public class AuthController {
     @PostMapping
     public String auth(@RequestBody @Valid LoginDTO loginDTO) throws RegraDeNegocioException {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken(
-                        loginDTO.getEmail(),
-                        loginDTO.getSenha()
-                );
+                new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getSenha());
 
-        Authentication authentication =
-                authenticationManager.authenticate(
+        Authentication authentication = authenticationManager.authenticate(
                         usernamePasswordAuthenticationToken);
 
         Usuario usuarioValidado = (Usuario) authentication.getPrincipal();
 
         return tokenService.generateToken(usuarioValidado);
     }
+
 }

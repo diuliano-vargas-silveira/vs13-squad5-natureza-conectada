@@ -4,9 +4,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.RelatorioRe
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.RelatorioClienteDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceRelatorioMuda;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/relatorio")
@@ -19,5 +17,16 @@ public class RelatorioController {
     public RelatorioClienteDTO adicionar (RelatorioRequestDTO dto) throws Exception {
         return this.serviceRelatorioMuda.adicionar(dto);
     }
+
+    @GetMapping("/espec/{idEspecialista}")
+    public void relatorioEspecialista(){}
+
+    @GetMapping("/aberto")
+    public void  buscarRelatorioAbertos(){}
+
+    @PutMapping("/avaliacao")
+    public void avaliarRelatorio(){}
+    @GetMapping()
+    public void listarTodos(){}
 
 }

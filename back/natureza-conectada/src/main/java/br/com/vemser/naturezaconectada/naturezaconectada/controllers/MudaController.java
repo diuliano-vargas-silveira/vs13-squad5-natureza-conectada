@@ -55,7 +55,7 @@ public class MudaController implements IMudaController {
 
     }
 
-    @DeleteMapping("/{idMuda}")
+    @PutMapping("/status/{idMuda}")
     public ResponseEntity<Void> mudarAtivoMuda(@PathVariable Integer idMuda) throws Exception {
         this.serviceMudas.mudarAtivoMuda(idMuda);
 
