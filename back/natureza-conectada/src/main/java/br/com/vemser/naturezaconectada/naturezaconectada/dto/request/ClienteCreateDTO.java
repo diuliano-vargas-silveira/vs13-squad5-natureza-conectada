@@ -19,8 +19,7 @@ import java.util.List;
 public class ClienteCreateDTO extends UsuarioRequestDTO {
 
     private Integer idCliente;
-    @Schema(description = "CPF", required = true, example = "12345678901")
-    private String cpf;
+
     @NotNull(message = "Endereço não pode ser nulo")
     @Schema(description = "Endereços", required = true)
     private List<Endereco> enderecos = new ArrayList<>();

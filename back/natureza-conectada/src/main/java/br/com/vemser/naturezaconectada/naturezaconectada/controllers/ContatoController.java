@@ -4,6 +4,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces.
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ContatoCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ContatoDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceContato;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,15 +17,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/contato")
+@RequiredArgsConstructor
 @Validated
 @Slf4j
 public class ContatoController implements IContatoController {
 
     private final ServiceContato serviceContato;
-
-    public ContatoController(ServiceContato serviceContato) {
-        this.serviceContato = serviceContato;
-    }
 
     @PostMapping("/{idCliente}")
     public ResponseEntity<ContatoDTO> adicionar(@PathVariable("idCliente") Integer idCliente, @Valid @RequestBody ContatoCreateDTO contato) throws Exception {
@@ -42,7 +40,7 @@ public class ContatoController implements IContatoController {
         return new ResponseEntity<>(serviceContato.editar(idContato, contatoAtualizado), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{idContato}")
+    @PutMapping("/remover/{idContato}")
     public ResponseEntity<Void> remover(@PathVariable("idContato") Integer idContato) throws Exception {
         serviceContato.remover(idContato);
         log.debug("Contato excluído");

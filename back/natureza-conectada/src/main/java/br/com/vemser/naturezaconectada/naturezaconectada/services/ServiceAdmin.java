@@ -10,6 +10,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.models.Admin;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.AdminRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,13 +24,19 @@ public class ServiceAdmin {
     private final AdminRepository adminRepository;
     private final ObjectMapper objectMapper;
 
+    private final PasswordEncoder passwordEncoder;
+
     public AdminResponseDTO adicionar(AdminRequestDTO adminRequestDTO) throws java.lang.Exception {
         Admin buscarAdminPorEmail = adminRepository.findByEmail(adminRequestDTO.getEmail());
         if (buscarAdminPorEmail == null) {
-            adminRequestDTO.setTipoUsuario(TipoUsuario.ADMIN);
-            adminRequestDTO.setAtivo(Ativo.A);
-            Admin admin = adminRepository.save(objectMapper.convertValue(adminRequestDTO, Admin.class));
-            AdminResponseDTO adminResponseDTO = objectMapper.convertValue(admin, AdminResponseDTO.class);
+            Admin novoAdmin = new Admin();
+            novoAdmin.setTipoUsuario(TipoUsuario.ADMIN);
+            novoAdmin.setNome(adminRequestDTO.getNome());
+            novoAdmin.setEmail(adminRequestDTO.getEmail());
+            novoAdmin.setCpf(adminRequestDTO.getCpf());
+            novoAdmin.setSenha(passwordEncoder.encode(adminRequestDTO.getSenha()));
+            novoAdmin.setAtivo(Ativo.A);
+            AdminResponseDTO adminResponseDTO = objectMapper.convertValue(novoAdmin, AdminResponseDTO.class);
             return adminResponseDTO;
         } else {
             throw new RegraDeNegocioException("Já existe um usuário para o e-mail informado: " + adminRequestDTO.getEmail());

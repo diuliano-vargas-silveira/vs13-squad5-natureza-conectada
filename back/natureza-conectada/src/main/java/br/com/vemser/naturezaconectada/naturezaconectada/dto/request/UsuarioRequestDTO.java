@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.br.CPF;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -30,6 +31,10 @@ public class UsuarioRequestDTO {
     @Schema(description = "Nome do usuário", required = true, example = "Lucas Alves")
     @NotBlank(message = "Nome não pode estar vazio!")
     private String nome;
+
+    @Schema(description = "CPF", required = true, example = "12345678901")
+    @CPF(message = "Cpf inválido")
+    private String cpf;
 
     @Schema(description = "E-mail", required = true, example = "lucas@gmail.com")
     @NotBlank(message = "E-mail não pode estar vazio!")

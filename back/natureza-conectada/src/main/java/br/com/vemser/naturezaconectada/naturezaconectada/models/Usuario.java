@@ -2,16 +2,20 @@ package br.com.vemser.naturezaconectada.naturezaconectada.models;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -40,13 +44,13 @@ public abstract class Usuario implements UserDetails {
     @Column(name = "ATIVO")
     @Enumerated(EnumType.STRING)
     private Ativo ativo;
-
     @Column(name = "CPF")
     private String cpf;
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return new ArrayList<>();
+        return List.of(new SimpleGrantedAuthority(tipoUsuario.getNome()));
     }
 
     @Override
