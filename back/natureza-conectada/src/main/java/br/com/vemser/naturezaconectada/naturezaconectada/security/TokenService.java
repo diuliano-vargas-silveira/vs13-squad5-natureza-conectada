@@ -51,8 +51,9 @@ public class TokenService {
                     .getBody();
             String user = body.get(Claims.ID, String.class);
             if (user != null) {
+                String role = body.get(CARGOS_CLAIM).toString();
                 List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                authorities.add(body.get(CARGOS_CLAIM, SimpleGrantedAuthority.class));
+                authorities.add(new SimpleGrantedAuthority(role));
 
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                         new UsernamePasswordAuthenticationToken(user, null, authorities);
