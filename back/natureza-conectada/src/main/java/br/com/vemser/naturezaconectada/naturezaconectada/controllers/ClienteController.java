@@ -36,7 +36,6 @@ public class ClienteController implements IClienteController {
         return new ResponseEntity<>(cliente, HttpStatus.CREATED);
     }
 
-    //TODO - Buscar usuário logado
     @PutMapping("/{id}")
     public ResponseEntity<ClienteDTO> editar(@PathVariable("id") Integer id, @Valid @RequestBody ClienteCreateDTO cliente) throws Exception {
         var clienteEditado = serviceCliente.editar(id, cliente);
