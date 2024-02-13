@@ -49,7 +49,7 @@ public class ServiceCliente  {
 
         clienteEncontrado.setNome(clienteEditado.getNome());
         clienteEncontrado.setEmail(clienteEditado.getEmail());
-        clienteEncontrado.setSenha(clienteEditado.getSenha());
+        clienteEncontrado.setSenha(encoder.encode(clienteEditado.getSenha()));
 
         clienteRepository.save(clienteEncontrado);
 
