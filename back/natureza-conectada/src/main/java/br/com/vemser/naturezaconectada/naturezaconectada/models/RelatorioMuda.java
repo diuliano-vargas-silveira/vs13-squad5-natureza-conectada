@@ -1,5 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity(name = "Relatorio")
 @Table(name = "RELATORIO")
 public class RelatorioMuda {

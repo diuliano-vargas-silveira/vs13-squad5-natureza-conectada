@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 public class ServiceAdmin {
 
     private final AdminRepository adminRepository;
+
+
     private final ObjectMapper objectMapper;
 
     private final PasswordEncoder passwordEncoder;
@@ -36,6 +38,7 @@ public class ServiceAdmin {
             novoAdmin.setCpf(adminRequestDTO.getCpf());
             novoAdmin.setSenha(passwordEncoder.encode(adminRequestDTO.getSenha()));
             novoAdmin.setAtivo(Ativo.A);
+            this.adminRepository.save(novoAdmin);
             AdminResponseDTO adminResponseDTO = objectMapper.convertValue(novoAdmin, AdminResponseDTO.class);
             return adminResponseDTO;
         } else {
@@ -50,11 +53,13 @@ public class ServiceAdmin {
         return objectMapper.convertValue(admin, AdminResponseDTO.class);
     }
 
-    public AdminResponseDTO editar(int id, AdminRequestDTO adminRequestDTO) throws java.lang.Exception {
+    public AdminResponseDTO editar(int id, AdminRequestDTO adminRequestDTO) throws Exception {
         Admin admin = procurarAdmin(id);
+        admin.setAtivo(Ativo.A);
         admin.setNome(adminRequestDTO.getNome());
         admin.setEmail(adminRequestDTO.getEmail());
-        admin.setSenha(adminRequestDTO.getSenha());
+        admin.setCpf(adminRequestDTO.getCpf());
+        admin.setSenha(passwordEncoder.encode(adminRequestDTO.getSenha()));
         adminRepository.save(admin);
         return objectMapper.convertValue(admin, AdminResponseDTO.class);
     }
