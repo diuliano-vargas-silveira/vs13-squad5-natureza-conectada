@@ -17,20 +17,6 @@ import java.util.List;
 public interface IUsuarioController {
 
 
-    @Operation(summary = "Login de usuário", description = "Realiza o login de um usuário")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "200", description = "Login realizado com sucesso",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = UsuarioResponseDTO.class))),
-                    @ApiResponse(responseCode = "400", description = "Credenciais inválidas"),
-                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
-            }
-    )
-    @PostMapping("/login")
-    ResponseEntity<UsuarioResponseDTO> logar(@RequestParam String email, @RequestParam String senha) throws Exception;
-
-
     @Operation(summary = "Listar todos os usuários", description = "Recupera uma lista de todos os usuários cadastrados")
     @ApiResponses(
             value = {

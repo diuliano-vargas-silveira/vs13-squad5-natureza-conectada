@@ -77,7 +77,7 @@ public interface IEnderecoController {
     @GetMapping("/{idEndereco}")
     public ResponseEntity<EnderecoDTO> procurarPorIdEndereco(@PathVariable("idEndereco") Integer idEndereco) throws Exception;
 
-    @Operation(summary = "Listar endereço  Ativos com is do cliente", description = "Lista todas os endereços cadastrados e ativos no banco com o id do cliente")
+    @Operation(summary = "Listar endereço ativos com id do cliente", description = "Lista todas os endereços cadastrados e ativos no banco com o id do cliente")
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "Retorna a lista de endereços Ativos  pelo id do cliente"),

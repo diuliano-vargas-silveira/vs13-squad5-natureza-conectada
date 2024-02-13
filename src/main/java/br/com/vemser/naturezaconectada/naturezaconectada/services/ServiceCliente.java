@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,10 +28,13 @@ public class ServiceCliente  {
     private final UsuarioRepository usuarioRepository;
     private final ObjectMapper objectMapper;
 
+    private final PasswordEncoder encoder;
+
 
 
     public ClienteDTO adicionar(ClienteCreateDTO clienteCreateDTO) throws Exception {
         var cliente = objectMapper.convertValue(clienteCreateDTO, Cliente.class);
+        cliente.setSenha(encoder.encode(clienteCreateDTO.getSenha()));
         cliente.setAtivo(Ativo.A);
         cliente.setTipoUsuario(TipoUsuario.CLIENTE);
         clienteRepository.save(cliente);
@@ -45,7 +49,7 @@ public class ServiceCliente  {
 
         clienteEncontrado.setNome(clienteEditado.getNome());
         clienteEncontrado.setEmail(clienteEditado.getEmail());
-        clienteEncontrado.setSenha(clienteEditado.getSenha());
+        clienteEncontrado.setSenha(encoder.encode(clienteEditado.getSenha()));
 
         clienteRepository.save(clienteEncontrado);
 
@@ -56,6 +60,8 @@ public class ServiceCliente  {
         var clienteEncontrado = clienteRepository.getById(idCliente);
         if (clienteEncontrado.getAtivo() == Ativo.A)
             clienteEncontrado.setAtivo(Ativo.D);
+
+        clienteRepository.save(clienteEncontrado);
     }
 
     public Page<ClienteDTO> listarTodos(Pageable paginacao) throws Exception {

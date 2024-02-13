@@ -48,10 +48,9 @@ public class EnderecoController implements IEnderecoController {
         return new ResponseEntity<>(enderecoAtualizado, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{idEndereco}")
+    @PutMapping("/remover/{idEndereco}")
     public ResponseEntity<Void> remover(@PathVariable("idEndereco") Integer idEndereco) throws Exception {
         log.debug("Excluindo endereço");
-
 
         serviceEndereco.remover(idEndereco);
 
@@ -82,13 +81,11 @@ public class EnderecoController implements IEnderecoController {
         return new ResponseEntity<>(endereco, HttpStatus.OK);
     }
 
-
-    @PutMapping("/ativar/{idEndereco}")
-    public ResponseEntity<EnderecoDTO> ativarEndereco(@PathVariable("idEndereco") Integer idEndereco, @RequestParam String eco) throws Exception {
+    @PutMapping("/ativar/{id}")
+    public ResponseEntity<EnderecoDTO> ativarEndereco(@PathVariable("id") Integer id, @RequestParam String eco) throws Exception {
         log.debug("Atualizando endereço");
 
-        EnderecoDTO enderecoAtualizado = serviceEndereco.ativarEndereco(idEndereco,eco);
-
+        EnderecoDTO enderecoAtualizado = serviceEndereco.ativarEndereco(id, eco);
 
         log.debug("Endereço atualizado");
 

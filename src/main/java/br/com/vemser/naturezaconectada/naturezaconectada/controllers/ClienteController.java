@@ -4,6 +4,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces.
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ClienteCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ClienteDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceCliente;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,16 +19,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cliente")
+@RequiredArgsConstructor
 @Validated
 @Slf4j
 public class ClienteController implements IClienteController {
 
     private final ServiceCliente serviceCliente;
-
-
-    public ClienteController(ServiceCliente serviceCliente) {
-        this.serviceCliente = serviceCliente;
-    }
 
     @PostMapping
     public ResponseEntity<ClienteDTO> adicionar(@Valid @RequestBody ClienteCreateDTO clienteCreateDTO) throws Exception {
@@ -44,7 +41,12 @@ public class ClienteController implements IClienteController {
         var clienteEditado = serviceCliente.editar(id, cliente);
 
         return new ResponseEntity<>(clienteEditado, HttpStatus.OK);
+    }
 
+    @PutMapping("/status/{id}")
+    public ResponseEntity<Void> desativarCliente(@PathVariable("id") Integer id) throws Exception {
+        serviceCliente.remover(id);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping
@@ -69,6 +71,5 @@ public class ClienteController implements IClienteController {
 
         return new ResponseEntity<>(clientesAtivos, HttpStatus.OK);
     }
-
 
 }

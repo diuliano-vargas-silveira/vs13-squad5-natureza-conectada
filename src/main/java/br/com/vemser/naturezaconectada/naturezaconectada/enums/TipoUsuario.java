@@ -1,9 +1,9 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.enums;
 
 public enum TipoUsuario {
-    CLIENTE("CLIENTE"),
-    ESPECIALISTA("ESPECIALISTA"),
-    ADMIN("ADMIN");
+    CLIENTE("ROLE_CLIENTE"),
+    ESPECIALISTA("ROLE_ESPECIALISTA"),
+    ADMIN("ROLE_ADMIN");
 
     private String nome;
 

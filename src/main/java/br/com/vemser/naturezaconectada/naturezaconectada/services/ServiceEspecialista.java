@@ -10,6 +10,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.models.Especialista;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.EspecialistaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,12 +23,15 @@ public class ServiceEspecialista {
     private final ServiceUsuario serviceUsuario;
     private final ObjectMapper objectMapper;
 
+    private final PasswordEncoder encoder;
+
 
     public EspecialistaCreateDTO adicionar(EspecialistaCreateDTO especialista) throws Exception {
-        especialista.setTipoUsuario(TipoUsuario.ESPECIALISTA);
-        especialista.setAtivo(Ativo.A);
-        Especialista especialistaAdicionado = especialistaRepository.save(retornarEntidade(especialista));
-
+        Especialista especialistaAdicionado = this.retornarEntidade(especialista);
+        especialistaAdicionado.setTipoUsuario(TipoUsuario.ESPECIALISTA);
+        especialistaAdicionado.setAtivo(Ativo.A);
+        especialistaAdicionado.setSenha(encoder.encode(especialista.getSenha()));
+        especialistaRepository.save(especialistaAdicionado);
         return retornarDto(especialistaAdicionado);
     }
 
