@@ -23,6 +23,7 @@ import java.util.List;
 public class ClienteDTO extends UsuarioResponseDTO {
 
     private String cpf;
+
     private Ativo ativo;
 
     private List<Endereco> enderecos = new ArrayList<>();

@@ -2,7 +2,6 @@ package br.com.vemser.naturezaconectada.naturezaconectada.dto.response;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,7 +29,6 @@ public class UsuarioResponseDTO {
     @Enumerated(EnumType.STRING)
     private Ativo ativo;
 
-    @JsonIgnore
-    private String senha;
+
     private String cpf;
 }

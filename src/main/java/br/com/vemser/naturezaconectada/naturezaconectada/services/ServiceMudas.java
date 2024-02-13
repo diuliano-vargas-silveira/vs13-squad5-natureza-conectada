@@ -60,9 +60,9 @@ public class ServiceMudas {
         return this.objectMapper.convertValue(mudaEncontrada, MudaDTO.class);
     }
 
-    public  Muda buscarMudaAtiva(Integer id) throws Exception{
-            Muda mudaEncontrada = this.mudaRepository.findByAtivoAndId(Ativo.A,id).orElseThrow(()->new RegraDeNegocioException("Não foi possível encontrar a muda no banco de dados"));
-            return mudaEncontrada;
+    public Muda buscarMudaAtiva(Integer id) throws Exception {
+        Muda mudaEncontrada = this.mudaRepository.findByAtivoAndId(Ativo.A, id).orElseThrow(() -> new RegraDeNegocioException("Não foi possível encontrar a muda no banco de dados"));
+        return mudaEncontrada;
     }
 
 
@@ -102,7 +102,7 @@ public class ServiceMudas {
     public List<MudaDTO> buscarPorEco(Ecossistema ecossistema) throws Exception {
         List<MudaDTO> listaDeMudas = new ArrayList<>();
 
-        this.mudaRepository.findByEcossistemaIs(ecossistema).forEach(muda -> listaDeMudas.add(this.objectMapper.convertValue(muda, MudaDTO.class)));
+        this.mudaRepository.findByEcossistemaIs(ecossistema).stream().filter((muda -> muda.getAtivo().equals(Ativo.A))).toList().forEach(muda -> listaDeMudas.add(this.objectMapper.convertValue(muda, MudaDTO.class)));
 
         return listaDeMudas;
 
@@ -115,16 +115,16 @@ public class ServiceMudas {
         return retornarDto(this.mudaRepository.save(novaMuda));
     }
 
-    public Muda getByEntidade(Integer id) throws Exception{
-        Muda retornoMuda = this.mudaRepository.findById(id).orElseThrow(()->new InformacaoNaoEncontrada("Não existe muda com este id no banco de dados"));
+    public Muda getByEntidade(Integer id) throws Exception {
+        Muda retornoMuda = this.mudaRepository.findById(id).orElseThrow(() -> new InformacaoNaoEncontrada("Não existe muda com este id no banco de dados"));
         return retornoMuda;
     }
 
-    public void confereMudaCliente(Integer idMuda,Integer idCliente) throws Exception{
+    public void confereMudaCliente(Integer idMuda, Integer idCliente) throws Exception {
         Cliente cliente = this.serviceCliente.buscarPorIdEntidade(idCliente);
-        Optional<List<Muda>> isPertence = this.mudaRepository.findByClienteAndIdIs(cliente,idMuda);
-        if(isPertence.get().isEmpty() ){
-        throw new RegraDeNegocioException("A muda não pertence ao cliente");
+        Optional<List<Muda>> isPertence = this.mudaRepository.findByClienteAndIdIs(cliente, idMuda);
+        if (isPertence.get().isEmpty()) {
+            throw new RegraDeNegocioException("A muda não pertence ao cliente");
         }
     }
 
@@ -136,7 +136,7 @@ public class ServiceMudas {
         return this.objectMapper.convertValue(muda, Muda.class);
     }
 
-    public List<RelatorioMudasDoadas> mudasDoadas(){
+    public List<RelatorioMudasDoadas> mudasDoadas() {
         return this.mudaRepository.mudasDoadas();
     }
 
