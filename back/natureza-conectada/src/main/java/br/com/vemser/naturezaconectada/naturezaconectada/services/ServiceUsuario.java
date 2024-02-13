@@ -8,6 +8,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.models.Usuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -55,7 +56,12 @@ public class ServiceUsuario implements IServiceUsuario {
         }
     }
 
-    public List<RelatorioQuantidadeUsuario> gerarRelatorio(){
-       return this.usuarioRepository.relatorioParaAdmin();
+    public Integer getIdLoggedUser() {
+        Integer findUserId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        return findUserId;
+    }
+
+    public List<RelatorioQuantidadeUsuario> gerarRelatorio() {
+        return this.usuarioRepository.relatorioParaAdmin();
     }
 }

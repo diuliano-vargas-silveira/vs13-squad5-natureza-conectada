@@ -8,6 +8,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
+@Validated
 public class EnderecoCreateDTO {
 
     private static final String PAIS = "Brasil";

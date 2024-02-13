@@ -1,3 +1,7 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.dto.request;
 
-public class AdminRequestDTO extends UsuarioRequestDTO { }
+import org.springframework.validation.annotation.Validated;
+
+@Validated
+public class AdminRequestDTO extends UsuarioRequestDTO {
+}
