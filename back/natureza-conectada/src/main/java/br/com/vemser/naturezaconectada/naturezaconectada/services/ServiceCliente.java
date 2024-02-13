@@ -60,6 +60,8 @@ public class ServiceCliente  {
         var clienteEncontrado = clienteRepository.getById(idCliente);
         if (clienteEncontrado.getAtivo() == Ativo.A)
             clienteEncontrado.setAtivo(Ativo.D);
+
+        clienteRepository.save(clienteEncontrado);
     }
 
     public Page<ClienteDTO> listarTodos(Pageable paginacao) throws Exception {
