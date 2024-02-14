@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -16,6 +18,7 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Validated
 public class UsuarioRequestDTO {
 
     private static final String PASSWORD_VALIDATION_REGEX = "^(?=.*\\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$";
@@ -23,13 +26,17 @@ public class UsuarioRequestDTO {
     @Schema(description = "Identificador do usuário", required = false, hidden = true, example = "1")
     private Integer id;
 
-    @Schema(description = "Ativo", example = "A",hidden = true)
+    @Schema(description = "Ativo", example = "A", hidden = true)
     @Hidden
     private Ativo ativo;
 
     @Schema(description = "Nome do usuário", required = true, example = "Lucas Alves")
     @NotBlank(message = "Nome não pode estar vazio!")
     private String nome;
+
+    @Schema(description = "CPF", required = true, example = "12345678901")
+    @CPF(message = "Cpf inválido")
+    private String cpf;
 
     @Schema(description = "E-mail", required = true, example = "lucas@gmail.com")
     @NotBlank(message = "E-mail não pode estar vazio!")

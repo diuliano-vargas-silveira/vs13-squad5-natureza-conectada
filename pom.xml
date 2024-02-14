@@ -12,7 +12,7 @@
 	<artifactId>natureza-conectada</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>natureza-conectada</name>
-	<description>Natureza Conectada um app para controle de plantação</description>
+	<description>Natureza Conectada - Um app para controle de plantacao</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -62,6 +62,23 @@
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-ui</artifactId>
 			<version>1.6.8</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcpkix-jdk15on</artifactId>
+			<version>1.69</version>
 		</dependency>
 
 	</dependencies>

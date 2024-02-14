@@ -46,8 +46,8 @@ public class EntregaController implements IEntregaController {
         return ResponseEntity.ok().body(entregaService.editarMudasEntrega(id, entregaRequestDTO));
     }
 
-    @PutMapping("/status/{idEntrega}")
-    public ResponseEntity<EntregaResponseDTO> editarStatus(@PathVariable("idEntrega") Integer id, @Valid @RequestParam String status) throws Exception {
+    @PutMapping("/status/{id}")
+    public ResponseEntity<EntregaResponseDTO> editarStatus(@PathVariable("id") Integer id, @Valid @RequestParam String status) throws Exception {
         log.info("Atualizando entrega...");
         return ResponseEntity.ok().body(entregaService.mudarStatusEntrega(id, status));
     }

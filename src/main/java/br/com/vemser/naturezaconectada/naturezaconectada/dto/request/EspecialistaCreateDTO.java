@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
@@ -14,7 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class EspecialistaCreateDTO extends UsuarioRequestDTO{
+@Validated
+public class EspecialistaCreateDTO extends UsuarioRequestDTO {
 
     @Schema(description = "Documento de idenificação da especialização, (carteirinha, certificado e etc)", required = true, example = "83303022020")
     @NotBlank(message = "Documento não pode ser vazia!")

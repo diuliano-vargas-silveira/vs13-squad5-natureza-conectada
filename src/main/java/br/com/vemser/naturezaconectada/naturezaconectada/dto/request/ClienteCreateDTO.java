@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -16,11 +17,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Validated
 public class ClienteCreateDTO extends UsuarioRequestDTO {
 
     private Integer idCliente;
-    @Schema(description = "CPF", required = true, example = "12345678901")
-    private String cpf;
+
     @NotNull(message = "Endereço não pode ser nulo")
     @Schema(description = "Endereços", required = true)
     private List<Endereco> enderecos = new ArrayList<>();

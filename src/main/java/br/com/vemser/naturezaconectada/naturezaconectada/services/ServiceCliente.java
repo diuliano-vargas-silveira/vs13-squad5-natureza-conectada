@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,16 +23,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 @Slf4j
-public class ServiceCliente  {
+public class ServiceCliente {
 
     private final ClienteRepository clienteRepository;
     private final UsuarioRepository usuarioRepository;
     private final ObjectMapper objectMapper;
 
+    private final PasswordEncoder encoder;
 
 
     public ClienteDTO adicionar(ClienteCreateDTO clienteCreateDTO) throws Exception {
         var cliente = objectMapper.convertValue(clienteCreateDTO, Cliente.class);
+        cliente.setSenha(encoder.encode(clienteCreateDTO.getSenha()));
         cliente.setAtivo(Ativo.A);
         cliente.setTipoUsuario(TipoUsuario.CLIENTE);
         clienteRepository.save(cliente);
@@ -45,7 +49,7 @@ public class ServiceCliente  {
 
         clienteEncontrado.setNome(clienteEditado.getNome());
         clienteEncontrado.setEmail(clienteEditado.getEmail());
-        clienteEncontrado.setSenha(clienteEditado.getSenha());
+        clienteEncontrado.setSenha(encoder.encode(clienteEditado.getSenha()));
 
         clienteRepository.save(clienteEncontrado);
 
@@ -56,6 +60,8 @@ public class ServiceCliente  {
         var clienteEncontrado = clienteRepository.getById(idCliente);
         if (clienteEncontrado.getAtivo() == Ativo.A)
             clienteEncontrado.setAtivo(Ativo.D);
+
+        clienteRepository.save(clienteEncontrado);
     }
 
     public Page<ClienteDTO> listarTodos(Pageable paginacao) throws Exception {
@@ -89,8 +95,19 @@ public class ServiceCliente  {
                 .collect(Collectors.toList());
     }
 
-    public Cliente buscarPorIdEntidade(Integer id) throws Exception{
-        Cliente cliente = this.clienteRepository.findByAtivoAndId(Ativo.A,id).orElseThrow(() -> new RegraDeNegocioException("Não foi possível buscar usuario"));
+    public Cliente buscarPorIdEntidade(Integer id) throws Exception {
+        Cliente cliente = this.clienteRepository.findByAtivoAndId(Ativo.A, id).orElseThrow(() -> new RegraDeNegocioException("Não foi possível buscar usuario"));
         return cliente;
+    }
+
+    public Cliente getUsuarioLogado() throws Exception {
+        Integer id = getIdLoggedUser();
+        Cliente cliente = buscarPorIdEntidade(id);
+        return cliente;
+    }
+
+    public Integer getIdLoggedUser() {
+        Integer findUserId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        return findUserId;
     }
 }
