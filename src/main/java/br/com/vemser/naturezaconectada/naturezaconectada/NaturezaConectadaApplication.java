@@ -12,4 +12,5 @@ NaturezaConectadaApplication {
 		SpringApplication.run(NaturezaConectadaApplication.class, args);
 
 	}
+
 }
