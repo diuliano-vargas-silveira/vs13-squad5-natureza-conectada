@@ -2,7 +2,6 @@ package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.UsuarioResponseDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.relatorios.RelatorioQuantidadeUsuario;
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.relatorios.RelatorioQuantidadeUsuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
