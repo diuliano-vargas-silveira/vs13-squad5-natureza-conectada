@@ -4,7 +4,6 @@ import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EntregaRequ
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.*;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.StatusEntrega;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.*;
@@ -36,31 +35,16 @@ public class ServiceEntrega {
     private final ObjectMapper objectMapper;
     private final EntregaMudaRepository entregaMudaRepository;
 
-//    private final EmailService emailService;
+//  rivate final EmailService emailService;
 
     public EntregaResponseDTO adicionar(EntregaRequestDTO entregaRequestDTO, Integer idEndereco) throws Exception {
         try {
 
-            if (serviceEndereco.procurarPorIdEndereco(idEndereco) == null) throw new InformacaoNaoEncontrada("Não existe nenhum endereço com o ID: " + idEndereco);
+            validarEndereco(idEndereco);
 
-            serviceCliente.procurarPorId(entregaRequestDTO.getIdCliente());
+            validarCliente(entregaRequestDTO.getIdCliente());
 
-            List<Muda> mudaEntity = new ArrayList<>();
-
-            Set<Integer> idsMudas = new HashSet<>();
-
-            for (Muda muda : entregaRequestDTO.getMudas()) {
-
-                if (!idsMudas.add(muda.getId())) throw new RegraDeNegocioException("A mesma muda não pode ser adicionada mais de uma vez à entrega.");
-
-                Muda mudaEntidade = serviceMudas.procurarPorIDEntidade(muda.getId());
-
-                if (mudaEntidade == null || mudaEntidade.getAtivo() != Ativo.A) throw new InformacaoNaoEncontrada("Muda com id " + muda.getId() + " não está disponível ou não está ativa.");
-
-                if (mudaEntidade.getEstoque() < 1) throw new RegraDeNegocioException("Quantidade insuficiente para a muda com ID " + muda.getId());
-
-                mudaEntity.add(mudaEntidade);
-            }
+            List<Muda> mudaEntity = validarMudas(entregaRequestDTO.getMudas());
 
             entregaRequestDTO.setStatus(StatusEntrega.RECEBIDO);
 
@@ -79,22 +63,13 @@ public class ServiceEntrega {
 
             Entrega entregaProcessada = entregaRepository.save(entrega);
 
-            for (Muda muda : mudaEntity) {
-                muda.setEstoque(muda.getEstoque()-1);
-                EntregaMuda entregaMuda = new EntregaMuda();
-                EntregaMudaPK pk = new EntregaMudaPK();
-                pk.setIdEntrega(entregaProcessada.getId());
-                pk.setIdMuda(muda.getId());
-                entregaMuda.setEntregaPK(pk);
-                entregaMuda.setQuantidade(1);
-                entregaMudaRepository.save(entregaMuda);
-            }
+            processarMudas(mudaEntity, entregaProcessada);
 
             EntregaResponseDTO novaEntrega = objectMapper.convertValue(entregaProcessada, EntregaResponseDTO.class);
 
             alteraMudasEnderecosClienteNoEntregaResponseDTO(novaEntrega, entregaProcessada.getId());
 
-//            emailService.sendEmail(novaEntrega,TipoEmail.CRIACAO);
+//          emailService.sendEmail(novaEntrega,TipoEmail.CRIACAO);
 
             return novaEntrega ;
         } catch (RegraDeNegocioException e) {
@@ -102,10 +77,6 @@ public class ServiceEntrega {
         }
     }
 
-    //TODO
-    public EntregaResponseDTO editarMudasEntrega(Integer id, EntregaRequestDTO entregaRequestDTO) throws ErroNoBancoDeDados, RegraDeNegocioException {
-        return null;
-    }
     public EntregaResponseDTO mudarStatusEntrega(Integer idEntrega, String status) throws Exception {
         Entrega entrega = procurar(idEntrega);
         Optional<Cliente> cliente = clienteRepository.findById(entrega.getCliente().getId());
@@ -190,5 +161,49 @@ public class ServiceEntrega {
         novaEntrega.setMudas(buscarMudasEntrega(entregaProcessada));
         novaEntrega.setEndereco(objectMapper.convertValue(enderecoRepository.buscarEnderecoEntrega(entregaProcessada), EnderecoEntregaDTO.class));
         novaEntrega.setCliente(objectMapper.convertValue(clienteRepository.buscarClienteEntrega(entregaProcessada), ClienteEntregaDTO.class));
+    }
+
+    private void validarEndereco(Integer idEndereco) throws Exception {
+        if (serviceEndereco.procurarPorIdEndereco(idEndereco) == null) {
+            throw new InformacaoNaoEncontrada("Não existe nenhum endereço com o ID: " + idEndereco);
+        }
+    }
+
+    private void validarCliente(Integer idCliente) throws Exception {
+        serviceCliente.procurarPorId(idCliente);
+    }
+
+    private List<Muda> validarMudas(List<Muda> mudas) throws Exception {
+        Set<Integer> idsMudas = new HashSet<>();
+        List<Muda> mudaEntity = new ArrayList<>();
+
+        for (Muda muda : mudas) {
+            if (!idsMudas.add(muda.getId())) {
+                throw new RegraDeNegocioException("A mesma muda não pode ser adicionada mais de uma vez à entrega.");
+            }
+
+            Muda mudaEntidade = serviceMudas.procurarPorIDEntidade(muda.getId());
+            if (mudaEntidade == null || mudaEntidade.getAtivo() != Ativo.A) {
+                throw new InformacaoNaoEncontrada("Muda com id " + muda.getId() + " não está disponível ou não está ativa.");
+            }
+            if (mudaEntidade.getEstoque() < 1) {
+                throw new RegraDeNegocioException("Quantidade insuficiente para a muda com ID " + muda.getId());
+            }
+            mudaEntity.add(mudaEntidade);
+        }
+        return mudaEntity;
+    }
+
+    private void processarMudas(List<Muda> mudaEntity, Entrega entregaProcessada) {
+        for (Muda muda : mudaEntity) {
+            muda.setEstoque(muda.getEstoque() - 1);
+            EntregaMuda entregaMuda = new EntregaMuda();
+            EntregaMudaPK pk = new EntregaMudaPK();
+            pk.setIdEntrega(entregaProcessada.getId());
+            pk.setIdMuda(muda.getId());
+            entregaMuda.setEntregaPK(pk);
+            entregaMuda.setQuantidade(1);
+            entregaMudaRepository.save(entregaMuda);
+        }
     }
 }

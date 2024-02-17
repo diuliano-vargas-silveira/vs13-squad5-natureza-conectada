@@ -25,18 +25,6 @@ public interface IEntregaController {
     @PostMapping("/{idEndereco}")
     ResponseEntity<EntregaResponseDTO> adicionar(@Valid @RequestBody EntregaRequestDTO entregaRequestDTO, @NotNull @PathVariable("idEndereco") Integer idEndereco) throws Exception;
 
-    @Operation(summary = "Editar as mudas da  entrega por ID", description = "Edita as mudas de uma entrega pelo ID especificado")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "200", description = "Entrega editada com sucesso"),
-                    @ApiResponse(responseCode = "400", description = "Requisição inválida"),
-                    @ApiResponse(responseCode = "404", description = "Entrega não encontrada"),
-                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
-            }
-    )
-    @PutMapping("/{idEntrega}")
-    ResponseEntity<EntregaResponseDTO> editarMudasDaEntrega(@PathVariable("idEntrega") Integer id, @Valid @RequestBody EntregaRequestDTO entregaRequestDTO) throws Exception;
-
     @Operation(summary = "Editar o Status da  entrega por ID", description = "Edita o status de uma entrega pelo ID especificado , Possibilidade de Status( RECEBIDO,ENVIADO ou ENTREGUE)")
     @ApiResponses(
             value = {

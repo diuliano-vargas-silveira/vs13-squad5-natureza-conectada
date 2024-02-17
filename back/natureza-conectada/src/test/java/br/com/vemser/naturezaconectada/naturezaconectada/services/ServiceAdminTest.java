@@ -4,10 +4,8 @@ import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.AdminReques
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.AdminResponseDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Admin;
-import br.com.vemser.naturezaconectada.naturezaconectada.models.Usuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.AdminRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -218,11 +216,6 @@ class ServiceAdminTest {
 
         assertThrows(RegraDeNegocioException.class, () -> serviceAdmin.listarTodos());
     }
-
-
-
-
-
 
     private static void gerarAdminRequest(AdminRequestDTO adminRequestDTOMock) {
         adminRequestDTOMock.setNome("Lucas");
