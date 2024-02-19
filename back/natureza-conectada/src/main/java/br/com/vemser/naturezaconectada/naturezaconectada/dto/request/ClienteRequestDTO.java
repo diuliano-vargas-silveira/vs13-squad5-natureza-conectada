@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Validated
-public class ClienteCreateDTO extends UsuarioRequestDTO {
+public class ClienteRequestDTO extends UsuarioRequestDTO {
 
     private Integer idCliente;
 

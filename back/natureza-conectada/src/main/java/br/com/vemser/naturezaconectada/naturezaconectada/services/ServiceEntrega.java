@@ -205,7 +205,7 @@ public class ServiceEntrega {
     }
 
     private Cliente obterClientePorId(Integer idCliente) throws Exception {
-        ClienteDTO clienteDTO = serviceCliente.procurarPorId(idCliente);
+        ClienteResponseDTO clienteDTO = serviceCliente.procurarPorId(idCliente);
         return objectMapper.convertValue(clienteDTO, Cliente.class);
     }
 
