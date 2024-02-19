@@ -48,8 +48,9 @@ public class ServiceUsuario implements IServiceUsuario {
     }
 
     public UsuarioResponseDTO procurarPorEmail(String email) throws Exception {
-        Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
-        if (usuario != null) {
+        Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(email);
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
             return objectMapper.convertValue(usuario, UsuarioResponseDTO.class);
         } else {
             throw new RegraDeNegocioException("Nenhum usuário encontrado para o email: " + email);

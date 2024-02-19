@@ -23,7 +23,6 @@ public class ServiceAdmin {
 
     private final AdminRepository adminRepository;
 
-
     private final ObjectMapper objectMapper;
 
     private final PasswordEncoder passwordEncoder;
@@ -64,16 +63,22 @@ public class ServiceAdmin {
         return objectMapper.convertValue(admin, AdminResponseDTO.class);
     }
 
-    public AdminResponseDTO procurarPorId(int id) throws RegraDeNegocioException, InformacaoNaoEncontrada {
+    public AdminResponseDTO procurarPorId(int id) throws RegraDeNegocioException {
         Admin admin = procurarAdmin(id);
         return objectMapper.convertValue(admin, AdminResponseDTO.class);
     }
 
     public List<AdminResponseDTO> listarTodos() throws Exception {
-        return adminRepository.findAll().stream()
-                .map(adminEntity -> objectMapper.convertValue(adminEntity, AdminResponseDTO.class))
-                .collect(Collectors.toList());
+        List<Admin> admins = adminRepository.findAll();
+        if (!admins.isEmpty()) {
+            return admins.stream()
+                    .map(adminEntity -> objectMapper.convertValue(adminEntity, AdminResponseDTO.class))
+                    .collect(Collectors.toList());
+        } else {
+            throw new RegraDeNegocioException("Nenhum admin encontrado");
+        }
     }
+
 
     private Admin procurarAdmin(int id) throws RegraDeNegocioException {
         Optional<Admin> adminOptional = adminRepository.findById(id);
