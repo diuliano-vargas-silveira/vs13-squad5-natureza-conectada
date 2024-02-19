@@ -35,7 +35,7 @@ public class ServiceEntrega {
     private final ObjectMapper objectMapper;
     private final EntregaMudaRepository entregaMudaRepository;
 
-//  rivate final EmailService emailService;
+//  private final EmailService emailService;
 
     public EntregaResponseDTO adicionar(EntregaRequestDTO entregaRequestDTO, Integer idEndereco) throws Exception {
         try {
@@ -50,11 +50,8 @@ public class ServiceEntrega {
 
             entregaRequestDTO.setDataPedido(LocalDate.now());
 
-            ClienteDTO clienteDTO = serviceCliente.procurarPorId(entregaRequestDTO.getIdCliente());
-            Cliente cliente = objectMapper.convertValue(clienteDTO, Cliente.class);
-
-            EnderecoDTO enderecoDTO = serviceEndereco.procurarPorIdEndereco(idEndereco);
-            Endereco endereco = objectMapper.convertValue(enderecoDTO, Endereco.class);
+            Cliente cliente = obterClientePorId(entregaRequestDTO.getIdCliente());
+            Endereco endereco = obterEnderecoPorId(idEndereco);
 
             Entrega entrega = objectMapper.convertValue(entregaRequestDTO, Entrega.class);
 
@@ -205,5 +202,15 @@ public class ServiceEntrega {
             entregaMuda.setQuantidade(1);
             entregaMudaRepository.save(entregaMuda);
         }
+    }
+
+    private Cliente obterClientePorId(Integer idCliente) throws Exception {
+        ClienteDTO clienteDTO = serviceCliente.procurarPorId(idCliente);
+        return objectMapper.convertValue(clienteDTO, Cliente.class);
+    }
+
+    private Endereco obterEnderecoPorId(Integer idEndereco) throws Exception {
+        EnderecoDTO enderecoDTO = serviceEndereco.procurarPorIdEndereco(idEndereco);
+        return objectMapper.convertValue(enderecoDTO, Endereco.class);
     }
 }
