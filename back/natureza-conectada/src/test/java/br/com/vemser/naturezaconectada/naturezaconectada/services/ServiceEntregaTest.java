@@ -1,7 +1,7 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EntregaRequestDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ClienteDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ClienteResponseDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EnderecoDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EntregaResponseDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.*;
@@ -144,7 +144,7 @@ class ServiceEntregaTest {
                 1, "35588000", "Rua 1", "100", "casa", "São Paulo", Estados.SP, Tipo.RESIDENCIAL, Ecossistema.INDIFERENTE, Ativo.A
         ));
 
-        Mockito.lenient().when(serviceCliente.procurarPorId(anyInt())).thenReturn(new ClienteDTO());
+        Mockito.lenient().when(serviceCliente.procurarPorId(anyInt())).thenReturn(new ClienteResponseDTO());
 
         Mockito.lenient().when(serviceMudas.procurarPorIDEntidade(anyInt())).thenReturn(null);
 
