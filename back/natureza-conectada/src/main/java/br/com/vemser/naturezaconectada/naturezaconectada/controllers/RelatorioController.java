@@ -28,7 +28,7 @@ public class RelatorioController {
     }
 
     @GetMapping("/espec/{idEspecialista}")
-    public ResponseEntity<List<RelatorioResponseEspecialista>> relatorioEspecialista(@PathVariable Integer idEspecialista) throws InformacaoNaoEncontrada {
+    public ResponseEntity<List<RelatorioResponseEspecialista>> relatorioEspecialista(@PathVariable Integer idEspecialista) throws Exception {
         return ResponseEntity.ok().body(this.serviceRelatorioMuda.relatorioEspecialista(idEspecialista));
     }
 

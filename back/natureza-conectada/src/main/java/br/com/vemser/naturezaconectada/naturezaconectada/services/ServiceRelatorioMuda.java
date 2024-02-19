@@ -13,6 +13,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.RelatorioMuda;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.RelatorioMudaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,8 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+
+
 public class ServiceRelatorioMuda {
 
     private final RelatorioMudaRepository relatorioMudaRepository;
@@ -92,7 +95,6 @@ public class ServiceRelatorioMuda {
 
     public void avaliarRelatorio(Integer idRelatorio, AvaliacaoDTO dto) throws Exception {
         Especialista especialista = this.serviceEspecialista.getUsuarioLogado();
-        RelatorioResponseEspecialista retorno = new RelatorioResponseEspecialista();
         RelatorioMuda relatorio = procurarPorID(idRelatorio);
         relatorio.setAvaliacao(dto.getAvaliacao());
         relatorio.setSugestoes(dto.getSugestoes());
@@ -101,7 +103,7 @@ public class ServiceRelatorioMuda {
 
     }
 
-    private RelatorioMuda procurarPorID(Integer id) throws Exception {
+    public RelatorioMuda procurarPorID(Integer id) throws Exception {
 
         RelatorioMuda relatorioMuda = this.relatorioMudaRepository.findById(id).orElseThrow(() -> new RegraDeNegocioException("Não existe relatório com este id no banco de dados"));
 
@@ -115,7 +117,7 @@ public class ServiceRelatorioMuda {
     }
 
 
-    private RelatorioClienteDTO retornarDtoCliente(RelatorioMuda relatorioMuda) {
+    public RelatorioClienteDTO retornarDtoCliente(RelatorioMuda relatorioMuda) {
         RelatorioClienteDTO relatorioCliente = new RelatorioClienteDTO();
         relatorioCliente.setCliente(relatorioMuda.getCliente());
         relatorioCliente.setMuda(relatorioMuda.getMuda());
@@ -136,8 +138,8 @@ public class ServiceRelatorioMuda {
         return this.objectMapper.convertValue(relatorio, RelatorioMuda.class);
     }
 
-    public List<RelatorioResponseEspecialista> relatorioEspecialista(Integer idEspecialista) throws InformacaoNaoEncontrada {
-        Especialista especialista = this.serviceEspecialista.procurarPorIdEntidade(idEspecialista);
+    public List<RelatorioResponseEspecialista> relatorioEspecialista(Integer idEspecialista) throws Exception {
+        Especialista especialista = this.serviceEspecialista.procurarPorIDEntidade(idEspecialista);
         List<RelatorioResponseEspecialista> retorno = new ArrayList<>();
         List<RelatorioMuda> relatorioEspecialista = this.relatorioMudaRepository.findByEspecialistaIs(especialista);
 
