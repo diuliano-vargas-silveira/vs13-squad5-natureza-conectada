@@ -210,7 +210,7 @@ public class ServiceEntrega {
     }
 
     private Endereco obterEnderecoPorId(Integer idEndereco) throws Exception {
-        EnderecoDTO enderecoDTO = serviceEndereco.procurarPorIdEndereco(idEndereco);
+        EnderecoResponseDTO enderecoDTO = serviceEndereco.procurarPorIdEndereco(idEndereco);
         return objectMapper.convertValue(enderecoDTO, Endereco.class);
     }
 }
