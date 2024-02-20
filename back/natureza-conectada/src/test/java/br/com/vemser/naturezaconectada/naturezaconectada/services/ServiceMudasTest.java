@@ -46,6 +46,9 @@ class ServiceMudasTest {
     @InjectMocks
     private ServiceMudas serviceMudas;
 
+    @Mock
+    private ServiceLog serviceLog;
+
     private static MudaDTO retornarDTO() {
         MudaDTO dto = new MudaDTO();
         dto.setId(1);

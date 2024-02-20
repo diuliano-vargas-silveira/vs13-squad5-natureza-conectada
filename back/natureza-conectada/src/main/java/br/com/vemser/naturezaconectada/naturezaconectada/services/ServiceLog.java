@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 public class ServiceLog {
     private final LogUsuarioRepository logUsuario;
     private final LogMudasCriadasRepository logMudas;
-
     private final ObjectMapper objectMapper;
 
     public void criarLogUsuario(LogUsuarios logUsuarios){
@@ -32,7 +31,7 @@ public class ServiceLog {
     public List<LogUsuarioDTO> totalDeUsuarioPorTipo(){
         return this.logUsuario.groupByTipoUsuarioAndCount().stream().map(logContaUsuario -> this.objectMapper.convertValue(logContaUsuario,LogUsuarioDTO.class)).collect(Collectors.toList());
     }
-    public List<LogMudasCriadasDTO>listarMudasCriadasPor(String nome){
+    public List<LogMudasCriadasDTO>listarMudasCriadasPorNome(String nome){
         return this.logMudas.findAllBynomeDoAdminLikeIgnoreCase(nome).stream().map(logMudasCriadas -> this.objectMapper.convertValue(logMudasCriadas, LogMudasCriadasDTO.class)).collect(Collectors.toList());
     }
 

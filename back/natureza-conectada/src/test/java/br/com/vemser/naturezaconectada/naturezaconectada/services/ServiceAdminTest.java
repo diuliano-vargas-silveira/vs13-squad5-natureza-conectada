@@ -37,6 +37,9 @@ class ServiceAdminTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private ServiceLog serviceLog;
+
     @InjectMocks
     private ServiceAdmin serviceAdmin;
 
