@@ -7,6 +7,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Admin;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.LogUsuarios;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.AdminRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,8 @@ public class ServiceAdmin {
 
     private final ObjectMapper objectMapper;
 
+    private final ServiceLog serviceLog;
+
     private final PasswordEncoder passwordEncoder;
 
     public AdminResponseDTO adicionar(AdminRequestDTO adminRequestDTO) throws java.lang.Exception {
@@ -38,6 +41,11 @@ public class ServiceAdmin {
             novoAdmin.setSenha(passwordEncoder.encode(adminRequestDTO.getSenha()));
             novoAdmin.setAtivo(Ativo.A);
             this.adminRepository.save(novoAdmin);
+            LogUsuarios logUsuarios = new LogUsuarios();
+            logUsuarios.setTipoUsuario(TipoUsuario.ADMIN);
+            logUsuarios.setNome(adminRequestDTO.getNome());
+            this.serviceLog.criarLogUsuario(logUsuarios);
+
             AdminResponseDTO adminResponseDTO = objectMapper.convertValue(novoAdmin, AdminResponseDTO.class);
             return adminResponseDTO;
         } else {

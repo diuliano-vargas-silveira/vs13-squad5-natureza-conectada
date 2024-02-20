@@ -7,6 +7,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Especialista;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.LogUsuarios;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.EspecialistaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class ServiceEspecialista {
     private final ServiceUsuario serviceUsuario;
     private final ObjectMapper objectMapper;
 
+    private final ServiceLog serviceLog;
     private final PasswordEncoder encoder;
 
 
@@ -33,6 +35,10 @@ public class ServiceEspecialista {
         especialistaAdicionado.setAtivo(Ativo.A);
         especialistaAdicionado.setSenha(encoder.encode(especialista.getSenha()));
         especialistaRepository.save(especialistaAdicionado);
+        LogUsuarios logUsuarios = new LogUsuarios();
+        logUsuarios.setTipoUsuario(TipoUsuario.CLIENTE);
+        logUsuarios.setNome(especialista.getNome());
+        this.serviceLog.criarLogUsuario(logUsuarios);
         return retornarDto(especialistaAdicionado);
     }
 

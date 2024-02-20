@@ -8,6 +8,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.LogMudasCriadas;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Muda;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.MudaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -27,12 +29,18 @@ public class ServiceMudas {
     private final ObjectMapper objectMapper;
     private final ServiceCliente serviceCliente;
 
+    private final ServiceLog serviceLog;
+
 
     public MudaCreateDTO adicionar(MudaCreateDTO mudadto) throws Exception {
         Muda muda = retornarEntidade(mudadto);
         muda.setAtivo(Ativo.A);
 
         Muda mudaCriada = this.mudaRepository.save(muda);
+        LogMudasCriadas logMudasCriadas = new LogMudasCriadas();
+        logMudasCriadas.setNomeMuda(mudadto.getNome());
+        logMudasCriadas.setNomeDoAdmin("Pedro");
+        serviceLog.criarLogMudas(logMudasCriadas);
 
         return retornarDto(mudaCriada);
     }

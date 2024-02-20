@@ -6,6 +6,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.LogUsuarios;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.ClienteRepository;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,6 +30,7 @@ public class ServiceCliente {
     private final UsuarioRepository usuarioRepository;
     private final ObjectMapper objectMapper;
 
+    private final ServiceLog serviceLog;
     private final PasswordEncoder encoder;
 
 
@@ -40,6 +42,10 @@ public class ServiceCliente {
         cliente.setAtivo(Ativo.A);
         cliente.setTipoUsuario(TipoUsuario.CLIENTE);
         clienteRepository.save(cliente);
+        LogUsuarios logUsuarios = new LogUsuarios();
+        logUsuarios.setTipoUsuario(TipoUsuario.CLIENTE);
+        logUsuarios.setNome(clienteCreateDTO.getNome());
+        this.serviceLog.criarLogUsuario(logUsuarios);
 
         return objectMapper.convertValue(cliente, ClienteResponseDTO.class);
     }
