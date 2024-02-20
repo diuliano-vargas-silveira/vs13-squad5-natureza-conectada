@@ -99,26 +99,8 @@ class ServiceEntregaTest {
 
         var result = serviceEntrega.adicionar(entregaRequestDTO, 1);
 
-//        assertEquals(StatusEntrega.RECEBIDO, entregaRequestDTO.getStatus());
-//        assertEquals(LocalDate.now(), entregaRequestDTO.getDataPedido());
-//        assertEquals(clienteMock.getId(), entregaMock.getCliente().getId());
-//        assertEquals(enderecoMock.getIdEndereco(), entregaMock.getEndereco().getIdEndereco());
-
         assertNotNull(result);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     @Test
     @DisplayName("Deveria alterar a data de entrega ao mudar o status para 'ENTREGUE'")
@@ -690,26 +672,4 @@ class ServiceEntregaTest {
         mudas.add(muda2);
         return mudas;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
