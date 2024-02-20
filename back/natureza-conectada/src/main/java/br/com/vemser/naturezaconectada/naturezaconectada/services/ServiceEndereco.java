@@ -1,7 +1,7 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EnderecoCreateDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EnderecoDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EnderecoRequestDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EnderecoResponseDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
@@ -26,7 +26,7 @@ public class ServiceEndereco {
     private final ClienteRepository clienteRepository;
     private final ObjectMapper objectMapper;
 
-    public EnderecoDTO adicionar(EnderecoCreateDTO enderecoCreateDTO, Integer idCliente) throws Exception {
+    public EnderecoResponseDTO adicionar(EnderecoRequestDTO enderecoCreateDTO, Integer idCliente) throws Exception {
         List<Cliente> clientes = new ArrayList<>();
         var endereco = objectMapper.convertValue(enderecoCreateDTO, Endereco.class);
         var cliente = clienteRepository.getById(idCliente);
@@ -36,21 +36,20 @@ public class ServiceEndereco {
 
         enderecoRepository.save(endereco);
 
-        return objectMapper.convertValue(endereco, EnderecoDTO.class);
+        return objectMapper.convertValue(endereco, EnderecoResponseDTO.class);
     }
 
     public void remover(Integer idEndereco) throws Exception {
-        var enderecoEncontrado = procurarPorIdEndereco(idEndereco);
+        var enderecoEncontrado = enderecoRepository.getById(idEndereco);
 
-        var endereco = objectMapper.convertValue(enderecoEncontrado, Endereco.class);
+        if (enderecoEncontrado.getAtivo() == Ativo.A)
+            enderecoEncontrado.setAtivo(Ativo.D);
 
-        endereco.setAtivo(Ativo.D);
-
-        enderecoRepository.save(endereco);
+        enderecoRepository.save(enderecoEncontrado);
     }
 
-    public EnderecoDTO editar(Integer idEndereco, EnderecoCreateDTO enderecoEditado) throws Exception {
-        var enderecoEncontrado = procurarPorIdEndereco(idEndereco);
+    public EnderecoResponseDTO editar(Integer idEndereco, EnderecoRequestDTO enderecoEditado) throws Exception {
+        var enderecoEncontrado = enderecoRepository.getById(idEndereco);
 
         enderecoEncontrado.setCep(enderecoEditado.getCep());
         enderecoEncontrado.setCidade(enderecoEditado.getCidade());
@@ -63,40 +62,43 @@ public class ServiceEndereco {
 
         enderecoRepository.save(endereco);
 
-        return objectMapper.convertValue(enderecoEncontrado, EnderecoDTO.class);
+        return objectMapper.convertValue(enderecoEncontrado, EnderecoResponseDTO.class);
     }
 
-    public EnderecoDTO procurarPorIdEndereco(Integer idEndereco) throws Exception {
-        var enderecoEncontrado =  enderecoRepository.findAll().stream()
-                .filter(endereco -> endereco.getIdEndereco().equals(idEndereco)).findFirst().orElseThrow(() -> new RegraDeNegocioException("Endereço não existe."));
+    public EnderecoResponseDTO procurarPorIdEndereco(Integer idEndereco) throws Exception {
+        var enderecoEncontrado =  enderecoRepository.findById(idEndereco)
+                .orElseThrow(() -> new RegraDeNegocioException("Endereço não encontrado"));
 
-        return objectMapper.convertValue(enderecoEncontrado, EnderecoDTO.class);
+        return objectMapper.convertValue(enderecoEncontrado, EnderecoResponseDTO.class);
     }
 
-    public List<EnderecoDTO> listarTodos() throws Exception {
+    public List<EnderecoResponseDTO> listarTodos() throws Exception {
         var enderecos = enderecoRepository.findAll();
 
 
         return enderecos.stream()
-                .map(endereco -> objectMapper.convertValue(endereco, EnderecoDTO.class))
+                .map(endereco -> objectMapper.convertValue(endereco, EnderecoResponseDTO.class))
                 .collect(Collectors.toList());
     }
 
-    public EnderecoDTO ativarEndereco(Integer idEndereco, String eco) throws Exception {
-        var enderecoEncontrado = procurarPorIdEndereco(idEndereco);
+    public EnderecoResponseDTO ativarEndereco(Integer idEndereco, String eco) throws Exception {
+        var enderecoEncontrado = enderecoRepository.getById(idEndereco);
 
-        enderecoEncontrado.setAtivo(Ativo.A);
+        if (enderecoEncontrado.getAtivo() == Ativo.D)
+            enderecoEncontrado.setAtivo(Ativo.A);
 
-        return objectMapper.convertValue(enderecoEncontrado, EnderecoDTO.class);
+        enderecoRepository.save(enderecoEncontrado);
+
+        return objectMapper.convertValue(enderecoEncontrado, EnderecoResponseDTO.class);
 
     }
 
-    public List<EnderecoDTO> listarEnderecosPorAtivo() throws Exception {
+    public List<EnderecoResponseDTO> listarEnderecosPorAtivo() throws Exception {
         var listaEnderecosAtivos =  enderecoRepository.findAll().stream()
                 .filter(endereco -> endereco.getAtivo().equals(Ativo.A)).toList();
 
         return listaEnderecosAtivos.stream()
-                .map(endereco -> objectMapper.convertValue(endereco, EnderecoDTO.class))
+                .map(endereco -> objectMapper.convertValue(endereco, EnderecoResponseDTO.class))
                 .collect(Collectors.toList());
     }
 }

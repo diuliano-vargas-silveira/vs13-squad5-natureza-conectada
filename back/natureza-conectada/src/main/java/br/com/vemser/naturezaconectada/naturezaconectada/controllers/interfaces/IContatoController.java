@@ -1,7 +1,7 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ContatoCreateDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ContatoDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ContatoRequestDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ContatoResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -23,7 +23,7 @@ public interface IContatoController {
             }
     )
     @PostMapping("/{idCliente}")
-    public ResponseEntity<ContatoDTO> adicionar(@PathVariable("idCliente") Integer idCliente, @Valid @RequestBody ContatoCreateDTO contato) throws Exception;
+    public ResponseEntity<ContatoResponseDTO> adicionar(@PathVariable("idCliente") Integer idCliente, @Valid @RequestBody ContatoRequestDTO contato) throws Exception;
 
     @Operation(summary = "Atualizar contato", description = "Atualiza o contato pelo id do contato")
     @ApiResponses(
@@ -34,7 +34,7 @@ public interface IContatoController {
             }
     )
     @PutMapping("/{idContato}")
-    public ResponseEntity<ContatoDTO> editar(@PathVariable("idContato") Integer idContato, @Valid @RequestBody ContatoCreateDTO contatoAtualizado) throws Exception;
+    public ResponseEntity<ContatoResponseDTO> editar(@PathVariable("idContato") Integer idContato, @Valid @RequestBody ContatoRequestDTO contatoAtualizado) throws Exception;
 
     @Operation(summary = "Excluir contato", description = "Exclui o contato pelo id do contato")
     @ApiResponses(
@@ -57,7 +57,7 @@ public interface IContatoController {
             }
     )
     @GetMapping
-    public ResponseEntity<List<ContatoDTO>> listarTodos() throws SQLException;
+    public ResponseEntity<List<ContatoResponseDTO>> listarTodos() throws SQLException;
 
     @Operation(summary = "Listar contatos por id cliente", description = "Lista todos os contatos pelo id do cliente")
     @ApiResponses(
@@ -69,5 +69,5 @@ public interface IContatoController {
             }
     )
     @GetMapping("/{idCliente}")
-    public ResponseEntity<List<ContatoDTO>> procurarPorIdCliente(@PathVariable("idCliente") Integer idCliente) throws Exception;
+    public ResponseEntity<List<ContatoResponseDTO>> procurarPorIdCliente(@PathVariable("idCliente") Integer idCliente) throws Exception;
 }

@@ -1,7 +1,7 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EnderecoCreateDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EnderecoDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EnderecoRequestDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EnderecoResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -22,7 +22,7 @@ public interface IEnderecoController {
             }
     )
     @PostMapping("/{idCliente}")
-    public ResponseEntity<EnderecoDTO> adicionar(@PathVariable("idCliente") Integer idCliente, @Valid @RequestBody EnderecoCreateDTO endereco) throws Exception;
+    public ResponseEntity<EnderecoResponseDTO> adicionar(@PathVariable("idCliente") Integer idCliente, @Valid @RequestBody EnderecoRequestDTO endereco) throws Exception;
 
     @Operation(summary = "Atualizar endereço", description = "Atualiza o endereço pelo id do endereço do banco")
     @ApiResponses(
@@ -33,7 +33,7 @@ public interface IEnderecoController {
             }
     )
     @PutMapping("/{idEndereco}")
-    public ResponseEntity<EnderecoDTO> editar(@PathVariable("idEndereco") Integer idEndereco, @Valid @RequestBody EnderecoCreateDTO endereco) throws Exception;
+    public ResponseEntity<EnderecoResponseDTO> editar(@PathVariable("idEndereco") Integer idEndereco, @Valid @RequestBody EnderecoRequestDTO endereco) throws Exception;
 
     @Operation(summary = "Ativar endereço de cliente", description = "Ativa uma endereço no banco pelo id e insere um ecossistema ")
     @ApiResponses(
@@ -43,7 +43,7 @@ public interface IEnderecoController {
                     @ApiResponse(responseCode = "500", description = "Enum ecossistema não existe / não existe endereço com este id ")
             }
     )
-    public ResponseEntity<EnderecoDTO> ativarEndereco(@PathVariable("idEndereco") Integer idEndereco, @RequestParam String eco) throws Exception;
+    public ResponseEntity<EnderecoResponseDTO> ativarEndereco(@PathVariable("idEndereco") Integer idEndereco, @RequestParam String eco) throws Exception;
     @Operation(summary = "Excluir endereço", description = "Exclui o endereço pelo id do endereço do banco")
     @ApiResponses(
             value = {
@@ -64,7 +64,7 @@ public interface IEnderecoController {
             }
     )
     @GetMapping
-    public ResponseEntity<List<EnderecoDTO>> listarTodos() throws Exception;
+    public ResponseEntity<List<EnderecoResponseDTO>> listarTodos() throws Exception;
 
     @Operation(summary = "Retornar endereço por id do endereço", description = "Retorna pelo id do endereço as infomações cadastradas")
     @ApiResponses(
@@ -75,7 +75,7 @@ public interface IEnderecoController {
             }
     )
     @GetMapping("/{idEndereco}")
-    public ResponseEntity<EnderecoDTO> procurarPorIdEndereco(@PathVariable("idEndereco") Integer idEndereco) throws Exception;
+    public ResponseEntity<EnderecoResponseDTO> procurarPorIdEndereco(@PathVariable("idEndereco") Integer idEndereco) throws Exception;
 
     @Operation(summary = "Listar endereço ativos com id do cliente", description = "Lista todas os endereços cadastrados e ativos no banco com o id do cliente")
     @ApiResponses(
@@ -86,5 +86,5 @@ public interface IEnderecoController {
             }
     )
     @GetMapping
-    public List<EnderecoDTO> listarEnderecosPorAtivo() throws Exception;
+    public List<EnderecoResponseDTO> listarEnderecosPorAtivo() throws Exception;
 }

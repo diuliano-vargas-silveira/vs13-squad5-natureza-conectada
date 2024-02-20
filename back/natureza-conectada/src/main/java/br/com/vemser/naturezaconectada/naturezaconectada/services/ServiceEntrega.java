@@ -123,7 +123,7 @@ public class ServiceEntrega {
         return entregaResponseDTO;
     }
 
-    private Entrega procurar(Integer id) throws RegraDeNegocioException {
+    public Entrega procurar(Integer id) throws RegraDeNegocioException {
         Optional<Entrega> entregaOptional = entregaRepository.findById(id);
         if (entregaOptional.isPresent()) {
             return entregaOptional.get();
@@ -132,7 +132,7 @@ public class ServiceEntrega {
         }
     }
 
-    private List<MudaDTO> buscarMudasEntrega(Integer idEntrega) throws Exception {
+    public List<MudaDTO> buscarMudasEntrega(Integer idEntrega) throws Exception {
         List<EntregaMuda> entregaList = entregaMudaRepository.buscarMudasEntrega(idEntrega);
         List<MudaDTO> mudaList = new ArrayList<>();
         for (EntregaMuda entregaMuda : entregaList) {
@@ -143,7 +143,7 @@ public class ServiceEntrega {
         return mudaList;
     }
 
-    private List<Muda> buscarMudasEntityEntrega(Integer idEntrega) throws Exception {
+    public List<Muda> buscarMudasEntityEntrega(Integer idEntrega) throws Exception {
         List<EntregaMuda> entregaList = entregaMudaRepository.buscarMudasEntrega(idEntrega);
         List<Muda> mudaList = new ArrayList<>();
         for (EntregaMuda entregaMuda : entregaList) {
@@ -154,23 +154,23 @@ public class ServiceEntrega {
         return mudaList;
     }
 
-    private void alteraMudasEnderecosClienteNoEntregaResponseDTO(EntregaResponseDTO novaEntrega, Integer entregaProcessada) throws Exception {
+    public void alteraMudasEnderecosClienteNoEntregaResponseDTO(EntregaResponseDTO novaEntrega, Integer entregaProcessada) throws Exception {
         novaEntrega.setMudas(buscarMudasEntrega(entregaProcessada));
         novaEntrega.setEndereco(objectMapper.convertValue(enderecoRepository.buscarEnderecoEntrega(entregaProcessada), EnderecoEntregaDTO.class));
         novaEntrega.setCliente(objectMapper.convertValue(clienteRepository.buscarClienteEntrega(entregaProcessada), ClienteEntregaDTO.class));
     }
 
-    private void validarEndereco(Integer idEndereco) throws Exception {
+    public void validarEndereco(Integer idEndereco) throws Exception {
         if (serviceEndereco.procurarPorIdEndereco(idEndereco) == null) {
             throw new InformacaoNaoEncontrada("Não existe nenhum endereço com o ID: " + idEndereco);
         }
     }
 
-    private void validarCliente(Integer idCliente) throws Exception {
+    public void validarCliente(Integer idCliente) throws Exception {
         serviceCliente.procurarPorId(idCliente);
     }
 
-    private List<Muda> validarMudas(List<Muda> mudas) throws Exception {
+    public List<Muda> validarMudas(List<Muda> mudas) throws Exception {
         Set<Integer> idsMudas = new HashSet<>();
         List<Muda> mudaEntity = new ArrayList<>();
 
@@ -191,7 +191,7 @@ public class ServiceEntrega {
         return mudaEntity;
     }
 
-    private void processarMudas(List<Muda> mudaEntity, Entrega entregaProcessada) {
+    public void processarMudas(List<Muda> mudaEntity, Entrega entregaProcessada) {
         for (Muda muda : mudaEntity) {
             muda.setEstoque(muda.getEstoque() - 1);
             EntregaMuda entregaMuda = new EntregaMuda();
@@ -204,13 +204,13 @@ public class ServiceEntrega {
         }
     }
 
-    private Cliente obterClientePorId(Integer idCliente) throws Exception {
+    public Cliente obterClientePorId(Integer idCliente) throws Exception {
         ClienteResponseDTO clienteDTO = serviceCliente.procurarPorId(idCliente);
         return objectMapper.convertValue(clienteDTO, Cliente.class);
     }
 
-    private Endereco obterEnderecoPorId(Integer idEndereco) throws Exception {
-        EnderecoDTO enderecoDTO = serviceEndereco.procurarPorIdEndereco(idEndereco);
+    public Endereco obterEnderecoPorId(Integer idEndereco) throws Exception {
+        EnderecoResponseDTO enderecoDTO = serviceEndereco.procurarPorIdEndereco(idEndereco);
         return objectMapper.convertValue(enderecoDTO, Endereco.class);
     }
 }

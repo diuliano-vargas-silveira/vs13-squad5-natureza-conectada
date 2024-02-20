@@ -1,7 +1,7 @@
  package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
- import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ContatoCreateDTO;
- import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ContatoDTO;
+ import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ContatoRequestDTO;
+ import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ContatoResponseDTO;
  import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
  import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
  import br.com.vemser.naturezaconectada.naturezaconectada.models.Contato;
@@ -25,7 +25,7 @@
     private final ServiceCliente serviceCliente;
 
 
-     public ContatoDTO adicionar(ContatoCreateDTO contatoCreateDTO, Integer idCliente) throws Exception {
+     public ContatoResponseDTO adicionar(ContatoRequestDTO contatoCreateDTO, Integer idCliente) throws Exception {
          var contato = objectMapper.convertValue(contatoCreateDTO, Contato.class);
          var clienteDTO = serviceCliente.procurarClienteAtivo(idCliente);
          var cliente = objectMapper.convertValue(clienteDTO, Cliente.class);
@@ -34,10 +34,10 @@
          contatoRepository.save(contato);
          cliente.getContatos().add(contato);
 
-        return objectMapper.convertValue(contato, ContatoDTO.class);
+        return objectMapper.convertValue(contato, ContatoResponseDTO.class);
     }
 
-     public ContatoDTO editar(Integer idContato, ContatoCreateDTO contatoEditado) throws Exception {
+     public ContatoResponseDTO editar(Integer idContato, ContatoRequestDTO contatoEditado) throws Exception {
          var contatoEncontrado = contatoRepository.getById(idContato);
 
          var clienteDTO = serviceCliente.procurarPorId(contatoEncontrado.getCliente().getId());
@@ -52,39 +52,39 @@
 
          contatoRepository.save(contatoEncontrado);
 
-         var contato = objectMapper.convertValue(contatoEncontrado, ContatoDTO.class);
+         var contato = objectMapper.convertValue(contatoEncontrado, ContatoResponseDTO.class);
 //         contato.setIdCliente(cliente.getId());
 
          return contato;
      }
 
      public void remover(Integer idContato) throws Exception {
-         var contatoEncontrado = procurarPorIdContato(idContato);
+         var contatoEncontrado = contatoRepository.getById(idContato);
          var contato = objectMapper.convertValue(contatoEncontrado, Contato.class);
          contatoRepository.delete(contato);
      }
 
-     public List<ContatoDTO> listarTodos() throws SQLException {
+     public List<ContatoResponseDTO> listarTodos() throws SQLException {
          var contatos = contatoRepository.findAll();
 
          return contatos.stream()
-                 .map(contato -> objectMapper.convertValue(contato, ContatoDTO.class))
+                 .map(contato -> objectMapper.convertValue(contato, ContatoResponseDTO.class))
                  .collect(Collectors.toList());
      }
 
-     public List<ContatoDTO> procurarPorIdCliente(Integer idCliente) throws Exception {
+     public List<ContatoResponseDTO> procurarPorIdCliente(Integer idCliente) throws Exception {
          var contatos = contatoRepository.findAll().stream()
                  .filter(contato -> contato.getCliente() != null && contato.getCliente().getId().equals(idCliente))
                  .collect(Collectors.toList());
 
          var contatosDTO = contatos.stream()
-                 .map(contato -> objectMapper.convertValue(contato, ContatoDTO.class))
+                 .map(contato -> objectMapper.convertValue(contato, ContatoResponseDTO.class))
                  .collect(Collectors.toList());
 
          return contatosDTO;
      }
 
-     private ContatoDTO procurarPorIdContato(Integer idContato) throws SQLException, RegraDeNegocioException {
+     public ContatoResponseDTO procurarPorIdContato(Integer idContato) throws SQLException, RegraDeNegocioException {
          return listarTodos().stream()
                  .filter(contato -> contato.getIdContato().equals(idContato))
                  .findFirst().orElseThrow(() -> new RegraDeNegocioException("Contato não encontrado."));

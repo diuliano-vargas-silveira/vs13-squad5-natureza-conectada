@@ -33,9 +33,6 @@ public class ServiceCliente {
     private final ServiceLog serviceLog;
     private final PasswordEncoder encoder;
 
-
-
-
     public ClienteResponseDTO adicionar(ClienteRequestDTO clienteCreateDTO) throws Exception {
         var cliente = objectMapper.convertValue(clienteCreateDTO, Cliente.class);
         cliente.setSenha(encoder.encode(clienteCreateDTO.getSenha()));
