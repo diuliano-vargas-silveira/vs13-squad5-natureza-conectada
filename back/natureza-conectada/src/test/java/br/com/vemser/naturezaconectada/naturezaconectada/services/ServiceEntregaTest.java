@@ -2,7 +2,7 @@ package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EntregaRequestDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ClienteResponseDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EnderecoDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EnderecoResponseDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EntregaResponseDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.*;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
@@ -140,7 +140,7 @@ class ServiceEntregaTest {
     @DisplayName("Deveria lançar exceção quando mudas inválidas forem passadas como entrada")
     public void deveriaLancarExcecaoQuandoMudasInvalidasForemPassadas() throws Exception {
 
-        Mockito.lenient().when(serviceEndereco.procurarPorIdEndereco(anyInt())).thenReturn(new EnderecoDTO(
+        Mockito.lenient().when(serviceEndereco.procurarPorIdEndereco(anyInt())).thenReturn(new EnderecoResponseDTO(
                 1, "35588000", "Rua 1", "100", "casa", "São Paulo", Estados.SP, Tipo.RESIDENCIAL, Ecossistema.INDIFERENTE, Ativo.A
         ));
 

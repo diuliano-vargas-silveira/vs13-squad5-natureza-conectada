@@ -6,8 +6,7 @@ import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Tipo;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.EnumType;
@@ -18,10 +17,12 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
 @Validated
-public class EnderecoCreateDTO {
+public class EnderecoRequestDTO {
 
     private static final String PAIS = "Brasil";
     private Integer idEndereco;

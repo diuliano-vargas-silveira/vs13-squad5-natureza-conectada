@@ -28,11 +28,7 @@ public class ServiceCliente {
     private final ClienteRepository clienteRepository;
     private final UsuarioRepository usuarioRepository;
     private final ObjectMapper objectMapper;
-
     private final PasswordEncoder encoder;
-
-
-
 
     public ClienteResponseDTO adicionar(ClienteRequestDTO clienteCreateDTO) throws Exception {
         var cliente = objectMapper.convertValue(clienteCreateDTO, Cliente.class);

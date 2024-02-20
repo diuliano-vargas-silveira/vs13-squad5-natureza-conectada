@@ -13,7 +13,7 @@ import javax.persistence.Enumerated;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ContatoDTO {
+public class ContatoResponseDTO {
 
     private Integer idContato;
     private String descricao;
