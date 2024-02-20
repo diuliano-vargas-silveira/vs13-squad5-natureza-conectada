@@ -1,8 +1,8 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.controllers;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces.IClienteController;
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ClienteCreateDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ClienteDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ClienteRequestDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ClienteResponseDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceCliente;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,17 +27,17 @@ public class ClienteController implements IClienteController {
     private final ServiceCliente serviceCliente;
 
     @PostMapping
-    public ResponseEntity<ClienteDTO> adicionar(@Valid @RequestBody ClienteCreateDTO clienteCreateDTO) throws Exception {
+    public ResponseEntity<ClienteResponseDTO> adicionar(@Valid @RequestBody ClienteRequestDTO clienteCreateDTO) throws Exception {
         log.debug("Criando cliente");
 
-        ClienteDTO cliente = serviceCliente.adicionar(clienteCreateDTO);
+        ClienteResponseDTO cliente = serviceCliente.adicionar(clienteCreateDTO);
         log.debug("Contato cliente");
 
         return new ResponseEntity<>(cliente, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClienteDTO> editar(@PathVariable("id") Integer id, @Valid @RequestBody ClienteCreateDTO cliente) throws Exception {
+    public ResponseEntity<ClienteResponseDTO> editar(@PathVariable("id") Integer id, @Valid @RequestBody ClienteRequestDTO cliente) throws Exception {
         var clienteEditado = serviceCliente.editar(id, cliente);
 
         return new ResponseEntity<>(clienteEditado, HttpStatus.OK);
@@ -50,13 +50,13 @@ public class ClienteController implements IClienteController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ClienteDTO>> listarClientes(@PageableDefault(size=10, sort={"nome"}) Pageable paginacao) throws Exception {
+    public ResponseEntity<Page<ClienteResponseDTO>> listarClientes(@PageableDefault(size=10, sort={"nome"}) Pageable paginacao) throws Exception {
 
         return ResponseEntity.ok().body(serviceCliente.listarTodos(paginacao));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClienteDTO> procurarPorId(@PathVariable("id") Integer id) throws Exception {
+    public ResponseEntity<ClienteResponseDTO> procurarPorId(@PathVariable("id") Integer id) throws Exception {
         log.debug("Procurando contato");
         var cliente = serviceCliente.procurarPorId(id);
 
@@ -66,7 +66,7 @@ public class ClienteController implements IClienteController {
     }
 
     @GetMapping("/ativos")
-    public ResponseEntity<List<ClienteDTO>> procurarClienteAtivos() {
+    public ResponseEntity<List<ClienteResponseDTO>> procurarClienteAtivos() {
         var clientesAtivos = serviceCliente.listarClientesAtivos();
 
         return new ResponseEntity<>(clientesAtivos, HttpStatus.OK);

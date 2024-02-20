@@ -88,6 +88,10 @@ public abstract class Usuario implements UserDetails {
     @JsonIgnore
     @Override
     public boolean isEnabled() {
-        return true;
+        if(this.ativo == Ativo.D){
+            return  false;
+        }else {
+            return true;
+        }
     }
 }

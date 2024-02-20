@@ -56,7 +56,7 @@ class ServiceEntregaTest {
     public void deveriaAdicionarEntregaComSucesso() throws Exception {
 
         Endereco enderecoMock = gerarEndereco();
-        EnderecoDTO enderecoDTO = gerarEnderecoDTO();
+        EnderecoResponseDTO enderecoDTO = gerarEnderecoDTO();
         List<Muda> mudas = gerarMudas();
 
         Integer id = new Random().nextInt();
@@ -190,11 +190,11 @@ class ServiceEntregaTest {
     @DisplayName("Deveria lançar exceção quando mudas inválidas forem passadas como entrada")
     public void deveriaLancarExcecaoQuandoMudasInvalidasForemPassadas() throws Exception {
 
-        Mockito.lenient().when(serviceEndereco.procurarPorIdEndereco(anyInt())).thenReturn(new EnderecoDTO(
+        Mockito.lenient().when(serviceEndereco.procurarPorIdEndereco(anyInt())).thenReturn(new EnderecoResponseDTO(
                 1, "35588000", "Rua 1", "100", "casa", "São Paulo", Estados.SP, Tipo.RESIDENCIAL, Ecossistema.INDIFERENTE, Ativo.A
         ));
 
-        Mockito.lenient().when(serviceCliente.procurarPorId(anyInt())).thenReturn(new ClienteDTO());
+        Mockito.lenient().when(serviceCliente.procurarPorId(anyInt())).thenReturn(new ClienteResponseDTO());
 
         Mockito.lenient().when(serviceMudas.procurarPorIDEntidade(anyInt())).thenReturn(null);
 
@@ -431,7 +431,7 @@ class ServiceEntregaTest {
 
         int idEnderecoExistente = 1;
 
-        Mockito.lenient().when(serviceEndereco.procurarPorIdEndereco(anyInt())).thenReturn(new EnderecoDTO(
+        Mockito.lenient().when(serviceEndereco.procurarPorIdEndereco(anyInt())).thenReturn(new EnderecoResponseDTO(
                 1, "35588000", "Rua 1", "100", "casa", "São Paulo", Estados.SP, Tipo.RESIDENCIAL, Ecossistema.INDIFERENTE, Ativo.A));
 
         assertDoesNotThrow(() -> serviceEntrega.validarEndereco(idEnderecoExistente));
@@ -453,7 +453,7 @@ class ServiceEntregaTest {
     public void deveriaObterClientePorIdComSucesso() throws Exception {
 
         Integer idClienteExistente = 1;
-        ClienteDTO clienteDTO = new ClienteDTO();
+        ClienteResponseDTO clienteDTO = new ClienteResponseDTO();
         clienteDTO.setId(idClienteExistente);
         Cliente clienteMock = new Cliente();
         clienteMock.setId(idClienteExistente);
@@ -485,7 +485,7 @@ class ServiceEntregaTest {
     public void deveriaObterEnderecoPorIdComSucesso() throws Exception {
 
         Integer idEndereco = 1;
-        EnderecoDTO enderecoDTO = new EnderecoDTO(
+        EnderecoResponseDTO enderecoDTO = new EnderecoResponseDTO(
                 1, "35588000", "Rua 1", "100", "casa", "São Paulo", Estados.SP, Tipo.RESIDENCIAL, Ecossistema.INDIFERENTE, Ativo.A);
         Endereco enderecoMock = new Endereco();
 
@@ -614,8 +614,8 @@ class ServiceEntregaTest {
         return endereco;
     }
 
-    private static EnderecoDTO gerarEnderecoDTO() {
-        var enderecoDTO = new EnderecoDTO(1,
+    private static EnderecoResponseDTO gerarEnderecoDTO() {
+        var enderecoDTO = new EnderecoResponseDTO(1,
                 "123456789",
                 "Rua ABC",
                 "123",

@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Data
 @Validated
-public class ContatoCreateDTO {
+public class ContatoRequestDTO {
 
     private Integer id;
     private Cliente cliente;

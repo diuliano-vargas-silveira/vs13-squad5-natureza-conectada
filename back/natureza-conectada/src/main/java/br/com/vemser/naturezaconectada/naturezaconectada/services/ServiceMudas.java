@@ -45,7 +45,6 @@ public class ServiceMudas {
         } else {
             mudaEncontrada.setAtivo(Ativo.A);
         }
-
         this.mudaRepository.save(mudaEncontrada);
 
     }
@@ -79,7 +78,7 @@ public class ServiceMudas {
         mudaAtualizada.setTipo(mudaEditada.getTipo());
 
         this.mudaRepository.save(mudaAtualizada);
-        ;
+
         return retornarDto(mudaAtualizada);
     }
 
@@ -105,7 +104,6 @@ public class ServiceMudas {
         this.mudaRepository.findByEcossistemaIs(ecossistema).stream().filter((muda -> muda.getAtivo().equals(Ativo.A))).toList().forEach(muda -> listaDeMudas.add(this.objectMapper.convertValue(muda, MudaDTO.class)));
 
         return listaDeMudas;
-
     }
 
     public MudaCreateDTO novaMuda(MudaCreateDTO mudaDto) throws Exception {
@@ -123,16 +121,16 @@ public class ServiceMudas {
     public void confereMudaCliente(Integer idMuda, Integer idCliente) throws Exception {
         Cliente cliente = this.serviceCliente.buscarPorIdEntidade(idCliente);
         Optional<List<Muda>> isPertence = this.mudaRepository.findByClienteAndIdIs(cliente, idMuda);
-        if (isPertence.get().isEmpty()) {
+        if (isPertence.isEmpty()) {
             throw new RegraDeNegocioException("A muda não pertence ao cliente");
         }
     }
 
-    private MudaCreateDTO retornarDto(Muda muda) {
+    public MudaCreateDTO retornarDto(Muda muda) {
         return this.objectMapper.convertValue(muda, MudaCreateDTO.class);
     }
 
-    private Muda retornarEntidade(MudaCreateDTO muda) {
+    public Muda retornarEntidade(MudaCreateDTO muda) {
         return this.objectMapper.convertValue(muda, Muda.class);
     }
 

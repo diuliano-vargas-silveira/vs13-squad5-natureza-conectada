@@ -1,7 +1,7 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ClienteCreateDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ClienteDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ClienteRequestDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ClienteResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -25,7 +25,7 @@ public interface IClienteController {
             }
     )
     @PostMapping
-    public ResponseEntity<ClienteDTO> adicionar(@Valid @RequestBody ClienteCreateDTO clienteCreateDTO) throws Exception;
+    public ResponseEntity<ClienteResponseDTO> adicionar(@Valid @RequestBody ClienteRequestDTO clienteCreateDTO) throws Exception;
 
     @Operation(summary = "Editar cliente", description = "Edita o cliente no banco de dados")
     @ApiResponses(
@@ -36,7 +36,7 @@ public interface IClienteController {
             }
     )
     @PutMapping("/{id}")
-    public ResponseEntity<ClienteDTO> editar(@PathVariable("id") Integer id, @Valid @RequestBody ClienteCreateDTO cliente) throws Exception;
+    public ResponseEntity<ClienteResponseDTO> editar(@PathVariable("id") Integer id, @Valid @RequestBody ClienteRequestDTO cliente) throws Exception;
 
     @Operation(summary = "Listar clientes", description = "Lista os clientes cadastrados no banco de dados")
     @ApiResponses(
@@ -47,7 +47,7 @@ public interface IClienteController {
             }
     )
     @GetMapping
-    public ResponseEntity<Page<ClienteDTO>> listarClientes(@PageableDefault() Pageable paginacao) throws Exception;
+    public ResponseEntity<Page<ClienteResponseDTO>> listarClientes(@PageableDefault() Pageable paginacao) throws Exception;
 
     @Operation(summary = "Procurar cliente", description = "Procura cliente por id")
     @ApiResponses(
@@ -58,7 +58,7 @@ public interface IClienteController {
             }
     )
     @GetMapping("/{id}")
-    public ResponseEntity<ClienteDTO> procurarPorId(@PathVariable("id") Integer id) throws Exception;
+    public ResponseEntity<ClienteResponseDTO> procurarPorId(@PathVariable("id") Integer id) throws Exception;
 
     @Operation(summary = "Procurar clientes ativos", description = "Procura os clientes ativos")
     @ApiResponses(
@@ -69,5 +69,5 @@ public interface IClienteController {
             }
     )
     @GetMapping("/ativos")
-    public ResponseEntity<List<ClienteDTO>> procurarClienteAtivos();
+    public ResponseEntity<List<ClienteResponseDTO>> procurarClienteAtivos();
 }

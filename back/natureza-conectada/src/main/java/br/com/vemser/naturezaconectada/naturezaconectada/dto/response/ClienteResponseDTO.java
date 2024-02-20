@@ -20,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ClienteDTO extends UsuarioResponseDTO {
+public class ClienteResponseDTO extends UsuarioResponseDTO {
 
     private String cpf;
 

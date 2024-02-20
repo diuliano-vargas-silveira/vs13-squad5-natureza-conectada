@@ -1,7 +1,7 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ClienteCreateDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ClienteDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ClienteRequestDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ClienteResponseDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
@@ -28,21 +28,19 @@ public class ServiceCliente {
     private final ClienteRepository clienteRepository;
     private final UsuarioRepository usuarioRepository;
     private final ObjectMapper objectMapper;
-
     private final PasswordEncoder encoder;
 
-
-    public ClienteDTO adicionar(ClienteCreateDTO clienteCreateDTO) throws Exception {
+    public ClienteResponseDTO adicionar(ClienteRequestDTO clienteCreateDTO) throws Exception {
         var cliente = objectMapper.convertValue(clienteCreateDTO, Cliente.class);
         cliente.setSenha(encoder.encode(clienteCreateDTO.getSenha()));
         cliente.setAtivo(Ativo.A);
         cliente.setTipoUsuario(TipoUsuario.CLIENTE);
         clienteRepository.save(cliente);
 
-        return objectMapper.convertValue(cliente, ClienteDTO.class);
+        return objectMapper.convertValue(cliente, ClienteResponseDTO.class);
     }
 
-    public ClienteDTO editar(Integer idCliente, ClienteCreateDTO clienteEditado) throws Exception {
+    public ClienteResponseDTO editar(Integer idCliente, ClienteRequestDTO clienteEditado) throws Exception {
 
         var clienteEncontrado = clienteRepository.getById(idCliente);
 
@@ -53,7 +51,7 @@ public class ServiceCliente {
 
         clienteRepository.save(clienteEncontrado);
 
-        return objectMapper.convertValue(clienteEncontrado, ClienteDTO.class);
+        return objectMapper.convertValue(clienteEncontrado, ClienteResponseDTO.class);
     }
 
     public void remover(Integer idCliente) throws Exception {
@@ -64,34 +62,32 @@ public class ServiceCliente {
         clienteRepository.save(clienteEncontrado);
     }
 
-    public Page<ClienteDTO> listarTodos(Pageable paginacao) throws Exception {
+    public Page<ClienteResponseDTO> listarTodos(Pageable paginacao) throws Exception {
         var clientesPaginados = clienteRepository.findAll(paginacao);
 
-        return clientesPaginados.map(cliente -> objectMapper.convertValue(cliente, ClienteDTO.class));
+        return clientesPaginados.map(cliente -> objectMapper.convertValue(cliente, ClienteResponseDTO.class));
     }
 
-    public ClienteDTO procurarPorId(Integer id) throws Exception {
-        var clienteEncontrado = clienteRepository.findAll().stream()
-                .filter(cliente -> cliente.getId().equals(id)).findFirst().orElseThrow(() -> new RegraDeNegocioException("Cliente não existe."));
+    public ClienteResponseDTO procurarPorId(Integer id) throws Exception {
+        var clienteEncontrado = clienteRepository.findById(id).orElseThrow(() -> new RegraDeNegocioException("Cliente não existe"));
 
 
-        return objectMapper.convertValue(clienteEncontrado, ClienteDTO.class);
+        return objectMapper.convertValue(clienteEncontrado, ClienteResponseDTO.class);
     }
 
-    public ClienteDTO procurarClienteAtivo(Integer idCliente) throws Exception {
-        var cliente = clienteRepository.getById(idCliente);
 
+    public ClienteResponseDTO procurarClienteAtivo(Integer idCliente) throws RegraDeNegocioException {
+        var clienteEncontrado = clienteRepository.getById(idCliente);
 
-        var usuarioAtivo = usuarioRepository.findAllUsuariosAtivos().stream()
-                .filter(usuario -> usuario.getId().equals(cliente.getId()))
-                .findFirst().orElseThrow(() -> new RegraDeNegocioException("Cliente inativo"));
+        if (clienteEncontrado.getAtivo() != Ativo.A)
+            throw new RegraDeNegocioException("Cliente inativo");
 
-        return objectMapper.convertValue(usuarioAtivo, ClienteDTO.class);
+        return objectMapper.convertValue(clienteEncontrado, ClienteResponseDTO.class);
     }
 
-    public List<ClienteDTO> listarClientesAtivos() {
+    public List<ClienteResponseDTO> listarClientesAtivos() {
         return usuarioRepository.findAllUsuariosAtivos()
-                .stream().filter(cliente -> cliente.getTipoUsuario().equals(TipoUsuario.CLIENTE)).map(usuarios -> objectMapper.convertValue(usuarios, ClienteDTO.class))
+                .stream().filter(cliente -> cliente.getTipoUsuario().equals(TipoUsuario.CLIENTE)).map(usuarios -> objectMapper.convertValue(usuarios, ClienteResponseDTO.class))
                 .collect(Collectors.toList());
     }
 
@@ -103,11 +99,13 @@ public class ServiceCliente {
     public Cliente getUsuarioLogado() throws Exception {
         Integer id = getIdLoggedUser();
         Cliente cliente = buscarPorIdEntidade(id);
+        log.error(cliente.toString());
         return cliente;
     }
 
     public Integer getIdLoggedUser() {
         Integer findUserId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        log.error(findUserId.toString());
         return findUserId;
     }
 }

@@ -1,8 +1,8 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.controllers;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces.IEnderecoController;
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EnderecoCreateDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EnderecoDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EnderecoRequestDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EnderecoResponseDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceEndereco;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ public class EnderecoController implements IEnderecoController {
     private final ServiceEndereco serviceEndereco;
 
     @PostMapping("/{idCliente}")
-    public ResponseEntity<EnderecoDTO> adicionar(@PathVariable("idCliente") Integer idCliente, @Valid @RequestBody EnderecoCreateDTO endereco) throws Exception {
+    public ResponseEntity<EnderecoResponseDTO> adicionar(@PathVariable("idCliente") Integer idCliente, @Valid @RequestBody EnderecoRequestDTO endereco) throws Exception {
         log.debug("Criando endereço");
 
         var enderecoCriado = serviceEndereco.adicionar(endereco, idCliente);
@@ -36,7 +36,7 @@ public class EnderecoController implements IEnderecoController {
     }
 
     @PutMapping("/{idEndereco}")
-    public ResponseEntity<EnderecoDTO> editar(@PathVariable("idEndereco") Integer idEndereco, @Valid @RequestBody EnderecoCreateDTO endereco) throws Exception {
+    public ResponseEntity<EnderecoResponseDTO> editar(@PathVariable("idEndereco") Integer idEndereco, @Valid @RequestBody EnderecoRequestDTO endereco) throws Exception {
         log.debug("Atualizando endereço");
 
         var enderecoAtualizado = serviceEndereco.editar(idEndereco, endereco);
@@ -60,7 +60,7 @@ public class EnderecoController implements IEnderecoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EnderecoDTO>> listarTodos() throws Exception {
+    public ResponseEntity<List<EnderecoResponseDTO>> listarTodos() throws Exception {
         var enderecos = serviceEndereco.listarTodos();
 
         if (enderecos == null)
@@ -70,7 +70,7 @@ public class EnderecoController implements IEnderecoController {
     }
 
     @GetMapping("/{idEndereco}")
-    public ResponseEntity<EnderecoDTO> procurarPorIdEndereco(@PathVariable("idEndereco") Integer idEndereco) throws Exception {
+    public ResponseEntity<EnderecoResponseDTO> procurarPorIdEndereco(@PathVariable("idEndereco") Integer idEndereco) throws Exception {
         var endereco = serviceEndereco.procurarPorIdEndereco(idEndereco);
 
         if (endereco == null)
@@ -82,10 +82,10 @@ public class EnderecoController implements IEnderecoController {
     }
 
     @PutMapping("/ativar/{id}")
-    public ResponseEntity<EnderecoDTO> ativarEndereco(@PathVariable("id") Integer id, @RequestParam String eco) throws Exception {
+    public ResponseEntity<EnderecoResponseDTO> ativarEndereco(@PathVariable("id") Integer id, @RequestParam String eco) throws Exception {
         log.debug("Atualizando endereço");
 
-        EnderecoDTO enderecoAtualizado = serviceEndereco.ativarEndereco(id, eco);
+        EnderecoResponseDTO enderecoAtualizado = serviceEndereco.ativarEndereco(id, eco);
 
         log.debug("Endereço atualizado");
 
@@ -95,7 +95,7 @@ public class EnderecoController implements IEnderecoController {
     }
 
     @GetMapping("/ativos")
-    public List<EnderecoDTO> listarEnderecosPorAtivo() throws Exception {
+    public List<EnderecoResponseDTO> listarEnderecosPorAtivo() throws Exception {
         return serviceEndereco.listarEnderecosPorAtivo();
     }
 }
