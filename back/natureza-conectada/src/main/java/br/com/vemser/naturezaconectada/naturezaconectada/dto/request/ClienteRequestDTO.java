@@ -25,11 +25,14 @@ public class ClienteRequestDTO extends UsuarioRequestDTO {
     @NotNull(message = "Endereço não pode ser nulo")
     @Schema(description = "Endereços", required = true)
     private List<Endereco> enderecos = new ArrayList<>();
+
     @NotNull(message = "Contatos não pode ser nulo")
     @Schema(description = "Contatos", required = true)
     private List<Contato> contatos = new ArrayList<>();
+
     @Schema(description = "Mudas", required = true)
     private List<Muda> mudas = new ArrayList<>();
+
     @Schema(description = "Entregas", required = true)
     private List<Entrega> entregas = new ArrayList<>();
 }

@@ -57,13 +57,13 @@ public class ServiceEspecialista {
         especialistaEncontrado.setEmail(especialistaEditado.getEmail());
         especialistaEncontrado.setEspecializacao(especialistaEditado.getEspecializacao());
         especialistaEncontrado.setDocumento(especialistaEditado.getDocumento());
-        return retornarDto(especialistaRepository.save(especialistaEncontrado));
+        especialistaRepository.save(especialistaEncontrado);
+        return retornarDto(especialistaEncontrado);
     }
 
 
-    private Especialista procurarPorIDEntidade(int id) throws Exception {
+    public Especialista procurarPorIDEntidade(Integer id) throws Exception {
         Especialista especialista = this.especialistaRepository.findById(id).orElseThrow(() -> new RegraDeNegocioException("Especialista não encontrado no banco de dados"));
-
 
         return especialista;
     }
@@ -87,16 +87,12 @@ public class ServiceEspecialista {
         return this.objectMapper.convertValue(especialista, EspecialistaDTO.class);
     }
 
-    public Especialista procurarPorIdEntidade(Integer id) throws InformacaoNaoEncontrada {
-        return this.especialistaRepository.findById(id).orElseThrow(() -> new InformacaoNaoEncontrada("Não há nenhum especialista com este ID"));
-    }
 
-
-    private EspecialistaCreateDTO retornarDto(Especialista especialista) {
+    public EspecialistaCreateDTO retornarDto(Especialista especialista) {
         return this.objectMapper.convertValue(especialista, EspecialistaCreateDTO.class);
     }
 
-    private Especialista retornarEntidade(EspecialistaCreateDTO especialista) {
+    public Especialista retornarEntidade(EspecialistaCreateDTO especialista) {
         return this.objectMapper.convertValue(especialista, Especialista.class);
     }
 

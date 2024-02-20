@@ -103,11 +103,13 @@ public class ServiceCliente {
     public Cliente getUsuarioLogado() throws Exception {
         Integer id = getIdLoggedUser();
         Cliente cliente = buscarPorIdEntidade(id);
+        log.error(cliente.toString());
         return cliente;
     }
 
     public Integer getIdLoggedUser() {
         Integer findUserId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        log.error(findUserId.toString());
         return findUserId;
     }
 }
