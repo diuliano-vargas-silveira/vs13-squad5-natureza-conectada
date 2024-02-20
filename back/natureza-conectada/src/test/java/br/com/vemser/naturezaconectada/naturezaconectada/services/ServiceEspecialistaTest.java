@@ -38,12 +38,17 @@ class ServiceEspecialistaTest {
     private ObjectMapper objectMapper;
     @Mock
     private PasswordEncoder encoder;
+
+    @Mock
+    private  ServiceLog serviceLog;
     @Spy
     @InjectMocks
     private ServiceEspecialista serviceEspecialista;
 
     private Especialista especialista;
     private EspecialistaCreateDTO especialistaCreateDTO;
+
+
 
     private EspecialistaCreateDTO especialistaRetornoDTO;
     private EspecialistaDTO especialistaDTO;
