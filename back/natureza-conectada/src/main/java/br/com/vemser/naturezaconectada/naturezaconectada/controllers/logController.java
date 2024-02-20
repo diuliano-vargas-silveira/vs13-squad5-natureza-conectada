@@ -38,6 +38,6 @@ public class logController {
     }
     @GetMapping("admin")
     public ResponseEntity<List<LogMudasCriadasDTO>> totalPorTipo(@RequestParam("nome")String nome){
-        return new ResponseEntity<>(this.log.listarMudasCriadasPor(nome),HttpStatus.OK);
+        return new ResponseEntity<>(this.log.listarMudasCriadasPorNome(nome),HttpStatus.OK);
     }
 }

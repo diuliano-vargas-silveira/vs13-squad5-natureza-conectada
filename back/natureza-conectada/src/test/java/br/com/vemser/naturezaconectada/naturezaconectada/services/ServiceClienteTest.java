@@ -54,6 +54,9 @@ public class ServiceClienteTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private ServiceLog serviceLog;
+
     @Test
     @DisplayName("Deveria criar um cliente com sucesso")
     public void deveriaAdicionarClienteComSucesso() throws Exception {
