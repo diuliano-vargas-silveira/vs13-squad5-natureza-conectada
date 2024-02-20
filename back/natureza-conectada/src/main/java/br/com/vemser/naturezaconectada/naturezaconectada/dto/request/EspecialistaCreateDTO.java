@@ -26,6 +26,6 @@ public class EspecialistaCreateDTO extends UsuarioRequestDTO {
     @NotBlank(message = "especialização não pode ser vazia!")
     private String especializacao;
 
-    private List<RelatorioMuda> relatorioMudas;
+
 
 }
