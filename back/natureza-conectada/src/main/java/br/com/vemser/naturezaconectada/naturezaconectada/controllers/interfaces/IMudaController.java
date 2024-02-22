@@ -1,5 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.relatorios.RelatorioMudasDoadas;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.MudaCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.MudaDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
@@ -99,4 +100,16 @@ public interface IMudaController {
     )
     @DeleteMapping("/{idMuda}")
     public ResponseEntity<Void> mudarAtivoMuda(@PathVariable Integer idMuda) throws Exception;
+
+    @Operation(summary = "Quantidade de mudas doadas por espécie", description = "Retorna relatório com quantidade de mudas doadas por espécie")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Retorna lista de relatório"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Erro ao Deletar muda no banco de dados"),
+                    @ApiResponse(responseCode = "400", description = "Muda não existe no banco de dados")
+            }
+    )
+    @GetMapping("/doacoes")
+    public ResponseEntity<List<RelatorioMudasDoadas>> mudasDoadas();
 }

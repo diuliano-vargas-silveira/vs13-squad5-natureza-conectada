@@ -1,5 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.controllers;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces.IRelatorioController;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.AvaliacaoDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.RelatorioRequestDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.RelatorioClienteDTO;
@@ -18,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/relatorio")
 @RequiredArgsConstructor
-public class RelatorioController {
+public class RelatorioController implements IRelatorioController {
 
     private final ServiceRelatorioMuda serviceRelatorioMuda;
 

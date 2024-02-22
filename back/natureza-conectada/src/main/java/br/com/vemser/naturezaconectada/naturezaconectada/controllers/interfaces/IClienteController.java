@@ -70,4 +70,15 @@ public interface IClienteController {
     )
     @GetMapping("/ativos")
     public ResponseEntity<List<ClienteResponseDTO>> procurarClienteAtivos();
+
+    @Operation(summary = "Desativar cliente", description = "Desativa o cliente")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Vazio"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @PutMapping("/status/{id}")
+    public ResponseEntity<Void> desativarCliente(@PathVariable("id") Integer id) throws Exception;
 }

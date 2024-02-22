@@ -365,9 +365,6 @@ public class ServiceClienteTest {
         cliente.setSenha("123");
         cliente.setEmail("pedro@dbccompany.com.br");
         cliente.setTipoUsuario(TipoUsuario.CLIENTE);
-        cliente.setEnderecos(gerarEndereco());
-        cliente.setContatos(gerarContato());
-
         return cliente;
     }
 

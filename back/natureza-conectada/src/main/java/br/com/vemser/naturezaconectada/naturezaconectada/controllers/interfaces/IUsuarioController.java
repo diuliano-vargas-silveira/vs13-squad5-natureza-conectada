@@ -1,5 +1,6 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.relatorios.RelatorioQuantidadeUsuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.UsuarioResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -55,5 +56,17 @@ public interface IUsuarioController {
     @GetMapping("/email")
     ResponseEntity<UsuarioResponseDTO> procurarPorEmail(@RequestParam String email) throws Exception;
 
+    @Operation(summary = "Gera relatório quantidade de usuários por tipo", description = "Gera relatório com quantidade de usuários por tipo e retorna")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Gera relatório com quantidade de usuários por tipo e retorna",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = UsuarioResponseDTO.class))),
+                    @ApiResponse(responseCode = "404", description = "Usuário não encontrado"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/relatorio")
+    public ResponseEntity<List<RelatorioQuantidadeUsuario>> gerarRelatorio();
 
 }

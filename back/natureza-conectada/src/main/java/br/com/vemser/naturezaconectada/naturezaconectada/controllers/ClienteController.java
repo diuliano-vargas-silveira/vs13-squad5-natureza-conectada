@@ -3,6 +3,8 @@ package br.com.vemser.naturezaconectada.naturezaconectada.controllers;
 import br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces.IClienteController;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ClienteRequestDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ClienteResponseDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoEmail;
+import br.com.vemser.naturezaconectada.naturezaconectada.services.EmailService;
 import br.com.vemser.naturezaconectada.naturezaconectada.services.ServiceCliente;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,7 @@ import java.util.List;
 public class ClienteController implements IClienteController {
 
     private final ServiceCliente serviceCliente;
+    private final EmailService emailService;
 
     @PostMapping
     public ResponseEntity<ClienteResponseDTO> adicionar(@Valid @RequestBody ClienteRequestDTO clienteCreateDTO) throws Exception {
@@ -32,6 +35,8 @@ public class ClienteController implements IClienteController {
 
         ClienteResponseDTO cliente = serviceCliente.adicionar(clienteCreateDTO);
         log.debug("Contato cliente");
+
+        emailCreate(clienteCreateDTO);
 
         return new ResponseEntity<>(cliente, HttpStatus.CREATED);
     }
@@ -70,6 +75,14 @@ public class ClienteController implements IClienteController {
         var clientesAtivos = serviceCliente.listarClientesAtivos();
 
         return new ResponseEntity<>(clientesAtivos, HttpStatus.OK);
+    }
+
+    @GetMapping("/email")
+    public void emailCreate(ClienteRequestDTO clienteCriado) throws Exception {
+        emailService.sendEmail(clienteCriado, TipoEmail.CRIACAO);
+
+        log.info("E-mail enviado!");
+
     }
 
 }
