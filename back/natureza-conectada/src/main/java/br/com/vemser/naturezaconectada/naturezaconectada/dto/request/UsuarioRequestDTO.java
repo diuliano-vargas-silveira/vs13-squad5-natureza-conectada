@@ -2,33 +2,41 @@ package br.com.vemser.naturezaconectada.naturezaconectada.dto.request;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Validated
 public class UsuarioRequestDTO {
 
     private static final String PASSWORD_VALIDATION_REGEX = "^(?=.*\\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$";
 
     @Schema(description = "Identificador do usuário", required = false, hidden = true, example = "1")
-    private int id;
+    private Integer id;
 
-    @Schema(description = "Ativo", example = "A")
+    @Schema(description = "Ativo", example = "A", hidden = true)
+    @Hidden
     private Ativo ativo;
 
     @Schema(description = "Nome do usuário", required = true, example = "Lucas Alves")
     @NotBlank(message = "Nome não pode estar vazio!")
     private String nome;
+
+    @Schema(description = "CPF", required = true, example = "12345678901")
+    @CPF(message = "Cpf inválido")
+    private String cpf;
 
     @Schema(description = "E-mail", required = true, example = "lucas@gmail.com")
     @NotBlank(message = "E-mail não pode estar vazio!")
@@ -42,7 +50,7 @@ public class UsuarioRequestDTO {
             message = "Senha com formato inválido, você precisa de pelo menos 1 número e 1 letra, com no mínimo 8 de tamanho!")
     private String senha;
 
-    @Schema(description = "Tipo do usuário", required = true, example = "ADMIN")
-    @NotNull(message = "Especifique o tipo do seu Usuário")
+    @Schema(description = "Tipo do usuário", required = false, hidden = true, example = "ADMIN")
+    @Hidden
     private TipoUsuario tipoUsuario;
 }

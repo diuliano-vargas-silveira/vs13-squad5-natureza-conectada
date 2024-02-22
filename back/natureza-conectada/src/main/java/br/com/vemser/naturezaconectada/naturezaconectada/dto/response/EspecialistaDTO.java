@@ -1,29 +1,23 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.dto.response;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
-import br.com.vemser.naturezaconectada.naturezaconectada.models.Contato;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.RelatorioMuda;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.br.CPF;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class EspecialistaDTO  {
+public class EspecialistaDTO extends UsuarioResponseDTO  {
 
-    private int idEspecialista;
 
-    private int id;
-
-    private String nome;
 
     private String especializacao;
 
+    private String documento;
 
-    private Estados regiaoResponsavel;
+    private List<RelatorioMuda> relatorioMudas;
 
 }

@@ -1,36 +1,25 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.models;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.enums.Estados;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.br.CNPJ;
-import org.hibernate.validator.constraints.br.CPF;
+import lombok.*;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
+import javax.persistence.*;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
+@Entity(name = "Especialista")
+@Table(name = "ESPECIALISTA")
+@DiscriminatorValue("ESPECIALISTA")
 public class Especialista extends Usuario {
 
-    private int idEspecialista;
-
-    private Contato contato;
-
-    @NotBlank(message = "Documento não pode ser vazia!")
-    @CPF(message = "Cpf inválido!")
-    @CNPJ(message = "Cnpj inválido")
+    @Column(name = "DOCUMENTO")
     private String documento;
-
-    @NotBlank(message = "Especialização não pode ser vazia!")
+    @Column(name = "ESPECIALIZACAO")
     private String especializacao;
-
-    @NotNull(message = "Região não pode ser nula!")
-    private Estados regiaoResponsavel;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "especialista", orphanRemoval = true)
+    private List<RelatorioMuda> relatorioMudas;
 
 }

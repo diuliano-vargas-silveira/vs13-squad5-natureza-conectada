@@ -1,6 +1,5 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EntregaRequestDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.UsuarioRequestDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EntregaResponseDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoEmail;
@@ -29,23 +28,18 @@ public class EmailService {
 
     @Value("${spring.mail.username}")
     private String from;
-
-
     private final JavaMailSender emailSender;
 
-
-
-
-    public void sendEmail(UsuarioRequestDTO dto, TipoEmail tipoEmail) throws Exception {
+    public void sendEmail(UsuarioRequestDTO usuario, TipoEmail tipoEmail) throws Exception {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         try {
 
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
 
             mimeMessageHelper.setFrom(from);
-            mimeMessageHelper.setTo(dto.getEmail());
-            mimeMessageHelper.setSubject(tipoEmail.toString() + " do usuario "+ dto.getNome()+ " na Natureza Conectada ");
-            mimeMessageHelper.setText(geContentFromTemplate(dto,tipoEmail), true);
+            mimeMessageHelper.setTo(usuario.getEmail());
+            mimeMessageHelper.setSubject(tipoEmail.toString() + " do usuario "+ usuario.getNome()+ " na Natureza Conectada ");
+            mimeMessageHelper.setText(geContentFromTemplate(usuario,tipoEmail), true);
 
             emailSender.send(mimeMessageHelper.getMimeMessage());
         } catch (MessagingException | IOException | TemplateException e) {
@@ -57,7 +51,7 @@ public class EmailService {
     public String getContentFromTemplate( TipoEmail tipoEmail,EntregaResponseDTO dto) throws IOException, TemplateException {
         Map<String, Object> dados = new HashMap<>();
         dados.put("nome", dto.getCliente().getNome());
-        dados.put("email",dto.getCliente().getEmail());
+        dados.put("email", from);
         dados.put("mensagem", tipoEmail.getMensagemEntrega().concat(String.valueOf(dto.getId())));
 
         Template template = fmConfiguration.getTemplate("email-entrega-template.ftl");
@@ -87,7 +81,7 @@ public class EmailService {
     public String geContentFromTemplate(UsuarioRequestDTO dto,TipoEmail tipoEmail) throws IOException, TemplateException {
         Map<String, Object> dados = new HashMap<>();
         dados.put("nome", dto.getNome());
-        dados.put("email",dto.getEmail());
+        dados.put("email", from);
         dados.put("mensagem", tipoEmail.getMensagemUsuario());
 
         Template template = fmConfiguration.getTemplate("email-usuario-template.ftl");

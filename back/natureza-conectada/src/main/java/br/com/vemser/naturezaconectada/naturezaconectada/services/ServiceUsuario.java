@@ -1,18 +1,18 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.UsuarioRequestDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.relatorios.RelatorioQuantidadeUsuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.UsuarioResponseDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.*;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.interfaces.IServiceUsuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Usuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.lang.Exception;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -22,98 +22,47 @@ public class ServiceUsuario implements IServiceUsuario {
     private final UsuarioRepository usuarioRepository;
     private final ObjectMapper objectMapper;
 
-    public UsuarioResponseDTO adicionarUsuario(UsuarioRequestDTO usuarioRequestDTO) throws Exception {
-        Usuario usuario = objectMapper.convertValue(usuarioRequestDTO, Usuario.class);
 
-        Usuario usuarioBanco = usuarioRepository.procurarPorEmail(usuarioRequestDTO.getEmail());
-
-        if (usuarioBanco != null) {
-            throw new RegraDeNegocioException("Usuário já existe para o email: " + usuarioRequestDTO.getEmail());
-        }
-
-        Usuario usuarioAdicionado = usuarioRepository.adicionar(usuario);
-
-        UsuarioResponseDTO usuarioResponseDTO = objectMapper.convertValue(usuarioAdicionado, UsuarioResponseDTO.class);
-        return usuarioResponseDTO;
-    }
-
-    public UsuarioResponseDTO logar(String email, String senha) throws Exception {
-        Usuario usuario = usuarioRepository.procurarPorEmail(email);
-
-        if (usuario == null) {
-            throw new RegraDeNegocioException("Usuário não existe pra o e-mail informado.");
-        }
-
-        if (!usuario.getSenha().equals(senha)) {
-            throw new RegraDeNegocioException("Senha incorreta.");
-        }
-        UsuarioResponseDTO usuarioResponseDTO = objectMapper.convertValue(usuario, UsuarioResponseDTO.class);
-        return usuarioResponseDTO;
+    public Optional<Usuario> findByLogin(String email) {
+        return usuarioRepository.findByEmail(email);
     }
 
     public List<UsuarioResponseDTO> listarTodos() throws Exception {
-        List<Usuario> usuario= usuarioRepository.listar();
-        List<UsuarioResponseDTO> usuarioResponseDTO = usuario.stream()
-                .map(usuarioEntity -> objectMapper.convertValue(usuarioEntity, UsuarioResponseDTO.class))
-                .collect(Collectors.toList());
-
-        return usuarioResponseDTO;
+        List<Usuario> usuarios = usuarioRepository.findAll();
+        if (!usuarios.isEmpty()) {
+            return usuarios.stream()
+                    .map(usuarioEntity -> objectMapper.convertValue(usuarioEntity, UsuarioResponseDTO.class))
+                    .collect(Collectors.toList());
+        } else {
+            throw new RegraDeNegocioException("Nenhum usuário encontrado");
+        }
     }
 
-    public List<UsuarioResponseDTO> procurarUsuariosAtivos() throws Exception {
-        List<Usuario> usuarios = usuarioRepository.procurarUsuariosAtivos();
-        var usuariosResponseDTO = usuarios.stream()
-                .map(usuarioDTO -> objectMapper.convertValue(usuarioDTO, UsuarioResponseDTO.class))
-                .collect(Collectors.toList());
-
-        return usuariosResponseDTO;
+    public List<UsuarioResponseDTO> listarUsuariosAtivos() throws RegraDeNegocioException {
+        List<UsuarioResponseDTO> usuarios = usuarioRepository.findAllUsuariosAtivos();
+        if (!usuarios.isEmpty()) {
+            return usuarios;
+        } else {
+            throw new RegraDeNegocioException("Nenhum usuário encontrado");
+        }
     }
 
-
-    @Override
     public UsuarioResponseDTO procurarPorEmail(String email) throws Exception {
-
-        Usuario usuario = usuarioRepository.procurarPorEmail(email);
-        if (usuario != null) {
-            UsuarioResponseDTO usuarioResponseDTO = objectMapper.convertValue(usuario, UsuarioResponseDTO.class);
-            return usuarioResponseDTO;
+        Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(email);
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            return objectMapper.convertValue(usuario, UsuarioResponseDTO.class);
         } else {
             throw new RegraDeNegocioException("Nenhum usuário encontrado para o email: " + email);
         }
     }
 
-    public UsuarioResponseDTO editar(int id, UsuarioRequestDTO usuarioRequestDTO) throws Exception {
-        Usuario usuarioRecuperado = buscarUsuario(id);
-
-        Usuario usuario = objectMapper.convertValue(usuarioRequestDTO, Usuario.class);
-
-        usuarioRepository.editar(id, usuario);
-        usuario.setId(id);
-
-        UsuarioResponseDTO usuarioResponseDTO = objectMapper.convertValue(usuario, UsuarioResponseDTO.class);
-        return usuarioResponseDTO;
+    public Integer getIdLoggedUser() {
+        Integer findUserId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        return findUserId;
     }
 
-    public void remover(int id) throws Exception {
-        Usuario usuario = buscarUsuario(id);
-        usuarioRepository.remover(id);
+    public List<RelatorioQuantidadeUsuario> gerarRelatorio() {
+        return this.usuarioRepository.relatorioParaAdmin();
     }
-
-    private Usuario buscarUsuario(int id) throws RegraDeNegocioException {
-        try {
-            Usuario usuarioRecuperado = usuarioRepository.procurarPorId(id);
-            return usuarioRecuperado;
-        } catch (Exception ex) {
-            throw new RegraDeNegocioException("Nenhum usuário encontrado para o Id: " + id);
-        }
-    }
-    public Usuario buscarUsuarioAtivo(int id) throws Exception {
-        try {
-            Usuario usuarioRecuperado = usuarioRepository.procurarAtivoPorId(id);
-            return usuarioRecuperado;
-        } catch (Exception ex) {
-            throw new RegraDeNegocioException("Nenhum usuário Ativo encontrado para o Id: " + id);
-        }
-    }
-
 }

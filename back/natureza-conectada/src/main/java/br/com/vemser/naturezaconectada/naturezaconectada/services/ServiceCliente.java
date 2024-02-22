@@ -1,16 +1,21 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ClienteCreateDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.UsuarioRequestDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ClienteDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoEmail;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.ClienteRequestDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.ClienteResponseDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Cliente;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.LogUsuarios;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.ClienteRepository;
+import br.com.vemser.naturezaconectada.naturezaconectada.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,87 +24,95 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 @Slf4j
-public class ServiceCliente  {
+public class ServiceCliente {
 
-    private final ServiceUsuario serviceUsuario;
     private final ClienteRepository clienteRepository;
+    private final UsuarioRepository usuarioRepository;
     private final ObjectMapper objectMapper;
 
-    private final EmailService emailService;
+    private final ServiceLog serviceLog;
+    private final PasswordEncoder encoder;
 
+    public ClienteResponseDTO adicionar(ClienteRequestDTO clienteCreateDTO) throws Exception {
+        var cliente = objectMapper.convertValue(clienteCreateDTO, Cliente.class);
+        cliente.setSenha(encoder.encode(clienteCreateDTO.getSenha()));
+        cliente.setAtivo(Ativo.A);
+        cliente.setTipoUsuario(TipoUsuario.CLIENTE);
+        clienteRepository.save(cliente);
+        LogUsuarios logUsuarios = new LogUsuarios();
+        logUsuarios.setTipoUsuario(TipoUsuario.CLIENTE);
+        logUsuarios.setNome(clienteCreateDTO.getNome());
+        this.serviceLog.criarLogUsuario(logUsuarios);
 
-
-    public ClienteDTO adicionar(ClienteCreateDTO cliente) throws Exception {
-
-        if (cliente.getTipoUsuario() != TipoUsuario.CLIENTE) {
-            throw new RegraDeNegocioException("Tipo de usuário deve ser Cliente");
-        }
-        var usuarioCriado = objectMapper.convertValue(cliente, UsuarioRequestDTO.class);
-        var usuario = serviceUsuario.adicionarUsuario(usuarioCriado);
-
-        cliente.setId(usuario.getId());
-
-        var clienteCriado = objectMapper.convertValue(cliente, Cliente.class);
-
-        clienteRepository.adicionar(clienteCriado);
-
-        this.emailService.sendEmail(cliente, TipoEmail.CRIACAO);
-
-        return objectMapper.convertValue(clienteCriado, ClienteDTO.class);
-
+        return objectMapper.convertValue(cliente, ClienteResponseDTO.class);
     }
 
-    public ClienteDTO editar(Integer idCliente, ClienteCreateDTO clienteEditado) throws Exception {
-        var cliente = objectMapper.convertValue(clienteEditado, Cliente.class);
-        var clienteEncontrado = clienteRepository.procurarPorIdCliente(idCliente);
+    public ClienteResponseDTO editar(Integer idCliente, ClienteRequestDTO clienteEditado) throws Exception {
 
-        var usuarioEditado = objectMapper.convertValue(cliente, UsuarioRequestDTO.class);
+        var clienteEncontrado = clienteRepository.getById(idCliente);
 
-        serviceUsuario.editar(clienteEncontrado.getId(), usuarioEditado);
 
-        clienteRepository.editar(idCliente, cliente);
+        clienteEncontrado.setNome(clienteEditado.getNome());
+        clienteEncontrado.setEmail(clienteEditado.getEmail());
+        clienteEncontrado.setSenha(encoder.encode(clienteEditado.getSenha()));
 
-        this.emailService.sendEmail(clienteEditado, TipoEmail.ALTERACAO);
+        clienteRepository.save(clienteEncontrado);
 
-        return objectMapper.convertValue(cliente, ClienteDTO.class);
+        return objectMapper.convertValue(clienteEncontrado, ClienteResponseDTO.class);
     }
 
     public void remover(Integer idCliente) throws Exception {
-        var clienteEncontrado = clienteRepository.procurarPorIdCliente(idCliente);
+        var clienteEncontrado = clienteRepository.getById(idCliente);
+        if (clienteEncontrado.getAtivo() == Ativo.A)
+            clienteEncontrado.setAtivo(Ativo.D);
 
-        serviceUsuario.remover(clienteEncontrado.getId());
-
-        this.emailService.sendEmail( this.objectMapper.convertValue(clienteEncontrado,ClienteCreateDTO.class), TipoEmail.EXCLUSAO);
+        clienteRepository.save(clienteEncontrado);
     }
 
-    public List<ClienteDTO> listarTodos() throws Exception {
-        var clientes =  clienteRepository.listarTodos();
+    public Page<ClienteResponseDTO> listarTodos(Pageable paginacao) throws Exception {
+        var clientesPaginados = clienteRepository.findAll(paginacao);
 
-        return clientes.stream()
-                .map(cliente -> objectMapper.convertValue(cliente, ClienteDTO.class))
+        return clientesPaginados.map(cliente -> objectMapper.convertValue(cliente, ClienteResponseDTO.class));
+    }
+
+    public ClienteResponseDTO procurarPorId(Integer id) throws Exception {
+        var clienteEncontrado = clienteRepository.findById(id).orElseThrow(() -> new RegraDeNegocioException("Cliente não existe"));
+
+
+        return objectMapper.convertValue(clienteEncontrado, ClienteResponseDTO.class);
+    }
+
+
+    public ClienteResponseDTO procurarClienteAtivo(Integer idCliente) throws RegraDeNegocioException {
+        var clienteEncontrado = clienteRepository.getById(idCliente);
+
+        if (clienteEncontrado.getAtivo() != Ativo.A)
+            throw new RegraDeNegocioException("Cliente inativo");
+
+        return objectMapper.convertValue(clienteEncontrado, ClienteResponseDTO.class);
+    }
+
+    public List<ClienteResponseDTO> listarClientesAtivos() {
+        return usuarioRepository.findAllUsuariosAtivos()
+                .stream().filter(cliente -> cliente.getTipoUsuario().equals(TipoUsuario.CLIENTE)).map(usuarios -> objectMapper.convertValue(usuarios, ClienteResponseDTO.class))
                 .collect(Collectors.toList());
     }
 
-    public ClienteDTO procurarPorIdCliente(Integer idCliente) throws Exception {
-        Cliente cliente = clienteRepository.procurarPorIdCliente(idCliente);
-
-        var clienteEncontrado = objectMapper.convertValue(cliente, ClienteDTO.class);
-
-
-        return clienteEncontrado;
+    public Cliente buscarPorIdEntidade(Integer id) throws Exception {
+        Cliente cliente = this.clienteRepository.findByAtivoAndId(Ativo.A, id).orElseThrow(() -> new RegraDeNegocioException("Não foi possível buscar usuario"));
+        return cliente;
     }
 
-    public void procurarClientesAtivos(Integer idCliente) throws Exception {
-        var cliente = clienteRepository.procurarPorIdCliente(idCliente);
-        var usuario = objectMapper.convertValue(cliente, UsuarioRequestDTO.class);
-
-        var usuariosAtivos = serviceUsuario.buscarUsuarioAtivo(usuario.getId());
+    public Cliente getUsuarioLogado() throws Exception {
+        Integer id = getIdLoggedUser();
+        Cliente cliente = buscarPorIdEntidade(id);
+        log.error(cliente.toString());
+        return cliente;
     }
 
-
-
-    public void inserirMudasEntregues(Integer idCliente,Integer idMuda) throws Exception {
-        clienteRepository.InserirMudaEmCliente(idCliente,idMuda);
-
+    public Integer getIdLoggedUser() {
+        Integer findUserId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        log.error(findUserId.toString());
+        return findUserId;
     }
 }

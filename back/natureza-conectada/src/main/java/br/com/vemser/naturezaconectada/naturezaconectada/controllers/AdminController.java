@@ -36,7 +36,7 @@ public class AdminController implements IAdminController {
 
     @GetMapping("/{idAdmin}")
     public ResponseEntity<AdminResponseDTO> procurarPorId(@PathVariable int idAdmin) throws Exception {
-        return ResponseEntity.ok().body(adminService.procurarPorID(idAdmin));
+        return ResponseEntity.ok().body(adminService.procurarPorId(idAdmin));
     }
 
     @PutMapping("/{idAdmin}")
@@ -45,11 +45,10 @@ public class AdminController implements IAdminController {
         return ResponseEntity.ok().body(adminService.editar(id, adminRequestDTO));
     }
 
-    @DeleteMapping("/{idAdmin}")
-    public ResponseEntity<Void> deletar(@PathVariable("idAdmin") int id) throws java.lang.Exception {
-        log.info("Deletando admin...");
-        adminService.deletar(id);
-        return ResponseEntity.ok().build();
+    @PutMapping("/{idAdmin}/status")
+    public ResponseEntity<AdminResponseDTO> alterarStatus(@PathVariable("idAdmin") int id, @RequestBody AdminRequestDTO adminRequestDTO) throws java.lang.Exception {
+        log.info("Alterando status do admin...");
+        return ResponseEntity.ok().body(adminService.alterarStatusAtivo(id, adminRequestDTO));
     }
 }
 

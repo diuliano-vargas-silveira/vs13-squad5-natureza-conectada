@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -24,20 +25,9 @@ public class EntregaController implements IEntregaController {
     private final ServiceEntrega entregaService;
 
     @PostMapping("/{idEndereco}")
-    public ResponseEntity<EntregaResponseDTO> adicionar(@Valid @RequestBody EntregaRequestDTO entregaRequestDTO, @PathVariable("idEndereco") int idEndereco) throws Exception {
+    public ResponseEntity<EntregaResponseDTO> adicionar(@Valid @RequestBody EntregaRequestDTO entregaRequestDTO, @NotNull @PathVariable("idEndereco") Integer idEndereco) throws Exception {
         log.info("Criando entrega...");
         return new ResponseEntity<>(entregaService.adicionar(entregaRequestDTO, idEndereco), HttpStatus.CREATED);
-    }
-
-    @PutMapping("/{idEntrega}")
-    public ResponseEntity<EntregaResponseDTO> editarMudasDaEntrega(@PathVariable("idEntrega") int id, @Valid @RequestBody EntregaRequestDTO entregaRequestDTO) throws Exception {
-        log.info("Atualizando entrega...");
-        return ResponseEntity.ok().body(entregaService.editarMudasEntrega(id, entregaRequestDTO));
-    }
-    @PutMapping("/status/{idEntrega}")
-    public ResponseEntity<EntregaResponseDTO> editarStatus(@PathVariable("idEntrega") int id, @Valid @RequestParam String status) throws Exception {
-        log.info("Atualizando entrega...");
-        return ResponseEntity.ok().body(entregaService.mudarStatusEntrega(id, status));
     }
 
     @GetMapping
@@ -46,15 +36,14 @@ public class EntregaController implements IEntregaController {
     }
 
     @GetMapping("/{idEntrega}")
-    public ResponseEntity<EntregaResponseDTO> procurarPorId(@PathVariable int idEntrega) throws Exception {
-        return ResponseEntity.ok().body(entregaService.procurarPorID(idEntrega));
+    public ResponseEntity<EntregaResponseDTO> procurarPorId(@PathVariable Integer idEntrega) throws Exception {
+        return ResponseEntity.ok().body(entregaService.procurarPorId(idEntrega));
     }
 
-    @DeleteMapping("/{idEntrega}")
-    public ResponseEntity<Void> deletar(@PathVariable("idEntrega") int id) throws Exception {
-        log.info("Deletando entrega...");
-        entregaService.deletar(id);
-        return ResponseEntity.ok().build();
+    @PutMapping("/status/{id}")
+    public ResponseEntity<EntregaResponseDTO> editarStatus(@PathVariable("id") Integer id, @Valid @RequestParam String status) throws Exception {
+        log.info("Atualizando entrega...");
+        return ResponseEntity.ok().body(entregaService.mudarStatusEntrega(id, status));
     }
 }
 

@@ -5,7 +5,9 @@ public enum Ecossistema {
 
     MATA_ATLANTICA,
 
-    CAMPOS_ARAUCARIAS
+    CAMPOS_ARAUCARIAS,
+
+    INDIFERENTE;
 
 
 

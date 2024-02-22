@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public interface IEntregaController {
@@ -22,19 +23,7 @@ public interface IEntregaController {
             }
     )
     @PostMapping("/{idEndereco}")
-    ResponseEntity<EntregaResponseDTO> adicionar(@Valid @RequestBody EntregaRequestDTO entregaRequestDTO, @PathVariable("idEndereco") int idEndereco) throws Exception;
-
-    @Operation(summary = "Editar as mudas da  entrega por ID", description = "Edita as mudas de uma entrega pelo ID especificado")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "200", description = "Entrega editada com sucesso"),
-                    @ApiResponse(responseCode = "400", description = "Requisição inválida"),
-                    @ApiResponse(responseCode = "404", description = "Entrega não encontrada"),
-                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
-            }
-    )
-    @PutMapping("/{idEntrega}")
-    ResponseEntity<EntregaResponseDTO> editarMudasDaEntrega(@PathVariable("idEntrega") int id, @Valid @RequestBody EntregaRequestDTO entregaRequestDTO) throws Exception;
+    ResponseEntity<EntregaResponseDTO> adicionar(@Valid @RequestBody EntregaRequestDTO entregaRequestDTO, @NotNull @PathVariable("idEndereco") Integer idEndereco) throws Exception;
 
     @Operation(summary = "Editar o Status da  entrega por ID", description = "Edita o status de uma entrega pelo ID especificado , Possibilidade de Status( RECEBIDO,ENVIADO ou ENTREGUE)")
     @ApiResponses(
@@ -45,7 +34,7 @@ public interface IEntregaController {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    public ResponseEntity<EntregaResponseDTO> editarStatus(@PathVariable("idEntrega") int id, @Valid @RequestParam String status) throws Exception;
+    public ResponseEntity<EntregaResponseDTO> editarStatus(@PathVariable("idEntrega") Integer id, @Valid @RequestParam String status) throws Exception;
     @Operation(summary = "Listar todas as entregas", description = "Lista todas as entregas cadastradas")
     @ApiResponses(
             value = {
@@ -65,17 +54,7 @@ public interface IEntregaController {
             }
     )
     @GetMapping("/{idEntrega}")
-    ResponseEntity<EntregaResponseDTO> procurarPorId(@PathVariable int idEntrega) throws Exception;
+    ResponseEntity<EntregaResponseDTO> procurarPorId(@PathVariable Integer idEntrega) throws Exception;
 
-    @Operation(summary = "Deletar entrega por ID", description = "Deleta uma entrega pelo ID especificado")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "200", description = "Entrega deletada com sucesso"),
-                    @ApiResponse(responseCode = "404", description = "Entrega não encontrada"),
-                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
-            }
-    )
-    @DeleteMapping("/{idEntrega}")
-    ResponseEntity<Void> deletar(@PathVariable("idEntrega") int id) throws Exception;
 }
 

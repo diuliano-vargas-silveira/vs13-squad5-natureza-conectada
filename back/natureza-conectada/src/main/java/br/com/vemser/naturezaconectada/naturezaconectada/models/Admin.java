@@ -1,17 +1,19 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.models;
 
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @EqualsAndHashCode(callSuper = true)
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
+@Getter
+@Setter
+@Entity(name = "Admin")
+@Table(name = "ADMIN")
+@DiscriminatorValue("ADMIN")
 public class Admin extends Usuario {
-
-    private int idAdmin;
 
 }

@@ -1,99 +1,110 @@
-
 package br.com.vemser.naturezaconectada.naturezaconectada.services;
 
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.EspecialistaCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.EspecialistaDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.UsuarioResponseDTO;
+import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.TipoUsuario;
 import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.InformacaoNaoEncontrada;
+import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.RegraDeNegocioException;
 import br.com.vemser.naturezaconectada.naturezaconectada.models.Especialista;
+import br.com.vemser.naturezaconectada.naturezaconectada.models.LogUsuarios;
 import br.com.vemser.naturezaconectada.naturezaconectada.repository.EspecialistaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ServiceEspecialista  {
+public class ServiceEspecialista {
 
     private final EspecialistaRepository especialistaRepository;
-    private final ServiceUsuario serviceUsuario;
 
+    private final ServiceUsuario serviceUsuario;
     private final ObjectMapper objectMapper;
 
+    private final ServiceLog serviceLog;
+    private final PasswordEncoder encoder;
 
 
     public EspecialistaCreateDTO adicionar(EspecialistaCreateDTO especialista) throws Exception {
-        especialista.setTipoUsuario(TipoUsuario.ESPECIALISTA);
-        UsuarioResponseDTO usuarioCriado = serviceUsuario.adicionarUsuario(especialista);
-
-        especialista.setId(usuarioCriado.getId());
-       Especialista especialistaAdicionado =  especialistaRepository.adicionar(this.objectMapper.convertValue(especialista,Especialista.class));
-        especialista.setIdEspecialista(especialistaAdicionado.getIdEspecialista());
-        return especialista;
+        Especialista especialistaAdicionado = this.retornarEntidade(especialista);
+        especialistaAdicionado.setTipoUsuario(TipoUsuario.ESPECIALISTA);
+        especialistaAdicionado.setAtivo(Ativo.A);
+        especialistaAdicionado.setSenha(encoder.encode(especialista.getSenha()));
+        especialistaRepository.save(especialistaAdicionado);
+        LogUsuarios logUsuarios = new LogUsuarios();
+        logUsuarios.setTipoUsuario(TipoUsuario.CLIENTE);
+        logUsuarios.setNome(especialista.getNome());
+        this.serviceLog.criarLogUsuario(logUsuarios);
+        return retornarDto(especialistaAdicionado);
     }
 
 
-    public void deletar(int id) throws Exception {
-        Especialista especialista = procurarPorID(id);
+    public void mudarAtivoEspecialista(int id) throws Exception {
+        Especialista especialista = procurarPorIDEntidade(id);
 
-        especialistaRepository.remover(id);
-
-        serviceUsuario.remover(especialista.getId());
-
-    }
-
-
-//    public boolean editar(int id, Especialista especialistaEditado) throws Exception {
-//        serviceUsuario.editar(especialistaEditado.getId(), especialistaEditado);
-//        return especialistaRepository.editar(id, especialistaEditado);
-//    }
-
-
-    private Especialista procurarPorID(int id) throws Exception {
-        Especialista especialista = this.especialistaRepository.procurarPorId(id);
-
-        if (especialista == null) {
-            throw new InformacaoNaoEncontrada("Não existe nenhum especialista com este ID!");
+        if (especialista.getAtivo() == Ativo.A) {
+            especialista.setAtivo(Ativo.D);
+        } else {
+            especialista.setAtivo(Ativo.A);
         }
 
+        this.especialistaRepository.save(especialista);
+
+    }
+
+
+    public EspecialistaCreateDTO editar(int id, EspecialistaDTO especialistaEditado) throws Exception {
+        Especialista especialistaEncontrado = procurarPorIDEntidade(id);
+        especialistaEncontrado.setNome(especialistaEditado.getNome());
+        especialistaEncontrado.setEmail(especialistaEditado.getEmail());
+        especialistaEncontrado.setEspecializacao(especialistaEditado.getEspecializacao());
+        especialistaEncontrado.setDocumento(especialistaEditado.getDocumento());
+        especialistaRepository.save(especialistaEncontrado);
+        return retornarDto(especialistaEncontrado);
+    }
+
+
+    public Especialista procurarPorIDEntidade(Integer id) throws Exception {
+        Especialista especialista = this.especialistaRepository.findById(id).orElseThrow(() -> new RegraDeNegocioException("Especialista não encontrado no banco de dados"));
+
         return especialista;
+    }
+
+    public EspecialistaCreateDTO procurarPorIdCompleto(int id) throws Exception {
+        Especialista especialista = this.especialistaRepository.findById(id).orElseThrow(() -> new RegraDeNegocioException("Especialista não encontrado no banco de dados"));
+
+
+        return retornarDto(especialista);
     }
 
 
     public List<EspecialistaDTO> listarTodos() throws Exception {
-        return especialistaRepository.listar().stream().map(especialista -> this.objectMapper.convertValue(especialista,EspecialistaDTO.class)).toList();
+        return especialistaRepository.findAll().stream().map(especialista -> this.objectMapper.convertValue(especialista, EspecialistaDTO.class)).toList();
     }
 
 
-    public EspecialistaCreateDTO procurar(int id) throws Exception {
-        EspecialistaCreateDTO especialista = this.objectMapper.convertValue(especialistaRepository.procurarPorId(id),EspecialistaCreateDTO.class);
-        if (especialista == null) {
-            throw new InformacaoNaoEncontrada("Não existe nenhum especialista com este ID!");
-        }else {
-            return especialista;
-        }
+    public EspecialistaDTO procurarPorIdBasica(int id) throws Exception {
+        Especialista especialista = this.especialistaRepository.findById(id).orElseThrow(() -> new RegraDeNegocioException("Especialista não encontrado"));
+
+        return this.objectMapper.convertValue(especialista, EspecialistaDTO.class);
     }
 
-    public EspecialistaCreateDTO editar(Integer idEspecialista, EspecialistaCreateDTO dto) throws Exception {
-           EspecialistaCreateDTO especEncontrado = this.procurar(idEspecialista);
 
-           this.serviceUsuario.editar(especEncontrado.getId(),dto);
-
-           Especialista especEditado = this.especialistaRepository.editar(especEncontrado.getIdEspecialista(),this.objectMapper.convertValue(dto,Especialista.class));
-           especEditado.setIdEspecialista(especEncontrado.getIdEspecialista());
-           especEditado.setId(especEncontrado.getId());
-
-           return this.objectMapper.convertValue(especEditado,EspecialistaCreateDTO.class);
-
+    public EspecialistaCreateDTO retornarDto(Especialista especialista) {
+        return this.objectMapper.convertValue(especialista, EspecialistaCreateDTO.class);
     }
 
-//    public List<Relatorio> procurarRelatorioPorEmail(String email) {
-//        return serviceRelatorio.listarTodos().stream().filter(relatorio -> {
-//            if (Objects.isNull(relatorio.getAvaliador())) return false;
-//            return relatorio.getAvaliador().getEmail().equals(email);
-//        }).toList();
-//    }
+    public Especialista retornarEntidade(EspecialistaCreateDTO especialista) {
+        return this.objectMapper.convertValue(especialista, Especialista.class);
+    }
+
+    public Especialista getUsuarioLogado() throws Exception {
+        Integer id = this.serviceUsuario.getIdLoggedUser();
+        Especialista especialista = procurarPorIDEntidade(id);
+        return especialista;
+    }
 }

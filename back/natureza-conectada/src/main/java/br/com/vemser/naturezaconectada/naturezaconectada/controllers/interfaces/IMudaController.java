@@ -1,13 +1,15 @@
 package br.com.vemser.naturezaconectada.naturezaconectada.controllers.interfaces;
 
+import br.com.vemser.naturezaconectada.naturezaconectada.dto.relatorios.RelatorioMudasDoadas;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.request.MudaCreateDTO;
 import br.com.vemser.naturezaconectada.naturezaconectada.dto.response.MudaDTO;
-import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ativo;
 import br.com.vemser.naturezaconectada.naturezaconectada.enums.Ecossistema;
-import br.com.vemser.naturezaconectada.naturezaconectada.exceptions.ErroNoBancoDeDados;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +17,7 @@ import java.util.List;
 
 public interface IMudaController {
 
-    @Operation(summary = "Listar Mudas", description = "Lista todas as Mudas do banco")
+    @Operation(summary = "Listar todas as  Mudas salvas no banco", description = "Lista todas as Mudas do banco")
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "Retorna a lista de Mudas"),
@@ -25,7 +27,7 @@ public interface IMudaController {
             }
     )
     @GetMapping
-    public List<MudaDTO> listarMudas() throws Exception;
+    public ResponseEntity<Page<MudaCreateDTO>> listarMudas(@PageableDefault() Pageable paginacao) throws Exception;
 
     @Operation(summary = "Listar Mudas Ativas", description = "Lista todas as Mudas Ativas do banco")
     @ApiResponses(
@@ -37,7 +39,7 @@ public interface IMudaController {
             }
     )
     @GetMapping("/ativas")
-    public List<MudaDTO> listarAtivas() throws Exception ;
+    public ResponseEntity<List<MudaDTO>>listarAtivas() throws Exception ;
 
     @Operation(summary = "Lista Muda por ID", description = "Busca uma muda por id")
     @ApiResponses(
@@ -61,7 +63,7 @@ public interface IMudaController {
             }
     )
     @GetMapping("/buscar")
-    public ResponseEntity<MudaDTO> buscarPorEco(@RequestParam Ecossistema eco) throws Exception;
+    public ResponseEntity<List<MudaDTO>> buscarPorEco(@RequestParam Ecossistema eco) throws Exception;
 
     @Operation(summary = "Cria uma nova muda", description = "Cria uma nova muda no banco de dados")
     @ApiResponses(
@@ -97,5 +99,17 @@ public interface IMudaController {
             }
     )
     @DeleteMapping("/{idMuda}")
-    public ResponseEntity<Void> mudarAtivoMuda(@PathVariable Integer idMuda, @RequestParam Ativo ativo) throws Exception;
+    public ResponseEntity<Void> mudarAtivoMuda(@PathVariable Integer idMuda) throws Exception;
+
+    @Operation(summary = "Quantidade de mudas doadas por espécie", description = "Retorna relatório com quantidade de mudas doadas por espécie")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Retorna lista de relatório"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Erro ao Deletar muda no banco de dados"),
+                    @ApiResponse(responseCode = "400", description = "Muda não existe no banco de dados")
+            }
+    )
+    @GetMapping("/doacoes")
+    public ResponseEntity<List<RelatorioMudasDoadas>> mudasDoadas();
 }

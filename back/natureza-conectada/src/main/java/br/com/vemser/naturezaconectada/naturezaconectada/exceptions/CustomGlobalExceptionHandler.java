@@ -4,9 +4,11 @@ package br.com.vemser.naturezaconectada.naturezaconectada.exceptions;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -98,6 +100,16 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         body.put("message", exception.getMessage());
         return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
     }
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<Object> handleException( DisabledException exception,
+                                                   HttpServletRequest request) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", new Date());
+        body.put("status", HttpStatus.UNAUTHORIZED.value());
+        body.put("message", exception.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+    }
+
 
 
 
